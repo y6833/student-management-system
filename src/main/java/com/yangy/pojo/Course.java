@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("tb_courses")
-public class Courses {
+public class Course {
     @TableId(value = "course_id",type = IdType.AUTO)
-    private Integer courseId;
+    private String courseId;
     private String name;
     private String teacher;
     private Integer teacherId;

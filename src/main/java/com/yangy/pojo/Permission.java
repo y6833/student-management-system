@@ -15,4 +15,5 @@ public class Permission {
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     private String action;
+    private String annotation; //权限注释
 }

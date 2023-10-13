@@ -16,6 +16,7 @@ public class User {
     private Integer id;
     private String username;
     private String password;
+    private String activation; // 用户是否激活 0-未激活 1-激活
     private String  roleId;
     private String roleName;
 }
