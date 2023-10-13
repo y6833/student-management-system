@@ -19,4 +19,6 @@ public interface UserService {
 
     //查看所有用户信息
     List<User> getAllUsers();
+
+    User selectByUsername(String username);
 }

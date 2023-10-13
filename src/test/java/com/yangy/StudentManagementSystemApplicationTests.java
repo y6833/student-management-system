@@ -1,7 +1,7 @@
 package com.yangy;
 
-import com.yangy.pojo.StudentQuestionTypeScore;
 import com.yangy.pojo.Teacher;
+import com.yangy.pojo.User;
 import com.yangy.service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,10 @@ class StudentManagementSystemApplicationTests {
 
     @Autowired
     StudentQuestionTypeScoreService studentQuestionTypeScoreService;
+
+    @Autowired
+    UserService userService;
+
     @Test
     void contextLoads() throws ParseException {
 
@@ -48,17 +52,24 @@ class StudentManagementSystemApplicationTests {
 
     @Test
     void add(){
-        studentQuestionTypeScoreService.insert(new StudentQuestionTypeScore("s001","c001",1, 40.0F,new Date()));
+        User user = new User("yangyu","123456",1,"a001",2);
+        System.out.println(user);
+        userService.addUser(user);
         select();
     }
 
 
     @Test
     void select() {
-        List<StudentQuestionTypeScore> studentQuestionTypeScores = studentQuestionTypeScoreService.selectAll();
-        for (StudentQuestionTypeScore studentQuestionTypeScore : studentQuestionTypeScores) {
-            System.out.println(studentQuestionTypeScore);
+        List<User> allUsers = userService.getAllUsers();
+        for (User allUser : allUsers) {
+            System.out.println(allUser);
         }
+//        List<StudentQuestionTypeScore> studentQuestionTypeScores = studentQuestionTypeScoreService.selectAll();
+//        for (StudentQuestionTypeScore studentQuestionTypeScore : studentQuestionTypeScores) {
+//            System.out.println(studentQuestionTypeScore);
+//        }
+
     }
 
 

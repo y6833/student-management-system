@@ -3,6 +3,7 @@ package com.yangy.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.yangy.util.MD5;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,7 +28,7 @@ public class Teacher {
     public Teacher(String id, String name, String password, String gender, Date birthday, String grade, String classId, String email, String phone, String address) {
         this.id = id;
         this.name = name;
-        this.password = password;
+        this.password = MD5.encrypt(password);
         this.gender = gender;
         this.birthday = new java.sql.Date(birthday.getTime());
         this.grade = grade;
@@ -39,5 +40,8 @@ public class Teacher {
 
     public void setBirthday(Date birthday) {
         this.birthday = new java.sql.Date(birthday.getTime());
+    }
+    public void setPassword(String password) {
+        this.password = MD5.encrypt(password);
     }
 }
