@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.PermissionMapper;
-import com.yangy.pojo.Permission;
+import com.yangy.entity.Permission;
 import com.yangy.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

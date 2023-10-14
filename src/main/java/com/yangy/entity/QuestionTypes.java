@@ -1,19 +1,16 @@
-package com.yangy.pojo;
+package com.yangy.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@TableName("tb_permission")
-public class Permission {
+@TableName("tb_questiontypes")
+public class QuestionTypes {
     @TableId(value = "id",type = IdType.AUTO)
-    private Integer id;
-    private String action;
-    private String annotation; //权限注释
+    private int id;
+    private String description;
 }

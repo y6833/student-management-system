@@ -1,6 +1,6 @@
 package com.yangy.mapper;
 
-import com.yangy.pojo.Student;
+import com.yangy.entity.Student;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

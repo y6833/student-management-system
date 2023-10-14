@@ -1,6 +1,6 @@
 package com.yangy.service;
 
-import com.yangy.pojo.UserPermission;
+import com.yangy.entity.UserPermission;
 
 import java.util.List;
 

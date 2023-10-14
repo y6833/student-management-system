@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.CourseMapper;
-import com.yangy.pojo.Course;
+import com.yangy.entity.Course;
 import com.yangy.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

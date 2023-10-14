@@ -1,6 +1,6 @@
 package com.yangy.service;
 
-import com.yangy.pojo.Teacher;
+import com.yangy.entity.Teacher;
 
 import java.util.List;
 

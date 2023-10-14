@@ -1,6 +1,6 @@
 package com.yangy.service;
 
-import com.yangy.pojo.StudentQuestionTypeScore;
+import com.yangy.entity.StudentQuestionTypeScore;
 
 import java.util.List;
 

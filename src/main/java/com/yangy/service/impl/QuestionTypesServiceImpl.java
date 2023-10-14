@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.QuestionTypesMapper;
-import com.yangy.pojo.QuestionTypes;
+import com.yangy.entity.QuestionTypes;
 import com.yangy.service.QuestionTypesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

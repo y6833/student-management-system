@@ -1,7 +1,7 @@
 package com.yangy;
 
-import com.yangy.pojo.Teacher;
-import com.yangy.pojo.User;
+import com.yangy.entity.Teacher;
+import com.yangy.entity.User;
 import com.yangy.service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

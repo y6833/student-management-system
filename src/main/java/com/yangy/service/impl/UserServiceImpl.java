@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.UserMapper;
-import com.yangy.pojo.User;
+import com.yangy.entity.User;
 import com.yangy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +41,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User selectByUsername(String username) {
         return userMapper.selectByUsername(username);
+    }
+
+    @Override
+    public List<User> selectPage(Integer pageNum, Integer pageSize) {
+        return userMapper.selectPage(pageNum, pageSize);
+    }
+
+    @Override
+    public Integer selectTotal() {
+        return userMapper.selectTotal();
+
     }
 }

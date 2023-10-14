@@ -1,6 +1,6 @@
 package com.yangy.mapper;
 
-import com.yangy.pojo.QuestionTypes;
+import com.yangy.entity.QuestionTypes;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

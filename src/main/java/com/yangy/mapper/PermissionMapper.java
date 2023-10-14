@@ -1,6 +1,6 @@
 package com.yangy.mapper;
 
-import com.yangy.pojo.Permission;
+import com.yangy.entity.Permission;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

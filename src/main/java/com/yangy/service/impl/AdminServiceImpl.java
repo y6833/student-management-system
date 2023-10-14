@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.AdminMapper;
-import com.yangy.pojo.Admin;
+import com.yangy.entity.Admin;
 import com.yangy.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

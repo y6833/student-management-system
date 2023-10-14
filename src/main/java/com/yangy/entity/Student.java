@@ -1,4 +1,4 @@
-package com.yangy.pojo;
+package com.yangy.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,8 +11,8 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@TableName("tb_teachers")
-public class Teacher {
+@TableName("tb_students")
+public class Student {
     @TableId(value = "id",type = IdType.AUTO)
     private String id;
     private String name;
@@ -24,8 +24,10 @@ public class Teacher {
     private String email;
     private String phone;
     private String address;
+    private String major;
 
-    public Teacher(String id, String name, String password, String gender, Date birthday, String grade, String classId, String email, String phone, String address) {
+
+    public Student(String id, String name, String password, String gender, Date birthday, String grade, String classId, String email, String phone, String address, String major) {
         this.id = id;
         this.name = name;
         this.password = MD5.encrypt(password);
@@ -36,11 +38,13 @@ public class Teacher {
         this.email = email;
         this.phone = phone;
         this.address = address;
+        this.major = major;
     }
 
     public void setBirthday(Date birthday) {
         this.birthday = new java.sql.Date(birthday.getTime());
     }
+
     public void setPassword(String password) {
         this.password = MD5.encrypt(password);
     }

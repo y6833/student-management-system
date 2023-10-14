@@ -1,6 +1,6 @@
 package com.yangy.controller;
 
-import com.yangy.pojo.User;
+import com.yangy.entity.User;
 import com.yangy.service.UserService;
 import com.yangy.util.CreateVerifiCodeImage;
 import com.yangy.util.MD5;
@@ -72,4 +72,6 @@ public class SystemController {
         }
 
     }
+
+
 }

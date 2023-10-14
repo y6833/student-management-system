@@ -1,6 +1,6 @@
 package com.yangy.mapper;
 
-import com.yangy.pojo.StudentQuestionTypeScore;
+import com.yangy.entity.StudentQuestionTypeScore;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

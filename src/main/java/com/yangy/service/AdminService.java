@@ -1,6 +1,6 @@
 package com.yangy.service;
 
-import com.yangy.pojo.Admin;
+import com.yangy.entity.Admin;
 
 import java.util.List;
 

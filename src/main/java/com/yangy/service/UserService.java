@@ -1,6 +1,6 @@
 package com.yangy.service;
 
-import com.yangy.pojo.User;
+import com.yangy.entity.User;
 
 import java.util.List;
 
@@ -21,4 +21,8 @@ public interface UserService {
     List<User> getAllUsers();
 
     User selectByUsername(String username);
+
+    List<User> selectPage(Integer pageNum, Integer pageSize);
+
+    Integer selectTotal();
 }

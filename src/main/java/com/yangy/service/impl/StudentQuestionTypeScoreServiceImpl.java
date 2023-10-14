@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.StudentQuestionTypeScoreMapper;
-import com.yangy.pojo.StudentQuestionTypeScore;
+import com.yangy.entity.StudentQuestionTypeScore;
 import com.yangy.service.StudentQuestionTypeScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

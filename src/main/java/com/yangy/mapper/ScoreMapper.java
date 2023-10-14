@@ -1,6 +1,6 @@
 package com.yangy.mapper;
 
-import com.yangy.pojo.Score;
+import com.yangy.entity.Score;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

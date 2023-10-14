@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.StudentMapper;
-import com.yangy.pojo.Student;
+import com.yangy.entity.Student;
 import com.yangy.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.yangy.mapper;
 
-import com.yangy.pojo.Admin;
+import com.yangy.entity.Admin;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

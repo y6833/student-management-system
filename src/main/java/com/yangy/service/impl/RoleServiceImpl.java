@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.RoleMapper;
-import com.yangy.pojo.Role;
+import com.yangy.entity.Role;
 import com.yangy.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

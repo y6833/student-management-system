@@ -1,7 +1,7 @@
 package com.yangy.service.impl;
 
 import com.yangy.mapper.MajorMapper;
-import com.yangy.pojo.Major;
+import com.yangy.entity.Major;
 import com.yangy.service.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

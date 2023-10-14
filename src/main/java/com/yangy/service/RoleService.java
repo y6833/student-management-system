@@ -1,6 +1,6 @@
 package com.yangy.service;
 
-import com.yangy.pojo.Role;
+import com.yangy.entity.Role;
 
 import java.util.List;
 

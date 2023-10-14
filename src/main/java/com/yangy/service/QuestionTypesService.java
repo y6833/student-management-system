@@ -1,6 +1,6 @@
 package com.yangy.service;
 
-import com.yangy.pojo.QuestionTypes;
+import com.yangy.entity.QuestionTypes;
 
 import java.util.List;
 

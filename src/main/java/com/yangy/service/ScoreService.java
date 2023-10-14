@@ -1,6 +1,6 @@
 package com.yangy.service;
 
-import com.yangy.pojo.Score;
+import com.yangy.entity.Score;
 
 import java.util.List;
 

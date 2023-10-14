@@ -1,6 +1,6 @@
 package com.yangy.mapper;
 
-import com.yangy.pojo.User;
+import com.yangy.entity.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -24,4 +24,10 @@ public interface UserMapper {
 
     @Select("SELECT * FROM tb_user WHERE username = #{username}")
     User selectByUsername(String username);
+
+    @Select("select * from tb_user limit #{pageNum}, #{pageSize}")
+    List<User> selectPage(Integer pageNum, Integer pageSize);
+
+    @Select("select count(*) from tb_user")
+    Integer selectTotal();
 }
