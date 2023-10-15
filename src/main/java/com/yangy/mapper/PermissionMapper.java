@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface PermissionMapper {
     @Insert("INSERT INTO tb_permission(action,annotation) VALUES(#{action}, #{annotation})")
     void insert(Permission permission); // 插入一条权限记录

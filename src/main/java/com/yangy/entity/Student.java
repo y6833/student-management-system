@@ -16,6 +16,7 @@ public class Student {
     @TableId(value = "id",type = IdType.AUTO)
     private String id;
     private String name;
+//    @JsonIgnore //在前端不展示密码
     private String password;
     private String gender;
     private Date birthday;

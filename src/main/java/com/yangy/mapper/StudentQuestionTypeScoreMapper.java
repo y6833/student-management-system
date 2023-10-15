@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface StudentQuestionTypeScoreMapper {
     // 插入一条记录
     @Insert("INSERT INTO tb_StudentQuestionTypeScore(student_id, course_id, question_type_id, score, exam_time) VALUES(#{studentId}, #{courseId}, #{questionTypeId}, #{score}, #{examTime})")

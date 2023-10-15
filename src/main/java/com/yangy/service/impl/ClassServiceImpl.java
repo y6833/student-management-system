@@ -37,4 +37,9 @@ public class ClassServiceImpl implements ClassService {
     public List<Class> getAllClasses() { // 获取所有班级信息
         return classMapper.selectAll();
     }
+
+    @Override
+    public String getClassName(String id) {
+        return classMapper.getClassName(id);
+    }
 }

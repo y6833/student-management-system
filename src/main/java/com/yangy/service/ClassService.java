@@ -14,4 +14,7 @@ public interface ClassService {
     Class getClassById(String id); // 根据ID获取班级信息
 
     List<Class> getAllClasses(); // 获取所有班级信息
+
+    String getClassName(String id);
+
 }

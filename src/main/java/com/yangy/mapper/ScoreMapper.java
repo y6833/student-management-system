@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface ScoreMapper {
     @Select("SELECT * FROM tb_score")
     List<Score> findAll();

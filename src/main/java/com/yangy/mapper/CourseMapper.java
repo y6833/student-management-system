@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface CourseMapper {
     @Insert("INSERT INTO tb_courses(course_id,name,teacher,teacher_id,remark) VALUES(#{courseId},#{name},#{teacher},#{teacherId},#{remark})")
     void insert(Course course); // 插入一条课程记录

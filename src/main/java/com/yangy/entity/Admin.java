@@ -3,6 +3,7 @@ package com.yangy.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class Admin {
     @TableId(value = "id",type = IdType.AUTO)
     private String id;
     private String username;
+    @JsonIgnore
     private String password;
     private String gender;
     private String email;

@@ -14,4 +14,6 @@ public interface MajorService {
     Major getMajorById(String id); // 根据ID获取专业信息
 
     List<Major> getAllMajors(); // 获取所有专业信息
+
+    String getMajorName(String major);
 }

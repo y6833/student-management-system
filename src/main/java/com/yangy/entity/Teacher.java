@@ -3,6 +3,7 @@ package com.yangy.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yangy.util.MD5;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class Teacher {
     @TableId(value = "id",type = IdType.AUTO)
     private String id;
     private String name;
+    @JsonIgnore
     private String password;
     private String gender;
     private Date birthday;

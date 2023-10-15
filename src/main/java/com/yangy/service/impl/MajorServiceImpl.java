@@ -37,4 +37,9 @@ public class MajorServiceImpl implements MajorService {
     public List<Major> getAllMajors() { // 获取所有专业信息
         return majorMapper.selectAll();
     }
+
+    @Override
+    public String getMajorName(String major) {
+        return majorMapper.getMajorName(major);
+    }
 }

@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface QuestionTypesMapper {
     // 插入一条记录
     @Insert("INSERT INTO tb_questiontypes(description) VALUES(#{description})")

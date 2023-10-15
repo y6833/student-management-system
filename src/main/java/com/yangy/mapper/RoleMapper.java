@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface RoleMapper {
     @Insert("INSERT INTO tb_role(name) VALUES(#{name})")
     void insert(Role role); // 插入一条角色记录

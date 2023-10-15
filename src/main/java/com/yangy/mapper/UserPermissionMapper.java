@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface UserPermissionMapper {
     @Insert("INSERT INTO tb_user_permission(user_id,permission_id) VALUES(#{userId},#{permissionId})")
     void insert(UserPermission userPermission); // 插入一条用户权限记录

@@ -3,6 +3,7 @@ package com.yangy;
 import com.yangy.entity.Teacher;
 import com.yangy.entity.User;
 import com.yangy.service.*;
+import com.yangy.util.Pagetool;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class StudentManagementSystemApplicationTests {
@@ -31,7 +33,6 @@ class StudentManagementSystemApplicationTests {
 
     @Autowired
     UserService userService;
-
     @Test
     void contextLoads() throws ParseException {
 
@@ -52,7 +53,7 @@ class StudentManagementSystemApplicationTests {
 
     @Test
     void add(){
-        User user = new User("yangyu","123456",1,"a001",2);
+        User user = new User("yangyu","123456",1,"a001",2,null);
         System.out.println(user);
         userService.addUser(user);
         select();
@@ -71,6 +72,21 @@ class StudentManagementSystemApplicationTests {
 //        }
 
     }
+
+    @Test
+    void test(){
+        Map<String, String> stringStringMap = Pagetool.parseParams("&name=yy&gender=");
+//        Map<String, String> stringStringMap = Pagetool.parseParams(searchString);
+//        Set<String> keys = stringStringMap.keySet();
+//        Collection<String> values = stringStringMap.values();
+        System.out.println(stringStringMap);
+//        System.out.println(keyValue.length);
+//        for (String s : keyValue) {
+//            System.out.println(s);
+//        }
+        }
+
+
 
 
 

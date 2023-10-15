@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface AdminMapper {
     @Insert("INSERT INTO tb_admin (id,username,password, gender, email, phone, birthday) VALUES (#{id}, #{username},#{password}, #{gender}, #{email}, #{phone}, #{birthday})")
     void addAdmin(Admin admin);
