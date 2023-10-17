@@ -15,7 +15,7 @@ public interface UserService {
     void updateUserById(User user);
 
     //通过id查看用户信息
-    User getUserById(String id);
+    User getUserById(Integer id);
 
     //查看所有用户信息
     List<User> getAllUsers();
@@ -25,4 +25,5 @@ public interface UserService {
     List<User> selectPage(Integer pageNum, Integer pageSize);
 
     Integer selectTotal();
+
 }

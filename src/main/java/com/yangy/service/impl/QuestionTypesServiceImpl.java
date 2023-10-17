@@ -1,40 +1,16 @@
 package com.yangy.service.impl;
 
-import com.yangy.mapper.QuestionTypesMapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yangy.entity.QuestionTypes;
+import com.yangy.mapper.QuestionTypesMapper;
 import com.yangy.service.QuestionTypesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.annotation.Resource;
 
 @Service
-public class QuestionTypesServiceImpl implements QuestionTypesService {
-    @Autowired
+public class QuestionTypesServiceImpl extends ServiceImpl<QuestionTypesMapper, QuestionTypes> implements QuestionTypesService {
+    @Resource
     private QuestionTypesMapper questionTypesMapper;
 
-    @Override
-    public void insert(QuestionTypes record) {
-        questionTypesMapper.insert(record);
-    }
-
-    @Override
-    public QuestionTypes selectByPrimaryKey(Integer id) {
-        return questionTypesMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    public List<QuestionTypes> selectAll() {
-        return questionTypesMapper.selectAll();
-    }
-
-    @Override
-    public void updateByPrimaryKey(QuestionTypes record) {
-        questionTypesMapper.updateByPrimaryKey(record);
-    }
-
-    @Override
-    public void deleteByPrimaryKey(Integer id) {
-        questionTypesMapper.deleteByPrimaryKey(id);
-    }
 }

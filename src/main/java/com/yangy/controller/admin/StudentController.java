@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yangy.entity.Student;
+import com.yangy.service.ClassService;
+import com.yangy.service.MajorService;
 import com.yangy.service.StudentService;
 import com.yangy.util.Pagetool;
 import io.swagger.annotations.Api;
@@ -26,10 +28,22 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    //新增和修改
+    @Autowired
+    private ClassService classService;
+
+    @Autowired
+    private MajorService majorService;
+
+    //新增
     @PostMapping
     public boolean save(@RequestBody Student student){
         return studentService.saveStudent(student);
+    }
+
+    //修改
+    @PostMapping("/updata")
+    public boolean updata(@RequestBody Student student){
+        return studentService.updataStudent(student);
     }
 
     //查找所有
@@ -83,13 +97,18 @@ public class StudentController {
             Set<String> keys = stringStringMap.keySet();
             for (String key: keys) {
                 String value = stringStringMap.get(key);
+                if("class_id".equals(key)){
+                    value = classService.getIdByclassName(value);
+                }else if("major".equals(key)){
+                    value = majorService.getIdByclassName(value);
+                }
                 queryWrapper.like(key, value);
             }
 
         }
         IPage<Student> studentpage = studentService.getPage(page,queryWrapper);
-
-
         return studentpage;
     }
+
+
 }

@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-//@Mapper
+@Mapper
 public interface UserMapper {
     @Insert("INSERT INTO tb_user(username, password,activation, role_id, role_name) VALUES(#{username}, #{password},#{activation}, #{roleId}, #{roleName})")
     void insert(User user);
@@ -17,7 +17,7 @@ public interface UserMapper {
     void updateById(User user);
 
     @Select("SELECT * FROM tb_user WHERE id = #{id}")
-    User selectById(@Param("id") String id);
+    User selectById(@Param("id") Integer id);
 
     @Select("SELECT * FROM tb_user")
     List<User> selectAll();

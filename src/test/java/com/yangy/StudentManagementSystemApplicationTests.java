@@ -42,10 +42,7 @@ class StudentManagementSystemApplicationTests {
 //        Student student = new Student("s002", "杨宇", "1234785", "男", date, "2020", "jk2002", "18156845@qq.com", "18365465525", "湖南涉外经济学院", "jk001");
         Teacher teacher = new Teacher("t002", "左春华", "1231546", "女", date, "2020", "jk2002", "199625855@qq.com", "18965653322", "湖南涉外经济学院");
         System.out.println(teacher);
-        teacherService.insert(teacher);
-//        studentService.insert(student);
-//                adminService.addAdmin(admin);
-        teacherService.findAll();
+
 
 
 
@@ -85,7 +82,6 @@ class StudentManagementSystemApplicationTests {
 //            System.out.println(s);
 //        }
         }
-
 
 
 

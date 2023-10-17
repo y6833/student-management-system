@@ -6,10 +6,7 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,4 +35,26 @@ public class UserController {
         log.info("查询user数据：{}", res);
         return res;
     }
+
+    @PostMapping("/addUser")
+    public void addUser(@RequestBody User user){
+        userService.addUser(user);
+    }
+
+    @PostMapping("/updataUser")
+    public void updataUser(@RequestBody User user){
+        if(userService.selectByUsername(user.getUsername()) == null){
+            userService.addUser(user);
+        }else{
+            user.setId(userService.selectByUsername(user.getUsername()).getId());
+            userService.updateUserById(user);
+
+        }
+    }
+
+    @GetMapping("/getUser")
+    public User getUserById(@RequestParam String id){
+        return userService.selectByUsername(id);
+    }
+
 }

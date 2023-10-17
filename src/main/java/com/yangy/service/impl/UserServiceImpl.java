@@ -1,16 +1,16 @@
 package com.yangy.service.impl;
 
-import com.yangy.mapper.UserMapper;
 import com.yangy.entity.User;
+import com.yangy.mapper.UserMapper;
 import com.yangy.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     @Override
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(String id) {
+    public User getUserById(Integer id) {
         return userMapper.selectById(id);
     }
 
@@ -53,4 +53,5 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectTotal();
 
     }
+
 }

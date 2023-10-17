@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yangy.util.MD5;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class User {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private String username;
-    @JsonIgnore
+//    @JsonIgnore
     private String password;
     private Integer activation; // 用户是否激活 0-未激活 1-激活
     private String verifiCode;// 登录验证码
@@ -30,14 +29,14 @@ public class User {
 
     public User(String username, String password,String verifiCode, Integer activation){
         this.username = username;
-        this.password = MD5.encrypt(password);
+        this.password = password.length()>=20 ? password : MD5.encrypt(password);
         this.activation = activation;
         this.verifiCode = verifiCode;
     }
 
     public User(String username, String password, Integer activation, String roleId, Integer roleName,String avatar) {
         this.username = username;
-        this.password = MD5.encrypt(password);
+        this.password = password.length()>=20 ? password : MD5.encrypt(password);
         this.activation = activation;
         this.roleId = roleId;
         this.roleName = roleName;
@@ -46,6 +45,6 @@ public class User {
 
 
     public void setPassword(String password) {
-        this.password = MD5.encrypt(password);
+        this.password = password.length()>=20 ? password : MD5.encrypt(password);
     }
 }
