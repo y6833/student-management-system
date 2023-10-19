@@ -14,4 +14,6 @@ public interface StudentService{
     IPage<Student> getPage(IPage<Student> page, QueryWrapper<Student> queryWrapper);
 
     boolean updataStudent(Student student);
+
+    boolean removeByStuId(String id);
 }

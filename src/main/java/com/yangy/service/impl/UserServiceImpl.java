@@ -54,4 +54,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public boolean removeByUsername(String id) {
+        return userMapper.removeByUsername(id);
+    }
+
 }

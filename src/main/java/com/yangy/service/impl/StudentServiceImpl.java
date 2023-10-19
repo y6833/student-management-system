@@ -11,6 +11,7 @@ import com.yangy.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
@@ -19,6 +20,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     private ClassService classService;
     @Autowired
     private MajorService majorService;
+
+    @Resource
+    private StudentMapper studentMapper;
 //
 //
 //    @Override
@@ -59,6 +63,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         student.setClassId(classService.getIdByclassName(student.getClassId()));
         student.setMajor(majorService.getIdByclassName(student.getMajor()));
         return updateById(student);
+    }
+
+    @Override
+    public boolean removeByStuId(String id) {
+        return studentMapper.removeByStuId(id);
     }
 
     @Override

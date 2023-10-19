@@ -26,4 +26,5 @@ public interface UserService {
 
     Integer selectTotal();
 
+    boolean removeByUsername(String id);
 }

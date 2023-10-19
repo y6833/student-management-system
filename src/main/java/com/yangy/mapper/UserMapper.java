@@ -30,4 +30,8 @@ public interface UserMapper {
 
     @Select("select count(*) from tb_user")
     Integer selectTotal();
+
+
+    @Delete("delete from tb_user where username = #{username}")
+    boolean removeByUsername(String username);
 }

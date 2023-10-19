@@ -54,8 +54,8 @@ public class StudentController {
 
     //删除
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id){
-        return studentService.removeById(id);
+    public boolean delete(@PathVariable String id){
+        return studentService.removeByStuId(id);
     }
 
     /**

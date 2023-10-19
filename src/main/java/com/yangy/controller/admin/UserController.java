@@ -41,6 +41,12 @@ public class UserController {
         userService.addUser(user);
     }
 
+    //删除
+    @DeleteMapping("/{id}")
+    public boolean delete(@PathVariable String id){
+        return userService.removeByUsername(id);
+    }
+
     @PostMapping("/updataUser")
     public void updataUser(@RequestBody User user){
         if(userService.selectByUsername(user.getUsername()) == null){
