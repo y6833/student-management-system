@@ -16,4 +16,10 @@ public interface StudentService{
     boolean updataStudent(Student student);
 
     boolean removeByStuId(String id);
+
+    List<Student> findAllOver();
+
+    void saveStudentList(List<Student> list);
+
+    Student getStudentRoleId(String roleId);
 }

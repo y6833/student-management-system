@@ -13,4 +13,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Resource
     private AdminMapper adminMapper;
 
+    @Override
+    public Admin getAdminByRoleId(String roleId) {
+        return adminMapper.selectByRoleId(roleId);
+    }
 }

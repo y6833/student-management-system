@@ -3,8 +3,7 @@ package com.yangy.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.yangy.util.MD5;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,9 +16,9 @@ public class Teacher {
     @TableId(value = "id",type = IdType.AUTO)
     private String id;
     private String name;
-    @JsonIgnore
     private String password;
     private String gender;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date birthday;
     private String grade;
     private String classId;
@@ -30,7 +29,8 @@ public class Teacher {
     public Teacher(String id, String name, String password, String gender, Date birthday, String grade, String classId, String email, String phone, String address) {
         this.id = id;
         this.name = name;
-        this.password = MD5.encrypt(password);
+//        this.password = MD5.encrypt(password);
+        this.password = password;
         this.gender = gender;
         this.birthday = new java.sql.Date(birthday.getTime());
         this.grade = grade;
@@ -44,6 +44,7 @@ public class Teacher {
         this.birthday = new java.sql.Date(birthday.getTime());
     }
     public void setPassword(String password) {
-        this.password = MD5.encrypt(password);
+        this.password = password;
+//        this.password = MD5.encrypt(password);
     }
 }

@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yangy.entity.Student;
+import com.yangy.entity.User;
 import com.yangy.mapper.StudentMapper;
 import com.yangy.service.ClassService;
 import com.yangy.service.MajorService;
 import com.yangy.service.StudentService;
+import com.yangy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,12 @@ import java.util.List;
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
     @Autowired
     private ClassService classService;
+
     @Autowired
     private MajorService majorService;
+
+    @Autowired
+    private UserService userService;
 
     @Resource
     private StudentMapper studentMapper;
@@ -68,6 +74,35 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public boolean removeByStuId(String id) {
         return studentMapper.removeByStuId(id);
+    }
+
+    @Override
+    public List<Student> findAllOver() {
+        List<Student> students = list();
+        for (Student student : students) {
+            student.setClassId(classService.getClassName(student.getClassId()));
+            student.setMajor(majorService.getMajorName(student.getMajor()));
+        }
+        return students;
+    }
+
+    @Override
+    public void saveStudentList(List<Student> list) {
+        //专业id和name转换
+        for (Student student : list) {
+            student.setClassId(classService.getIdByclassName(student.getClassId()));
+            student.setMajor(majorService.getIdByclassName(student.getMajor()));
+            User user = new User(student.getId(),student.getPassword(), 1,student.getId(),4,"");
+            userService.addUser(user);
+        }
+        //将导入的学生创建user账户
+
+        saveBatch(list);
+    }
+
+    @Override
+    public Student getStudentRoleId(String roleId) {
+        return studentMapper.selectByRoleId(roleId);
     }
 
     @Override

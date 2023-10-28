@@ -1,5 +1,6 @@
 package com.yangy.controller.admin;
 
+import com.yangy.common.Result;
 import com.yangy.service.MajorService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,13 @@ public class MajorController {
     @Autowired
     private MajorService majorService;
 
+    /**
+     * 获取专业列表
+     * @return
+     */
     @GetMapping("/getMajorList")
-    public List<String> getMajorList(){
-        return majorService.getMajorList();
+    public Result getMajorList(){
+        List<String> majorList = majorService.getMajorList();
+        return Result.success(majorList);
     }
 }

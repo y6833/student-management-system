@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.yangy.util.MD5;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +19,8 @@ public class Student {
 //    @JsonIgnore //在前端不展示密码
     private String password;
     private String gender;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date birthday;
     private String grade;
     private String classId;
@@ -33,7 +33,8 @@ public class Student {
     public Student(String id, String name, String password, String gender, Date birthday, String grade, String classId, String email, String phone, String address, String major) {
         this.id = id;
         this.name = name;
-        this.password = password.length()>=20 ? password : MD5.encrypt(password);
+//        this.password = password.length()>=20 ? password : MD5.encrypt(password);
+        this.password = password;
         this.gender = gender;
         this.birthday = new java.sql.Date(birthday.getTime());
         this.grade = grade;
@@ -49,6 +50,7 @@ public class Student {
     }
 
     public void setPassword(String password) {
-        this.password = password.length()>=20 ? password : MD5.encrypt(password);
+        this.password = password;
+//        this.password = password.length()>=20 ? password : MD5.encrypt(password);
     }
 }

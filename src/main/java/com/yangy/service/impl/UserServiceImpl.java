@@ -14,8 +14,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public void addUser(User user) {
-        userMapper.insert(user);
+    public Boolean addUser(User user) {
+        return userMapper.insert(user);
     }
 
     @Override
@@ -24,8 +24,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserById(User user) {
-        userMapper.updateById(user);
+    public Boolean updateUserById(User user) {
+        return userMapper.updateById(user);
     }
 
     @Override
@@ -57,6 +57,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean removeByUsername(String id) {
         return userMapper.removeByUsername(id);
+    }
+
+    @Override
+    public User selectByRoleId(String roleId) {
+        return userMapper.selectByRoleId(roleId);
+    }
+
+    @Override
+    public boolean updateIsActivate(String roleId, Integer isActivate) {
+        return userMapper.updateIsActivate(roleId,isActivate);
+    }
+
+    @Override
+    public User login(User user) {
+        String password = user.getPassword();
+        User u = userMapper.selectByUsername(user.getUsername());
+        if (u != null && u.getPassword().equals(password)) {
+            return u;
+        }
+        return null;
     }
 
 }

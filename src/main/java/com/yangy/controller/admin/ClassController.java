@@ -1,5 +1,6 @@
 package com.yangy.controller.admin;
 
+import com.yangy.common.Result;
 import com.yangy.service.ClassService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -21,31 +22,36 @@ public class ClassController {
     ClassService classService;
 
     @GetMapping("/getClassList")
-    public List<String> getClassList(){
-        return classService.getClassList();
+    public Result getClassList(){
+        List<String> classList = classService.getClassList();
+        return Result.success(classList);
     }
 
     @GetMapping("/getGradeList")
-    public List<String> getGradeList(){
-        return classService.getGradeList();
+    public Result getGradeList(){
+        List<String> gradeList = classService.getGradeList();
+        return Result.success(gradeList);
     }
 
     //通过年级获得班级列表
     @GetMapping("/getClassListBygradeId")
-    public List<String> getClassList(@RequestParam String gradeId){
-        return classService.getClassListBygradeId(gradeId);
+    public Result getClassList(@RequestParam String gradeId){
+        List<String> classListBygradeId = classService.getClassListBygradeId(gradeId);
+        return Result.success(classListBygradeId);
     }
 
     //通过班级获得专业
     @GetMapping("/getMajorByclassId")
-    public List<String> getMajorListByclassId(@RequestParam String classId){
-        return classService.getMajorByclassId(classId);
+    public Result getMajorListByclassId(@RequestParam String classId){
+        List<String> majorByclassId = classService.getMajorByclassId(classId);
+        return Result.success(majorByclassId);
     }
 
     //通过班级获得年级
     @GetMapping("/getGradeByclassId")
-    public List<String> getGradeByclassId(@RequestParam String classId){
-        return classService.getGradeByclassId(classId);
+    public Result getGradeByclassId(@RequestParam String classId){
+        List<String> gradeByclassId = classService.getGradeByclassId(classId);
+        return Result.success(gradeByclassId);
     }
 
 

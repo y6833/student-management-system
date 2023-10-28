@@ -3,6 +3,7 @@ package com.yangy.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateHelp {
 
@@ -17,4 +18,36 @@ public class DateHelp {
         }
         return outputFormat.format(date);
     }
+
+    public static String dataToString(String dateString) {
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z", Locale.ENGLISH);
+        Date dd = null; //将字符串改为date的格式
+        try {
+            dd = sdf.parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        String resDate= new SimpleDateFormat("yyyy-MM-dd").format(dd);
+//        System.out.println(resDate);
+        return resDate;
+
+    }
+
+    public static String dataTimetoData(String inputTime){
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date date = inputFormat.parse(inputTime);
+            String outputTime = outputFormat.format(date);
+//            System.out.println(outputTime);
+            return outputTime;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
