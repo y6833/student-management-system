@@ -3,7 +3,6 @@ package com.yangy.controller.admin;
 import com.yangy.common.Constants;
 import com.yangy.common.Result;
 import com.yangy.entity.Admin;
-import com.yangy.entity.Student;
 import com.yangy.entity.Teacher;
 import com.yangy.entity.User;
 import com.yangy.service.AdminService;
@@ -44,47 +43,47 @@ public class UserController {
      * 分页查询
      */
     @GetMapping("/page")
-    public Map<String,Object> findPage(@RequestParam Integer pageNum, @RequestParam Integer pageSize){
+    public Map<String, Object> findPage(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         pageNum = (pageNum - 1) * pageSize;
         List<User> data = userService.selectPage(pageNum, pageSize);
         Integer total = userService.selectTotal();
-        Map<String,Object> res = new HashMap<>();
-        res.put("data",data);
+        Map<String, Object> res = new HashMap<>();
+        res.put("data", data);
         res.put("total", total);
         log.info("查询user数据：{}", res);
         return res;
     }
 
     @PostMapping("/addUser")
-    public Result addUser(@RequestBody User user){
+    public Result addUser(@RequestBody User user) {
 
         Boolean aBoolean = userService.addUser(user);
-        if (aBoolean){
+        if (aBoolean) {
             return Result.success();
-        }else{
+        } else {
             return Result.error();
         }
     }
 
     //删除
     @DeleteMapping("/{id}")
-    public Result delete(@PathVariable String id){
+    public Result delete(@PathVariable String id) {
         boolean b = userService.removeByUsername(id);
-        if(b){
+        if (b) {
             return Result.success();
         }
         return Result.error();
     }
 
     @PostMapping("/updataUser")
-    public Result updataUser(@RequestBody User user){
-        if(userService.selectByUsername(user.getUsername()) == null){
+    public Result updataUser(@RequestBody User user) {
+        if (userService.selectByUsername(user.getUsername()) == null) {
             return Result.error();
 //            userService.addUser(user);
-        }else{
+        } else {
             user.setId(userService.selectByUsername(user.getUsername()).getId());
             Boolean aBoolean = userService.updateUserById(user);
-            if (aBoolean){
+            if (aBoolean) {
                 return Result.success();
             }
         }
@@ -101,36 +100,35 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public Result getUserById(@RequestParam String id){
+    public Result getUserById(@RequestParam String id) {
         User user = userService.selectByUsername(id);
         return Result.success(user);
     }
 
     @PostMapping("/login")
-    public Result login(@RequestBody User user){
-        Result result = new Result();
-        User u = userService.login(user);
-        if(u != null) {
-            result.setCode(Constants.CODE_200);
-            switch (u.getRoleName()){
-                case 1: break;
-                case 2:
-                    Admin admin = adminService.getAdminByRoleId(u.getRoleId());
-                    result.setData(admin);
-                    break;
-                case 3:
-                    Teacher teacher = teacherService.getTeacherByRoleId(u.getRoleId());
-                    result.setData(teacher);
-                    break;
-                case 4:
-                    Student student = studentService.getStudentRoleId(u.getRoleId());
-                    result.setData(student);
-                    break;
+    public Result login(@RequestBody User user) {
+        boolean login = userService.login(user);
+        if (login) {
+            User u = userService.selectByUsername(user.getUsername());
+            if (u.getActivation() == 1 && u.getRoleName() != 4) {
+                switch (u.getRoleName()) {
+                    case 1:break;
+                    case 2:
+                        Admin admin = adminService.getAdminByRoleId(u.getRoleId());
+                        u.setName(admin.getName());
+                        break;
+                    case 3:
+                        Teacher teacher = teacherService.getTeacherByRoleId(u.getRoleId());
+                        u.setName(teacher.getName());
+                        break;
+                }
+                return Result.success(u);
+            } else {
+                return Result.error(Constants.CODE_304, "用户未激活");
             }
         } else {
-            result.setCode(Constants.CODE_500);
+            return Result.error(Constants.CODE_305, "账户或密码错误");
         }
-        return result;
     }
 
 }

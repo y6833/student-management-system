@@ -179,4 +179,13 @@ public class TeacherController {
         }
         return Result.error();
     }
+
+    @GetMapping("/getTeacherByRoleId/{roleId}")
+    public Result getTeacherByRoleId(@PathVariable String roleId){
+        Teacher teacher = teacherService.getTeacherByRoleId(roleId);
+        if(teacher != null){
+            return Result.success(teacher);
+        }
+        return Result.error();
+    }
 }

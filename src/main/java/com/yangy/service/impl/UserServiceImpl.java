@@ -70,13 +70,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(User user) {
+    public boolean login(User user) {
         String password = user.getPassword();
         User u = userMapper.selectByUsername(user.getUsername());
         if (u != null && u.getPassword().equals(password)) {
-            return u;
+            return true;
         }
-        return null;
+        return false;
     }
 
 }

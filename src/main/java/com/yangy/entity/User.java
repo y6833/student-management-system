@@ -17,6 +17,7 @@ public class User {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private String username;
+    private String name;
 //    @JsonIgnore
     private String password;
     private Integer activation; // 用户是否激活 0-未激活 1-激活

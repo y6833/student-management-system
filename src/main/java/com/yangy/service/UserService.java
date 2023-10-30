@@ -32,5 +32,6 @@ public interface UserService {
 
     boolean updateIsActivate(String roleId, Integer isActivate);
 
-    User login(User user);
+    boolean login(User user);
+
 }
