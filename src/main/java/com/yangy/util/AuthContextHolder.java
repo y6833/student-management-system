@@ -5,11 +5,11 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthContextHolder {
 
     //从请求头token获取userid
-    public static Long getUserIdToken(HttpServletRequest request) {
+    public static String getUserIdToken(HttpServletRequest request) {
         //从请求头token
         String token = request.getHeader("token");
         //调用工具类
-        Long userId = JwtHelper.getUserId(token);
+        String userId = JwtHelper.getUserId(token);
         return userId;
     }
 

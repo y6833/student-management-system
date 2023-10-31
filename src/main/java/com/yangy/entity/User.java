@@ -24,7 +24,7 @@ public class User {
     private String verifiCode;// 登录验证码
     private String  roleId;
     private Integer roleName;
-
+    private String token;
     @TableField(value = "avatar_url")  //绑定数据库中的字段
     private String avatar; //头像
 

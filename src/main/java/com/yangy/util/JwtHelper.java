@@ -10,7 +10,7 @@ public class JwtHelper {
     private static String tokenSignKey = "123456";
 
     //生成token字符串
-    public static String createToken(Long userId, Integer userType) {
+    public static String createToken(String userId, Integer userType) {
         String token = Jwts.builder()
 
                 .setSubject("YYGH-USER")
@@ -28,17 +28,17 @@ public class JwtHelper {
     }
 
     //从token字符串获取userid
-    public static Long getUserId(String token) {
-        if(StringUtils.isEmpty(token)) return null;
+    public static String getUserId(String token) {
+        if(StringUtils.isEmpty(token)) {return null;}
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token);
         Claims claims = claimsJws.getBody();
-        Integer userId = (Integer)claims.get("userId");
-        return userId.longValue();
+        String userId = (String)claims.get("userId");
+        return userId;
     }
 
     //从token字符串获取userType
     public static Integer getUserType(String token) {
-        if(StringUtils.isEmpty(token)) return null;
+        if(StringUtils.isEmpty(token)) {return null;}
         Jws<Claims> claimsJws
                 = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token);
         Claims claims = claimsJws.getBody();
@@ -47,7 +47,7 @@ public class JwtHelper {
 
     //从token字符串获取userName
     public static String getUserName(String token) {
-        if(StringUtils.isEmpty(token)) return "";
+        if(StringUtils.isEmpty(token)) {return "";}
         Jws<Claims> claimsJws
                 = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token);
         Claims claims = claimsJws.getBody();

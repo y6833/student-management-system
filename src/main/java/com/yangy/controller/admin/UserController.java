@@ -9,6 +9,7 @@ import com.yangy.service.AdminService;
 import com.yangy.service.StudentService;
 import com.yangy.service.TeacherService;
 import com.yangy.service.UserService;
+import com.yangy.util.TokenUtils;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +123,8 @@ public class UserController {
                         u.setName(teacher.getName());
                         break;
                 }
+                String token = TokenUtils.genToken(u.getUsername(), u.getPassword());
+                u.setToken(token);
                 return Result.success(u);
             } else {
                 return Result.error(Constants.CODE_304, "用户未激活");
