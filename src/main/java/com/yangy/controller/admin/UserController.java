@@ -125,6 +125,8 @@ public class UserController {
                 }
                 String token = TokenUtils.genToken(u.getUsername(), u.getPassword());
                 u.setToken(token);
+                String avatarURL = userService.getAvatarURL(user.getUsername());
+                u.setAvatar(avatarURL);
                 return Result.success(u);
             } else {
                 return Result.error(Constants.CODE_304, "用户未激活");

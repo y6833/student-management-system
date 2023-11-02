@@ -79,4 +79,9 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    @Override
+    public String getAvatarURL(String username) {
+        return userMapper.getAvatarURL(username);
+    }
+
 }

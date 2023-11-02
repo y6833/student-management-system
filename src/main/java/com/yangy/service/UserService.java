@@ -34,4 +34,5 @@ public interface UserService {
 
     boolean login(User user);
 
+    String getAvatarURL(String username);
 }

@@ -44,3 +44,8 @@ mybatis-plus:
     #添加日志支持
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:/mapper/*.xml
+
+files:
+  upload:
+    path: W:/student-sys/files/
+
