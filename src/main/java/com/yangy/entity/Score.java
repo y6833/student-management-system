@@ -16,10 +16,10 @@ public class Score {
     private Integer id;
     private String studentId;
     private String courseId;
-    private int score;
+    private Double score;
     private Date examDate;
 
-    public Score(Integer id, String studentId, String courseId, int score, Date examDate) {
+    public Score(Integer id, String studentId, String courseId, Double score, Date examDate) {
         this.id = id;
         this.studentId = studentId;
         this.courseId = courseId;
