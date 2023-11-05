@@ -3,6 +3,7 @@ package com.yangy.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -35,4 +36,11 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Insert("insert into tb_score(student_id,course_id,score,exam_date) values(#{studentId},#{courseId},#{score},#{examDate})")
     boolean addStudentScore(Score score1);
+
+    @Delete("delete from tb_score where student_id = #{studentId} AND exam_date = #{examDate}")
+    boolean deleteStuScore(String studentId, Date examData);
+
+    @Delete("delete from tb_score where id=#{id};")
+    boolean deleteByScoreId(Integer id);
+
 }

@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
 import com.yangy.mapper.ScoreMapper;
-import com.yangy.service.CourseService;
-import com.yangy.service.ScoreService;
+import com.yangy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +18,15 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private ClassService classService;
+
+    @Autowired
+    private MajorService majorService;
+
+    @Autowired
+    private StudentService studentService;
 
     @Override
     public List<Score> findByStudentId(String studentId) {
@@ -46,9 +54,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     public Map<String, Double> findScoreByStuIdAndExamDate(String id, Date examDate) {
         List<Score> studentScoreList = scoreMapper.findScoreByStuIdAndExamDate(id,examDate);
         Map<String, Double> studentScore = new HashMap<String, Double>();
+        Double sum = 0.0;
         for (Score score : studentScoreList) {
             studentScore.put(courseService.getCourseNameById(score.getCourseId()), score.getScore());
+            sum+=score.getScore();
         }
+        studentScore.put("sum",sum);//总分
+//        studentScore.put("average", sum / studentScoreList.size()); //班级平均分
+//        studentScore.put("average", sum / studentScoreList.size()); //年级平均分
         return studentScore;
     }
 
@@ -81,6 +94,27 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
             return false;
         }
     }
+
+    @Override
+    public boolean deleteStuScore(String studentId, Date examData) {
+        try {
+            return scoreMapper.deleteStuScore(studentId, examData);
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public List<Score> findScoreStuByStuIdAndExamDate(String studentId, Date examDate) {
+        return scoreMapper.findScoreByStuIdAndExamDate(studentId,examDate);
+    }
+
+    @Override
+    public boolean deleteById(Integer id) {
+        return scoreMapper.deleteByScoreId(id);
+    }
+
+
 
 
 }

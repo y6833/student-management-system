@@ -29,4 +29,11 @@ public interface ScoreService {
     List<String> getExamList();
 
     boolean addStudentScore(Score score1);
+
+    boolean deleteStuScore(String studentId, Date examData);
+
+    List<Score> findScoreStuByStuIdAndExamDate(String studentId, Date examData);
+
+    boolean deleteById(Integer id);
+
 }

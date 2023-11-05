@@ -5,9 +5,7 @@ import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
 import com.yangy.entity.Student;
 import com.yangy.entity.StudentScores;
-import com.yangy.service.CourseService;
-import com.yangy.service.ExaminationService;
-import com.yangy.service.ScoreService;
+import com.yangy.service.*;
 import com.yangy.util.Pagetool;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +33,12 @@ public class ScoreController {
 
     @Autowired
     ExaminationService examinationService;
+
+    @Autowired
+    private ClassService classService;
+
+    @Autowired
+    private MajorService majorService;
 
     //mybatis-plus分页查询
     @GetMapping("/getStuScoreList")
@@ -84,13 +88,14 @@ public class ScoreController {
                 studentScores.setExamDate(examTime.getExamDate());
                 //注入考试名称
                 studentScores.setExamName(examTime.getExamName());
+                List<Score> scoreStuByStuIdAndExamDate = scoreService.findScoreStuByStuIdAndExamDate(student.getId(), examinationService.getDateByName(examTime.getExamName()));
+                if(scoreStuByStuIdAndExamDate.size() > 0){
+                    //将此次考试信息加入列表
+                    studentScoresList.add(studentScores);
+                }
 
-
-                //将此次考试信息加入列表
-                studentScoresList.add(studentScores);
             }
         }
-
 
         return Result.success(studentScoresList);
     }
@@ -126,6 +131,21 @@ public class ScoreController {
             return Result.success();
         }else{
             return Result.error("该学生成绩已存在");
+        }
+    }
+
+    @DeleteMapping("/delStudentScore")
+    public Result delStudentScore(@RequestParam String studentId,@RequestParam String examName){
+        boolean b = false;
+        Date examDate = examinationService.getDateByName(examName);
+        List<Score> scoreStuByStuIdAndExamDate = scoreService.findScoreStuByStuIdAndExamDate(studentId, examDate);
+        for (Score score : scoreStuByStuIdAndExamDate) {
+            b = scoreService.deleteById(score.getId());
+        }
+        if(b){
+            return Result.success("该学生成绩删除");
+        }else{
+            return Result.error("删除失败");
         }
     }
 
