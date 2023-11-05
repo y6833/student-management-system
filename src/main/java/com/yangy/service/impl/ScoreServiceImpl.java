@@ -73,5 +73,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return scoreMapper.getExamList();
     }
 
+    @Override
+    public boolean addStudentScore(Score score1) {
+        try {
+            return scoreMapper.addStudentScore(score1);
+        }catch (Exception e){
+            return false;
+        }
+    }
+
 
 }

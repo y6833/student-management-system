@@ -106,6 +106,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
+    public Student getStudentById(String id) {
+        return studentMapper.selectById(id);
+    }
+
+    @Override
     public List<Student> findAll(){
         return list();
     }

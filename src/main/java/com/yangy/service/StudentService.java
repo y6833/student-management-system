@@ -22,4 +22,6 @@ public interface StudentService{
     void saveStudentList(List<Student> list);
 
     Student getStudentRoleId(String roleId);
+
+    Student getStudentById(String id);
 }

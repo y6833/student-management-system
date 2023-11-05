@@ -6,6 +6,7 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yangy.common.Constants;
 import com.yangy.common.Result;
 import com.yangy.entity.Student;
 import com.yangy.service.ClassService;
@@ -80,6 +81,18 @@ public class StudentController {
             return Result.success();
         }
         return Result.error();
+    }
+
+    @GetMapping("/{id}")
+    public Result getStuById(@PathVariable String id){
+        Student student = studentService.getStudentById(id);
+        if (student != null) {
+            student.setClassId(classService.getClassName(student.getClassId()));
+            student.setMajor(majorService.getMajorName(student.getMajor()));
+            return Result.success(student);
+
+        }
+        return Result.error(Constants.CODE_302,"学生不存在");
     }
 
 

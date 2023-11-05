@@ -27,6 +27,13 @@ public class Score {
         this.examDate = new java.sql.Date(examDate.getTime());
     }
 
+    public Score(String studentId, String courseId, Double score, Date examDate) {
+        this.studentId = studentId;
+        this.courseId = courseId;
+        this.score = score;
+        this.examDate = examDate;
+    }
+
     public void setExamDate(Date examDate) {
         this.examDate = new java.sql.Date(examDate.getTime());
     }

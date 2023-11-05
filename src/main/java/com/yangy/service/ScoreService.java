@@ -27,4 +27,6 @@ public interface ScoreService {
     boolean updataScore(String id, String courseName, Double scores,Date examDate);
 
     List<String> getExamList();
+
+    boolean addStudentScore(Score score1);
 }

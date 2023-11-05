@@ -3,6 +3,7 @@ package com.yangy.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -11,6 +12,8 @@ import java.util.List;
 
 //@Mapper
 public interface ScoreMapper extends BaseMapper<Score> {
+
+
 
     @Select("SELECT * FROM tb_score WHERE student_id = #{studentId}")
     List<Score> findByStudentId(String studentId);
@@ -29,4 +32,7 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Select("SELECT exam_name from tb_examination")
     List<String> getExamList();
+
+    @Insert("insert into tb_score(student_id,course_id,score,exam_date) values(#{studentId},#{courseId},#{score},#{examDate})")
+    boolean addStudentScore(Score score1);
 }

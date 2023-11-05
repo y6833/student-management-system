@@ -2,8 +2,11 @@ package com.yangy.controller.admin;
 
 import com.yangy.common.Result;
 import com.yangy.entity.Examination;
+import com.yangy.entity.Score;
 import com.yangy.entity.Student;
 import com.yangy.entity.StudentScores;
+import com.yangy.service.CourseService;
+import com.yangy.service.ExaminationService;
 import com.yangy.service.ScoreService;
 import com.yangy.util.Pagetool;
 import io.swagger.annotations.Api;
@@ -26,6 +29,12 @@ public class ScoreController {
 
     @Autowired
     StudentController studentController;
+
+    @Autowired
+    CourseService courseService;
+
+    @Autowired
+    ExaminationService examinationService;
 
     //mybatis-plus分页查询
     @GetMapping("/getStuScoreList")
@@ -95,6 +104,31 @@ public class ScoreController {
         return Result.success(result);
 
     }
+
+    /**
+     * 根据学号，考试名称添加学生成绩
+     * @param studentId
+     * @param examName
+     * @param score
+     * @return
+     */
+    @GetMapping("/addStudentScore")
+    public Result addStudentScore(@RequestParam String studentId,  @RequestParam String examName, @RequestParam String score){
+        //将成绩提取出来
+        String[] parts = score.split(":");
+        String key = parts[0];
+        double value = Double.parseDouble(parts[1]);
+        String coureseId = courseService.getCourseIdByName(key);
+        java.sql.Date examData = examinationService.getDateByName(examName);
+        Score score1 = new Score(studentId, coureseId, value, examData);
+        boolean b = scoreService.addStudentScore(score1);
+        if(b){
+            return Result.success();
+        }else{
+            return Result.error("该学生成绩已存在");
+        }
+    }
+
 
     /**
      * 获取考试列表
