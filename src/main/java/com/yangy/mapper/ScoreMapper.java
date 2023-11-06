@@ -43,4 +43,22 @@ public interface ScoreMapper extends BaseMapper<Score> {
     @Delete("delete from tb_score where id=#{id};")
     boolean deleteByScoreId(Integer id);
 
+
+    @Select("select * from tb_score where course_id = #{courseId} AND exam_date = #{examDate}")
+    List<Score> getStudentScore(Score score1);
+
+    @Update("UPDATE tb_score SET score_max = #{subjectMaxScore}, average_class_score = #{clazz}, average_grade_score = #{grade} where id=#{id}")
+    void updataAverageScore(Integer subjectMaxScore, double clazz, double grade,int id);
+
+    @Update("UPDATE tb_score SET score_max = #{subjectMaxScore}, average_grade_score = #{grade} where id=#{id}")
+    void updataAverageGradeScore(Integer subjectMaxScore,double grade,int id);
+
+    @Select("select * from tb_score where student_id = #{id} AND course_id = #{courseId} AND exam_date = #{examDate}")
+    Score getScoreByIdAndCourseAndExamDate(String id, String courseId, Date examDate);
+
+    @Select("select average_class_score from tb_score where student_id = #{id} AND course_id = #{object} AND exam_date = #{examDate}")
+    Double getClassAveByIdAndExamDate(String id, String object, Date examDate);
+
+    @Select("select average_grade_score from tb_score where student_id = #{id} AND course_id = #{courseId} AND exam_date = #{examDate}")
+    Double getGradeAveByIdAndExamDate(String id, String courseId, Date examDate);
 }

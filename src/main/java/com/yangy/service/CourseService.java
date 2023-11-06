@@ -9,4 +9,8 @@ public interface CourseService {
     String getCourseIdByName(String courseName);
 
     List<String> getSubjectList();
+
+    Integer getSubjectMaxScore(String subject);
+
+    Integer getSubjectNameMaxScore(String subject);
 }

@@ -52,16 +52,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
     @Override
     public Map<String, Double> findScoreByStuIdAndExamDate(String id, Date examDate) {
-        List<Score> studentScoreList = scoreMapper.findScoreByStuIdAndExamDate(id,examDate);
+        List<Score> studentScoreList = scoreMapper.findScoreByStuIdAndExamDate(id, examDate);
         Map<String, Double> studentScore = new HashMap<String, Double>();
-        Double sum = 0.0;
+//        Double sum = 0.0;
         for (Score score : studentScoreList) {
             studentScore.put(courseService.getCourseNameById(score.getCourseId()), score.getScore());
-            sum+=score.getScore();
+//            sum += score.getScore();
         }
-        studentScore.put("sum",sum);//总分
-//        studentScore.put("average", sum / studentScoreList.size()); //班级平均分
-//        studentScore.put("average", sum / studentScoreList.size()); //年级平均分
+//        studentScore.put("sum", sum);//总分
         return studentScore;
     }
 
@@ -76,9 +74,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     }
 
     @Override
-    public boolean updataScore(String id, String courseName, Double scores,Date examDate) {
+    public boolean updataScore(String id, String courseName, Double scores, Date examDate) {
         String courseId = courseService.getCourseIdByName(courseName);
-        return scoreMapper.updataScore(id,courseId,scores,examDate);
+        boolean b = scoreMapper.updataScore(id, courseId, scores, examDate);
+        Score score = scoreMapper.getScoreByIdAndCourseAndExamDate(id, courseId, examDate);
+        updataAver(score);
+        return b;
     }
 
     @Override
@@ -86,11 +87,52 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return scoreMapper.getExamList();
     }
 
+    public void updataAver(Score score1) {
+        Double classsum = 0.0;
+        Double gradeSum = 0.0;
+        int classn = 0;//计数
+        int graden = 0;
+        //首先查找这个同学是哪个班的
+        String classIdById = studentService.getClassIdById(score1.getStudentId());
+        //查看这个学生是哪个年级，哪个专业的
+        String gradeById = studentService.getGradeById(score1.getStudentId());
+        String majorById = studentService.getMajorById(score1.getStudentId());
+
+        //根据科目查看最大值
+        Integer subjectMaxScore = courseService.getSubjectMaxScore(score1.getCourseId());
+        //通过科目和日期获取成绩表中所有信息
+        List<Score> studentScore = scoreMapper.getStudentScore(score1);
+        for (Score score : studentScore) {
+            //获取班级该科目总分
+            if (studentService.getClassIdById(score.getStudentId()).equals(classIdById)) {
+                classsum += score.getScore();
+                gradeSum += score.getScore();
+                classn++;
+                graden++;
+            } else if (studentService.getGradeById(score.getStudentId()).equals(gradeById) && studentService.getMajorById(score.getStudentId()).equals(majorById)) {
+                gradeSum += score.getScore();
+                graden++;
+            }
+        }
+        for (Score score : studentScore) {
+            if (studentService.getClassIdById(score.getStudentId()).equals(classIdById)) {
+                //存入班级平均分
+                scoreMapper.updataAverageScore(subjectMaxScore, classsum / classn, gradeSum / graden, score.getId());
+            } else if (studentService.getGradeById(score.getStudentId()).equals(gradeById) && studentService.getMajorById(score.getStudentId()).equals(majorById)) {
+                //存年级平均分
+                scoreMapper.updataAverageGradeScore(subjectMaxScore, gradeSum / graden, score.getId());
+            }
+        }
+
+    }
+
     @Override
     public boolean addStudentScore(Score score1) {
         try {
-            return scoreMapper.addStudentScore(score1);
-        }catch (Exception e){
+            boolean b = scoreMapper.addStudentScore(score1);
+            updataAver(score1);
+            return b;
+        } catch (Exception e) {
             return false;
         }
     }
@@ -99,14 +141,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     public boolean deleteStuScore(String studentId, Date examData) {
         try {
             return scoreMapper.deleteStuScore(studentId, examData);
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
     @Override
     public List<Score> findScoreStuByStuIdAndExamDate(String studentId, Date examDate) {
-        return scoreMapper.findScoreByStuIdAndExamDate(studentId,examDate);
+        return scoreMapper.findScoreByStuIdAndExamDate(studentId, examDate);
     }
 
     @Override
@@ -114,7 +156,17 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return scoreMapper.deleteByScoreId(id);
     }
 
+    @Override
+    public Double getClassAveByIdAndExamDate(String id, String object, Date examDate) {
+        String courseId = courseService.getCourseIdByName(object);
+        return scoreMapper.getClassAveByIdAndExamDate(id,courseId,examDate);
+    }
 
+    @Override
+    public Double getGradeAveByIdAndExamDate(String id, String object, Date examDate) {
+        String courseId = courseService.getCourseIdByName(object);
+        return scoreMapper.getGradeAveByIdAndExamDate(id, courseId, examDate);
+    }
 
 
 }

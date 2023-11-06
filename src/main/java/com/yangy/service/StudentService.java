@@ -24,4 +24,10 @@ public interface StudentService{
     Student getStudentRoleId(String roleId);
 
     Student getStudentById(String id);
+//通过学号查班级
+    String getClassIdById(String studentId);
+//通过学号查年级
+    String getGradeById(String studentId);
+//通过学号查专业
+    String getMajorById(String studentId);
 }

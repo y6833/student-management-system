@@ -100,6 +100,8 @@ public class ScoreController {
         return Result.success(studentScoresList);
     }
 
+
+
     @GetMapping("/updataScore")
     public Result updataScore(@RequestParam String id,
                               @RequestParam String courseName,

@@ -36,4 +36,7 @@ public interface ScoreService {
 
     boolean deleteById(Integer id);
 
+    Double getClassAveByIdAndExamDate(String id, String object, Date examDate);
+
+    Double getGradeAveByIdAndExamDate(String id, String object, Date examDate);
 }

@@ -13,4 +13,13 @@ public interface StudentMapper extends BaseMapper<Student> {
 
     @Select("select * from tb_students where id = #{id}")
     Student selectByRoleId(String id);
+
+    @Select("select class_id from tb_students where id=#{studentId}")
+    String getClassIdById(String studentId);
+
+    @Select("select grade from tb_students where id=#{studentId}")
+    String getGradeById(String studentId);
+
+    @Select("select major from tb_students where id=#{studentId}")
+    String getMajorById(String studentId);
 }

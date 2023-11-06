@@ -28,4 +28,14 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<String> getSubjectList() {
         return courseMapper.getSubjectList();
     }
+
+    @Override
+    public Integer getSubjectMaxScore(String subject) {
+        return courseMapper.getsubjectMaxScore(subject);
+    }
+
+    @Override
+    public Integer getSubjectNameMaxScore(String subject) {
+        return courseMapper.getSubjectNameMaxScore(subject);
+    }
 }

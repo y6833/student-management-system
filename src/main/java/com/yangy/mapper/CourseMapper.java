@@ -17,4 +17,10 @@ public interface CourseMapper extends BaseMapper<Course> {
 
     @Select("select name from tb_courses")
     List<String> getSubjectList();
+
+    @Select("select fullmarks from  tb_courses where course_id = #{subject}")
+    Integer getsubjectMaxScore(String subject);
+
+    @Select("select fullmarks from  tb_courses where name = #{subject}")
+    Integer getSubjectNameMaxScore(String subject);
 }
