@@ -61,4 +61,7 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Select("select average_grade_score from tb_score where student_id = #{id} AND course_id = #{courseId} AND exam_date = #{examDate}")
     Double getGradeAveByIdAndExamDate(String id, String courseId, Date examDate);
+
+    @Select("SELECT COUNT(DISTINCT student_id, exam_date) FROM tb_score")
+    Integer getTotalScore();
 }

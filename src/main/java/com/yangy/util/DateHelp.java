@@ -50,4 +50,17 @@ public class DateHelp {
         return null;
     }
 
+    public static String dataTime(String imputTime){
+        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String output = null;
+        try {
+            Date date = inputFormat.parse(imputTime);
+            output = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return output;
+
+    }
 }

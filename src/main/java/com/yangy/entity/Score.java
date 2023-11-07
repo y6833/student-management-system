@@ -17,7 +17,7 @@ public class Score {
     private String studentId;
     private String courseId;
     private Double score;
-    private Double scoresMax;
+    private Double scoreMax;
     private Double averageClassScore;//班级平均分
     private Double averageGradeScore;//年级平均分
     private Date examDate;
@@ -26,7 +26,7 @@ public class Score {
         this.studentId = studentId;
         this.courseId = courseId;
         this.score = score;
-        this.scoresMax = scoresMax;
+        this.scoreMax = scoresMax;
         this.averageClassScore = averageClassScore;
         this.averageGradeScore = averageGradeScore;
         this.examDate = examDate;

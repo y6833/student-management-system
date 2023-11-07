@@ -2,6 +2,7 @@ package com.yangy.service;
 
 import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
+import com.yangy.entity.StudentScores;
 
 import java.util.Date;
 import java.util.List;
@@ -39,4 +40,8 @@ public interface ScoreService {
     Double getClassAveByIdAndExamDate(String id, String object, Date examDate);
 
     Double getGradeAveByIdAndExamDate(String id, String object, Date examDate);
+
+    Integer getScoreTotal();
+
+    List<StudentScores> findAllOver();
 }

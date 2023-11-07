@@ -3,6 +3,7 @@ package com.yangy.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
+import com.yangy.entity.StudentScores;
 import com.yangy.mapper.ScoreMapper;
 import com.yangy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,6 +167,26 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     public Double getGradeAveByIdAndExamDate(String id, String object, Date examDate) {
         String courseId = courseService.getCourseIdByName(object);
         return scoreMapper.getGradeAveByIdAndExamDate(id, courseId, examDate);
+    }
+
+    @Override
+    public Integer getScoreTotal() {
+        return scoreMapper.getTotalScore();
+    }
+
+    /**
+     * 查询所有数据
+     * @return
+     */
+    @Override
+    public List<StudentScores> findAllOver() {
+        ArrayList<StudentScores> studentScores = new ArrayList<>();
+        List<Score> list = list();
+        for (Score score : list) {
+            StudentScores studentScore = new StudentScores();
+            studentScore.setStudent(studentService.getStudentById(score.getStudentId()));
+        }
+        return studentScores;
     }
 
 
