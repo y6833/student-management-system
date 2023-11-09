@@ -25,4 +25,12 @@ public interface ExaminationService {
     void saveExaminationList(List<Examination> list);
 
     boolean deleteTable(String id);
+
+    List<Examination> getAll();
+
+    Date getDateByExamId(String id);
+
+    String getDateNameByExamId(String id);
+
+    String getIdByNameAndDate(String examName, java.util.Date examDate);
 }

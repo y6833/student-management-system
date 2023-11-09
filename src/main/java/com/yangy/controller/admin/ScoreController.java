@@ -3,10 +3,7 @@ package com.yangy.controller.admin;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.yangy.common.Result;
-import com.yangy.entity.Examination;
-import com.yangy.entity.Score;
-import com.yangy.entity.Student;
-import com.yangy.entity.StudentScores;
+import com.yangy.entity.*;
 import com.yangy.service.*;
 import com.yangy.util.Pagetool;
 import io.swagger.annotations.Api;
@@ -48,67 +45,95 @@ public class ScoreController {
     @Autowired
     private MajorService majorService;
 
-    //mybatis-plus分页查询
+    //分页查询
     @GetMapping("/getStuScoreList")
     public Result findPage(@RequestParam Integer pageNum
             , @RequestParam Integer pageSize
             , @RequestParam String searchString) {
-        String searchStr = "";
+
+        List<StudentScores> studentScoresList = scoreService.getAll();
         if (!"".equals(searchString)) {
             Map<String, String> stringStringMap = Pagetool.parseParams(searchString);
             Set<String> keys = stringStringMap.keySet();
+
             for (String key : keys) {
-//                switch (key){
-//                    case "id":
-//                    case "name":
-//                    case "gender":
-//                    case "grade":
-//                    case "class_id":
-//                    case "major":
-                searchStr += "&" + key + "=" + stringStringMap.get(key);
-//                break;
-//                }
+                String value = stringStringMap.get(key);
+                switch (key){
+                    case "id":
+                        studentScoresList = scoreService.getstudentScoresListByStudentId(value,studentScoresList); //通过学号筛选
+                        break;
+                    case "name":
+                        studentScoresList = scoreService.getstudentScoresListByStudentName(value,studentScoresList);//通过姓名筛选
+                        break;
+                    case "gender":
+                        studentScoresList = scoreService.getstudentScoresListByStudentGender(value,studentScoresList);//通过性别筛选
+                        break;
+                    case "grade":
+                        studentScoresList = scoreService.getstudentScoresListByGrade(value,studentScoresList);//通过年级筛选
+                        break;
+                    case "class_id":
+                        studentScoresList = scoreService.getstudentScoresListByClassId(value,studentScoresList);//通过班级筛选
+                        break;
+                    case "major":
+                        studentScoresList = scoreService.getstudentScoresListByMajor(value,studentScoresList);//通过专业筛选
+                        break;
+                    case "examDate":
+                        studentScoresList = scoreService.getstudentScoresListByExamDate(value,studentScoresList);//通过考试日期筛选
+                        break;
+                    case "examName":
+                        studentScoresList = scoreService.getstudentScoresListByExamName(value,studentScoresList);//通过考试名称筛选
+                        break;
+                }
+            }
+        }
+        List<StudentScores> studentScoresLists = new ArrayList<>();
+        //进行分页
+        for (int i = (pageNum -1)*pageSize; i < pageSize*pageNum; i++) {
+            if(studentScoresList.size()> i && studentScoresList.get(i) !=null){
+                studentScoresLists.add(studentScoresList.get(i));
             }
         }
 
-        Result page = studentController.findPage(pageNum, pageSize, searchStr);
+        StudentScoresDTO studentScoresDTO = new StudentScoresDTO(studentScoresLists,studentScoresList.size());
 
-        return Result.success(page);
+//        Result page = studentController.findPage(pageNum, pageSize, searchStr);
+
+        return Result.success(studentScoresDTO);
     }
 
-    @PostMapping("/getStuScorePage")
-    public Result Page(@RequestBody List<Student> studentList) {
-        ArrayList<StudentScores> studentScoresList = new ArrayList<>();
-        studentScoresList = getStudentScoesList(studentList);
-        //获取考试次数
-//        List<Examination> examTimes = scoreService.getExamTimes();
-//        for (Examination examTime : examTimes) {
-//            for (Student student : studentList) {
-//                StudentScores studentScores = new StudentScores();
-//                //注入学生信息
-//                studentScores.setStudent(student);
-//                //注入考试成绩
-//                studentScores.setScores(scoreService.findScoreByStuIdAndExamDate(student.getId(), examTime.getExamDate()));
-//                //注入班级考试排名
-//                studentScores.setClassRanking(scoreService.getClassRanking(student.getId(), student.getClassId(), examTime.getExamDate()));
-//                //注入年级排名
-//                studentScores.setGradeRanking(scoreService.getGradeRanking(student.getId(), student.getGrade(), student.getMajor(), examTime.getExamDate()));
-//                //注入考试日期
-//                studentScores.setExamDate(examTime.getExamDate());
-//                //注入考试名称
-//                studentScores.setExamName(examTime.getExamName());
-//                List<Score> scoreStuByStuIdAndExamDate = scoreService.findScoreStuByStuIdAndExamDate(student.getId(), examinationService.getDateByName(examTime.getExamName()));
-//                if(scoreStuByStuIdAndExamDate.size() > 0){
-//                    //将此次考试信息加入列表
-//                    studentScoresList.add(studentScores);
-//                }
+//    @PostMapping("/getStuScorePage")
+//    public Result Page(@RequestBody List<Student> studentList) {
+//        ArrayList<StudentScores> studentScoresList = new ArrayList<>();
+//        studentScoresList = getStudentScoesList(studentList);
+//        //获取考试次数
+////        List<Examination> examTimes = scoreService.getExamTimes();
+////        for (Examination examTime : examTimes) {
+////            for (Student student : studentList) {
+////                StudentScores studentScores = new StudentScores();
+////                //注入学生信息
+////                studentScores.setStudent(student);
+////                //注入考试成绩
+////                studentScores.setScores(scoreService.findScoreByStuIdAndExamDate(student.getId(), examTime.getExamDate()));
+////                //注入班级考试排名
+////                studentScores.setClassRanking(scoreService.getClassRanking(student.getId(), student.getClassId(), examTime.getExamDate()));
+////                //注入年级排名
+////                studentScores.setGradeRanking(scoreService.getGradeRanking(student.getId(), student.getGrade(), student.getMajor(), examTime.getExamDate()));
+////                //注入考试日期
+////                studentScores.setExamDate(examTime.getExamDate());
+////                //注入考试名称
+////                studentScores.setExamName(examTime.getExamName());
+////                List<Score> scoreStuByStuIdAndExamDate = scoreService.findScoreStuByStuIdAndExamDate(student.getId(), examinationService.getDateByName(examTime.getExamName()));
+////                if(scoreStuByStuIdAndExamDate.size() > 0){
+////                    //将此次考试信息加入列表
+////                    studentScoresList.add(studentScores);
+////                }
+////
+////            }
+////        }
 //
-//            }
-//        }
-
-        return Result.success(studentScoresList);
-    }
-
+//        return Result.success(studentScoresList);
+//    }
+//
     public ArrayList<StudentScores> getStudentScoesList(List<Student> studentList){
         ArrayList<StudentScores> studentScoresList = new ArrayList<>();
         //获取考试次数
@@ -138,13 +163,13 @@ public class ScoreController {
         }
         return studentScoresList;
     }
-
-
-    @GetMapping("/getScoreTotal")
-    public Result getScoreTotal(){
-        Integer scoreTotal = scoreService.getScoreTotal();
-        return Result.success(scoreTotal);
-    }
+//
+//
+//    @GetMapping("/getScoreTotal")
+//    public Result getScoreTotal(){
+//        Integer scoreTotal = scoreService.getScoreTotal();
+//        return Result.success(scoreTotal);
+//    }
 
 
     /**、
@@ -159,8 +184,12 @@ public class ScoreController {
     public Result updataScore(@RequestParam String id,
                               @RequestParam String courseName,
                               @RequestParam Double scores,
-                              @RequestParam Date examDate) {
-        boolean result = scoreService.updataScore(id, courseName, scores, examDate);
+                              @RequestParam Date examDate,
+                              @RequestParam String examName) {
+        String examId = examinationService.getIdByNameAndDate(examName, examDate);//考试id
+        String tableName = "ts_score_"+examId;
+        String coureseId = courseService.getCourseIdByName(courseName);
+        boolean result = scoreService.updataScore1(tableName,id, coureseId, scores);
         return Result.success(result);
 
     }

@@ -10,12 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.*;
+import java.util.Date;
 import java.util.*;
 
 @Service
 public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements ScoreService {
     @Resource
     private ScoreMapper scoreMapper;
+
+    @Autowired
+    private ScoreService scoreService;
 
     @Autowired
     private CourseService courseService;
@@ -25,6 +30,9 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
     @Autowired
     private MajorService majorService;
+
+    @Autowired
+    private ExaminationService examinationService;
 
     @Autowired
     private StudentService studentService;
@@ -188,6 +196,255 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         }
         return studentScores;
     }
+
+    @Override
+    public List<StudentScores> getAll() {
+        List<StudentScores> studentScoresList = new ArrayList<>();
+        List<Examination> examinationList = examinationService.getAll();
+        for (Examination examination : examinationList) {
+            String tableName = "ts_score_"+examination.getId(); //获得成绩表名称
+            List<String> tableFieldList = getTableFieldList(tableName); //通过成绩表名称获取表中字段
+            //通过表名获取考试成绩id列表
+            ArrayList<String> examinationScoreIdList = scoreMapper.getExaminationScoreId(tableName);
+            //通过获取的成绩id查询值
+            for (String scoreId : examinationScoreIdList) {
+                StudentScores studentScores = new StudentScores();
+                //先通过表名和考试成绩id获得学生id，然后通过学生id查到学生信息，然后存入studentscore对象中
+                studentScores.setStudent(studentService.getStudentByIdGM(scoreMapper.getStudentByScoreId(tableName,scoreId)));
+                studentScores.setClassRanking(scoreMapper.getClassRankingByScoreId(tableName,scoreId));//获取班级排名
+                studentScores.setGradeRanking(scoreMapper.getGradeRankingByScoreId(tableName,scoreId));//获取年级排名
+                studentScores.setExamDate(examinationService.getDateByExamId(examination.getId()));
+                studentScores.setExamName(examinationService.getDateNameByExamId(examination.getId()));
+                studentScores.setScores(getScoreMap(tableName,scoreId,tableFieldList));//需要表名称，考试成绩id， 表的字段名称
+                studentScoresList.add(studentScores);//将这条成绩添加到里面
+            }
+
+        }
+        return studentScoresList;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByStudentId(String studentId, List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScores = new ArrayList<>();
+        for (StudentScores studentScore : studentScoresList) {
+            if(studentId.equals(studentScore.getStudent().getId())){
+                studentScores.add(studentScore);
+            }
+        }
+        return studentScores;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByStudentName(String studentName, List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScores = new ArrayList<>();
+        for (StudentScores studentScore : studentScoresList) {
+            if(studentName.equals(studentScore.getStudent().getName())){
+                studentScores.add(studentScore);
+            }
+        }
+        return studentScores;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByStudentGender(String gender, List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScores = new ArrayList<>();
+        for (StudentScores studentScore : studentScoresList) {
+            if(gender.equals(studentScore.getStudent().getGender())){
+                studentScores.add(studentScore);
+            }
+        }
+        return studentScores;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByGrade(String grade, List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScores = new ArrayList<>();
+        for (StudentScores studentScore : studentScoresList) {
+            if(grade.equals(studentScore.getStudent().getGrade())){
+                studentScores.add(studentScore);
+            }
+        }
+        return studentScores;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByClassId(String classId, List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScores = new ArrayList<>();
+        for (StudentScores studentScore : studentScoresList) {
+            if(classId.equals(studentScore.getStudent().getClassId())){
+                studentScores.add(studentScore);
+            }
+        }
+        return studentScores;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByMajor(String major, List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScores = new ArrayList<>();
+        for (StudentScores studentScore : studentScoresList) {
+            if(major.equals(studentScore.getStudent().getMajor())){
+                studentScores.add(studentScore);
+            }
+        }
+        return studentScores;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByExamDate(String examDate, List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScores = new ArrayList<>();
+        for (StudentScores studentScore : studentScoresList) {
+            if(examDate.equals(studentScore.getExamDate())){
+                studentScores.add(studentScore);
+            }
+        }
+        return studentScores;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByExamName(String examName, List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScores = new ArrayList<>();
+        for (StudentScores studentScore : studentScoresList) {
+            if(examName.equals(studentScore.getExamName())){
+                studentScores.add(studentScore);
+            }
+        }
+        return studentScores;
+    }
+
+    /**
+     * 通过表名，科目id
+     * @param tableName
+     * @param courseId
+     * @return
+     */
+    @Override
+    public Double getGradeAveByScoreId(String tableName,String courseId) {
+        List<Double> scoreList = scoreMapper.getObjectScoreList(tableName,courseId);
+        double sum = 0.0;
+        for (Double score : scoreList) {
+            sum += score;
+        }
+        return sum/scoreList.size();
+    }
+
+    /**
+     * 通过表名，班级id，科目id
+     * @param tableName
+     * @param classId
+     * @param courseId
+     * @return
+     */
+    @Override
+    public Double getClassAveByScoreId(String tableName, String classId, String courseId) {
+        List<Double> scoreList = scoreMapper.getObjectByClassScoreList(tableName,classId,courseId);
+        double sum = 0.0;
+        for (Double score : scoreList) {
+            sum += score;
+        }
+        return sum/scoreList.size();
+    }
+
+    @Override
+    public boolean updataScore1(String tableName, String id, String courseName, Double scores) {
+        boolean b = scoreMapper.updataScore1(tableName, id, courseName, scores);
+        if(b){
+            List<String> tableFieldList = getTableFieldList(tableName);
+            List<String> scorelist = new ArrayList<>();
+            for (String s : tableFieldList) {
+                switch (s){
+                    case "score_id":
+                    case "exam_id":
+                    case "student_id":
+                    case "student_name":
+                    case "student_class":
+                    case "sum":
+                    case "classRanking":
+                    case "gradeRanking":break;
+                    default:scorelist.add(s);
+                }
+            }
+            Double sum = 0.0;
+            for (String score : scorelist) {
+                sum+=scoreMapper.getScoreByname(tableName,id,score);
+            }
+            setSum(tableName,id,sum);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void setSum(String tableName, String id, Double sum) {
+        scoreMapper.setSum(tableName, id, sum);
+    }
+
+
+    public Map<String, Double> getScoreMap(String tableName,String scoreId,List<String> tableFieldList){
+        Map<String, Double> stringDoubleMap = new HashMap<>();//用来存成绩
+        for (String s : tableFieldList) {
+            switch (s){
+                case "score_id":
+                case "exam_id":
+                case "student_id":
+                case "student_name":
+                case "student_class":
+                case "sum":
+                case "classRanking":
+                case "gradeRanking":break;
+                default:stringDoubleMap.put(courseService.getCourseNameById(s),scoreMapper.getScoreByCourse(s,tableName,scoreId));
+            }
+        }
+        return stringDoubleMap;
+    }
+
+
+    //获取表的字段
+    public List<String> getTableFieldList(String tableName){
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ResultSetMetaData rsmd = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/student_management_system?useSSL=false&serverTimezone=Asia/Shanghai";//填入所需的数据库名
+            String user = "root";//填入所需的用户名
+            String password = "root";//填入所需的密码
+            conn = DriverManager.getConnection(url, user, password);
+            String sql = "SELECT * FROM " + tableName;
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            rsmd = rs.getMetaData();
+            int columnCount = rsmd.getColumnCount();
+            List<String> columnNameList = new ArrayList<>();
+            for (int i = 1; i <= columnCount; i++) {
+                columnNameList.add(rsmd.getColumnName(i));
+            }
+            return columnNameList;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+
+
 
 
 }

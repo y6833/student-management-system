@@ -2,7 +2,9 @@ package com.yangy.controller.admin;
 
 import com.yangy.common.Result;
 import com.yangy.service.CourseService;
+import com.yangy.service.ExaminationService;
 import com.yangy.service.ScoreService;
+import com.yangy.service.StudentService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,11 @@ public class CourseController {
     @Autowired
     private ScoreService scoreService;
 
+    @Autowired
+    private ExaminationService examinationService;
+
+    @Autowired
+    private StudentService studentService;
     /**
      * 获取科目列表
      *
@@ -69,15 +76,20 @@ public class CourseController {
      * @return
      */
     @GetMapping("/getClassAve")
-    public Result getClassAve(@RequestParam Date examDate
+    public Result getClassAve(@RequestParam String examName,
+            @RequestParam Date examDate
             , @RequestParam String id
             , @RequestParam String objects) {
         objects = objects.replaceAll("\"", ""); // 去掉双引号
         String[] arr = objects.split(","); // 使用逗号分割字符串
         List<String> objectlist = Arrays.asList(arr); // 将数组转换为集合
         HashMap<String, Double> classAve = new HashMap<>();
+        //先通过考试时间和考试日期获得成绩表
+        String tableName = "ts_score_"+ examinationService.getIdByNameAndDate(examName, examDate);
+        //通过学生id获得班级
+        String classId = studentService.getClassIdById(id);
         for (String object : objectlist) {
-            Double value = scoreService.getClassAveByIdAndExamDate(id, object, examDate);
+            Double value = scoreService.getClassAveByScoreId(tableName,classId,courseService.getCourseIdByName(object));
             classAve.put(object, value);
         }
         return Result.success(classAve);
@@ -91,15 +103,18 @@ public class CourseController {
      * @return
      */
     @GetMapping("/getGradeAve")
-    public Result getGradeAve(@RequestParam Date examDate
+    public Result getGradeAve(@RequestParam String examName,
+            @RequestParam Date examDate
             , @RequestParam String id
             , @RequestParam String objects) {
         objects = objects.replaceAll("\"", ""); // 去掉双引号
         String[] arr = objects.split(","); // 使用逗号分割字符串
         List<String> objectlist = Arrays.asList(arr); // 将数组转换为集合
         HashMap<String, Double> gradeAve = new HashMap<>();
+        //先通过考试时间和考试日期获得成绩表
+        String tableName = "ts_score_"+ examinationService.getIdByNameAndDate(examName, examDate);
         for (String object : objectlist) {
-            Double value = scoreService.getGradeAveByIdAndExamDate(id, object, examDate);
+            Double value = scoreService.getGradeAveByScoreId(tableName,courseService.getCourseIdByName(object));
             gradeAve.put(object, value);
         }
         return Result.success(gradeAve);

@@ -3,11 +3,9 @@ package com.yangy.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -64,4 +62,34 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Select("SELECT COUNT(DISTINCT student_id, exam_date) FROM tb_score")
     Integer getTotalScore();
+
+    @Select("select score_id from ${tableName}")
+    ArrayList<String> getExaminationScoreId(String tableName);
+
+    @Select("select student_id from ${tableName} where score_id=#{scoreId}")
+    String getStudentByScoreId(String tableName, String scoreId);
+
+    @Select("select classRanking from ${tableName} where score_id=#{scoreId}")
+    Integer getClassRankingByScoreId(String tableName, String scoreId);
+
+    @Select("select gradeRanking from ${tableName} where score_id=#{scoreId}")
+    Integer getGradeRankingByScoreId(String tableName, String scoreId);
+
+    @Select("select ${s} from ${tableName} where score_id=#{scoreId}")
+    Double getScoreByCourse(String s, String tableName, String scoreId);
+
+    @Select("select ${courseId} from ${tableName}")
+    List<Double> getObjectScoreList(String tableName, String courseId);
+
+    @Select("select ${courseId} from ${tableName} where student_class=#{classId}")
+    List<Double> getObjectByClassScoreList(String tableName,String classId, String courseId);
+
+    @Update("update ${tableName} set ${courseName}=#{scores} where student_id=#{id}")
+    boolean updataScore1(String tableName, String id, String courseName, Double scores);
+
+    @Select("SELECT ${score} from ${tableName} where student_id=#{id}")
+    Double getScoreByname(String tableName, String id, String score);
+
+    @Update("update ${tableName} set sum=#{sum} where student_id=#{id}")
+    void setSum(String tableName, String id, Double sum);
 }

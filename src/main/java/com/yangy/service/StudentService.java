@@ -30,4 +30,7 @@ public interface StudentService{
     String getGradeById(String studentId);
 //通过学号查专业
     String getMajorById(String studentId);
+
+    Student getStudentByIdGM(String studentByScoreId);
+
 }

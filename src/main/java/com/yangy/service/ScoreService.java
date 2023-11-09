@@ -44,4 +44,30 @@ public interface ScoreService {
     Integer getScoreTotal();
 
     List<StudentScores> findAllOver();
+
+    List<StudentScores> getAll();
+    //通过学号筛选
+    List<StudentScores> getstudentScoresListByStudentId(String studentId, List<StudentScores> studentScoresList);
+    //通过姓名筛选
+    List<StudentScores> getstudentScoresListByStudentName(String studentName, List<StudentScores> studentScoresList);
+    //通过性别筛选
+    List<StudentScores> getstudentScoresListByStudentGender(String gender, List<StudentScores> studentScoresList);
+    //通过年级筛选
+    List<StudentScores> getstudentScoresListByGrade(String grade, List<StudentScores> studentScoresList);
+    //通过班级筛选
+    List<StudentScores> getstudentScoresListByClassId(String classId, List<StudentScores> studentScoresList);
+    //通过专业筛选
+    List<StudentScores> getstudentScoresListByMajor(String major, List<StudentScores> studentScoresList);
+    //通过考试日期筛选
+    List<StudentScores> getstudentScoresListByExamDate(String examDate, List<StudentScores> studentScoresList);
+    //通过考试名称筛选
+    List<StudentScores> getstudentScoresListByExamName(String examName, List<StudentScores> studentScoresList);
+
+    Double getGradeAveByScoreId(String tableName, String courseId);
+
+    Double getClassAveByScoreId(String tableName, String classId, String courseId);
+
+    boolean updataScore1(String tableName, String id, String courseName, Double scores);
+
+    void setSum(String tableName, String id, Double sum);
 }

@@ -62,16 +62,20 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
         String courseStr = "";
         for (String cours : courses) {
             String courseId = courseService.getCourseIdByName(cours);
-            courseStr+= courseId + " int DEFAULT '0',";
+            courseStr+= courseId + " double DEFAULT '0',";
         }
         String sql = "CREATE TABLE " + tablename +"("
-                +"id int NOT NULL,"
+//                +"id int NOT NULL AUTO_INCREMENT,"
+                +"score_id varchar(255) NOT NULL,"
                 +"exam_id varchar(255) NOT NULL,"
+                +"student_id varchar(255) NOT NULL,"
                 +"student_name varchar(255) NOT NULL,"
                 +"student_class varchar(255) NOT NULL,"
                 +courseStr
                 +"sum double DEFAULT '0',"
-                +"PRIMARY KEY (id)"
+                +"classRanking int DEFAULT '0',"  //班级排名
+                +"gradeRanking int DEFAULT '0'," //年级排名
+                +"PRIMARY KEY (score_id)"
                 +")";
         try {
             jdbcTemplate.execute(sql);
@@ -100,6 +104,26 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
         }catch (Exception e){
             return false;
         }
+    }
+
+    @Override
+    public List<Examination> getAll() {
+        return examinationMapper.getAll();
+    }
+
+    @Override
+    public Date getDateByExamId(String id) {
+        return examinationMapper.getDateByExamId(id);
+    }
+
+    @Override
+    public String getDateNameByExamId(String id) {
+        return examinationMapper.getDateNameByExamId(id);
+    }
+
+    @Override
+    public String getIdByNameAndDate(String examName, java.util.Date examDate) {
+        return examinationMapper.getIdByNameAndDate(examName, examDate);
     }
 
 

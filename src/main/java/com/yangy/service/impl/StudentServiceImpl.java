@@ -126,6 +126,16 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
+    public Student getStudentByIdGM(String studentByScoreId) {
+        Student student = studentMapper.selectById(studentByScoreId);
+        if (student != null) {
+            student.setClassId(classService.getClassName(student.getClassId()));
+            student.setMajor(majorService.getMajorName(student.getMajor()));
+        }
+        return student;
+    }
+
+    @Override
     public List<Student> findAll(){
         return list();
     }
