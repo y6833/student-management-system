@@ -198,24 +198,42 @@ public class ScoreController {
      * 根据学号，考试名称添加学生成绩
      * @param studentId
      * @param examName
-     * @param score
+     * @param scoreList
      * @return
      */
     @GetMapping("/addStudentScore")
-    public Result addStudentScore(@RequestParam String studentId,  @RequestParam String examName, @RequestParam String score){
-        //将成绩提取出来
-        String[] parts = score.split(":");
-        String key = parts[0];
-        double value = Double.parseDouble(parts[1]);
-        String coureseId = courseService.getCourseIdByName(key);
-        java.sql.Date examData = examinationService.getDateByName(examName);
-        Score score1 = new Score(studentId, coureseId, value, examData);
-        boolean b = scoreService.addStudentScore(score1);
-        if(b){
+    public Result addStudentScore(@RequestParam String studentId,  @RequestParam String examName, @RequestParam String scoreList){
+        //通过考试名称获取考试成绩表名
+        String examId = examinationService.getIdByExamName(examName); //考试id
+        String scoreId = examId + "_" +studentId;//成绩id
+        String studentName = studentService.getStudentById(studentId).getName();//学生姓名
+        String studentClass = studentService.getStudentById(studentId).getClassId();//获取班级id
+        String tableName = "ts_score_" + examId;
+        // 创建学生创建信息
+        boolean b2 = scoreService.createScore(scoreId, examId, studentId, studentName, studentClass, tableName);
+
+        if(b2){
+            Boolean b = true;
+            scoreList = scoreList.replaceAll("\"", ""); // 去掉双引号
+            String[] arr = scoreList.split(","); // 使用逗号分割字符串
+            List<String> scoreLists = Arrays.asList(arr); // 将数组转换为集合
+            for (String score : scoreLists) {
+                //将成绩提取出来
+                String[] parts = score.split(":");
+                String key = courseService.getCourseIdByName(parts[0]);
+                double value = Double.parseDouble(parts[1]);
+                //将这个科目的成绩添加到数据库
+                boolean b3 = scoreService.addScore(tableName,scoreId, key, value);
+                b = b & b3;
+                if(b == false){
+                    return Result.error(key+"成绩添加失败");
+                }
+            }
             return Result.success();
         }else{
-            return Result.error("该学生成绩已存在");
+            return Result.error("该学生创建信息已存在");
         }
+
     }
 
     /**
@@ -227,11 +245,16 @@ public class ScoreController {
     @DeleteMapping("/delStudentScore")
     public Result delStudentScore(@RequestParam String studentId,@RequestParam String examName){
         boolean b = false;
-        Date examDate = examinationService.getDateByName(examName);
-        List<Score> scoreStuByStuIdAndExamDate = scoreService.findScoreStuByStuIdAndExamDate(studentId, examDate);
-        for (Score score : scoreStuByStuIdAndExamDate) {
-            b = scoreService.deleteById(score.getId());
-        }
+        //通过考试名称获取表名
+        String examId = examinationService.getIdByExamName(examName);
+        String tableName = "ts_score_" + examId;
+        String scoreId = examId + "_"+studentId;
+        b = scoreService.deleteByScoreId(tableName, scoreId);
+//        Date examDate = examinationService.getDateByName(examName);
+//        List<Score> scoreStuByStuIdAndExamDate = scoreService.findScoreStuByStuIdAndExamDate(studentId, examDate);
+//        for (Score score : scoreStuByStuIdAndExamDate) {
+//            b = scoreService.deleteById(score.getId());
+//        }
         if(b){
             return Result.success("该学生成绩删除");
         }else{

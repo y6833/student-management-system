@@ -33,4 +33,6 @@ public interface ExaminationService {
     String getDateNameByExamId(String id);
 
     String getIdByNameAndDate(String examName, java.util.Date examDate);
+
+    String getIdByExamName(String examName);
 }

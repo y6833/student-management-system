@@ -46,6 +46,9 @@ public interface ScoreService {
     List<StudentScores> findAllOver();
 
     List<StudentScores> getAll();
+    //通过成绩表名获取科目名称
+    List<String > getSubjectListByTableName(String tableName);
+
     //通过学号筛选
     List<StudentScores> getstudentScoresListByStudentId(String studentId, List<StudentScores> studentScoresList);
     //通过姓名筛选
@@ -70,4 +73,11 @@ public interface ScoreService {
     boolean updataScore1(String tableName, String id, String courseName, Double scores);
 
     void setSum(String tableName, String id, Double sum);
+    //创建一条学生成绩信息
+    boolean createScore(String scoreId, String examId, String studentId, String studentName, String studentClass, String tableName);
+
+    //添加成绩记录
+    boolean addScore(String tableName, String scoreId, String key, double value);
+
+    boolean deleteByScoreId(String tableName, String scoreId);
 }

@@ -206,11 +206,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
             List<String> tableFieldList = getTableFieldList(tableName); //通过成绩表名称获取表中字段
             //通过表名获取考试成绩id列表
             ArrayList<String> examinationScoreIdList = scoreMapper.getExaminationScoreId(tableName);
+            //通过表名刷新排名
+            RefreshResults(tableName);
             //通过获取的成绩id查询值
             for (String scoreId : examinationScoreIdList) {
                 StudentScores studentScores = new StudentScores();
                 //先通过表名和考试成绩id获得学生id，然后通过学生id查到学生信息，然后存入studentscore对象中
                 studentScores.setStudent(studentService.getStudentByIdGM(scoreMapper.getStudentByScoreId(tableName,scoreId)));
+                studentScores.setScoreId(scoreId);//获取成绩id
                 studentScores.setClassRanking(scoreMapper.getClassRankingByScoreId(tableName,scoreId));//获取班级排名
                 studentScores.setGradeRanking(scoreMapper.getGradeRankingByScoreId(tableName,scoreId));//获取年级排名
                 studentScores.setExamDate(examinationService.getDateByExamId(examination.getId()));
@@ -347,6 +350,34 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     @Override
     public boolean updataScore1(String tableName, String id, String courseName, Double scores) {
         boolean b = scoreMapper.updataScore1(tableName, id, courseName, scores);
+        boolean b1 = setSumFunc(tableName, id, b);
+//        if(b){
+//            List<String> tableFieldList = getTableFieldList(tableName);
+//            List<String> scorelist = new ArrayList<>();
+//            for (String s : tableFieldList) {
+//                switch (s){
+//                    case "score_id":
+//                    case "exam_id":
+//                    case "student_id":
+//                    case "student_name":
+//                    case "student_class":
+//                    case "sum":
+//                    case "classRanking":
+//                    case "gradeRanking":break;
+//                    default:scorelist.add(s);
+//                }
+//            }
+//            Double sum = 0.0;
+//            for (String score : scorelist) {
+//                sum+=scoreMapper.getScoreByname(tableName,id,score);
+//            }
+//            setSum(tableName,id,sum);
+//            return true;
+//        }
+        return b1;
+    }
+    //通过表名，学生id,来进行sum值的设置
+    public boolean setSumFunc(String tableName,String id,Boolean b){
         if(b){
             List<String> tableFieldList = getTableFieldList(tableName);
             List<String> scorelist = new ArrayList<>();
@@ -373,9 +404,60 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return false;
     }
 
+
     @Override
     public void setSum(String tableName, String id, Double sum) {
-        scoreMapper.setSum(tableName, id, sum);
+        scoreMapper.setSum(tableName, id, sum);//将总分存入数据库
+        //获取这张表中所有学生的id，用来更新所有学生的排名
+        RefreshResults(tableName);
+
+    }
+
+    @Override
+    public boolean createScore(String scoreId, String examId, String studentId, String studentName, String studentClass, String tableName) {
+        try {
+            boolean score = scoreMapper.createScore(scoreId, examId, studentId, studentName, studentClass, tableName);
+            return score;
+
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public boolean addScore(String tableName, String scoreId, String key, double value) {
+        boolean b = scoreMapper.addScore(tableName, scoreId, key, value);
+        if(b){
+            String studentId = scoreMapper.getStudentByScoreId(tableName,scoreId);
+            boolean b1 = setSumFunc(tableName, studentId, true);
+            return b1;
+        }
+        return b;
+    }
+
+    @Override
+    public boolean deleteByScoreId(String tableName, String scoreId) {
+        boolean b = scoreMapper.deleteByScoreIdTS(tableName, scoreId);
+        if(b){
+            RefreshResults(tableName);//刷新排名
+        }
+        return b;
+    }
+
+    //获取这张表中所有学生的id，用来更新所有学生的排名
+    public void RefreshResults(String tableName){
+        List<String> studentIdList = scoreMapper.getStudentIdListByTableName(tableName);
+        for (String sid : studentIdList) {
+            String classId = studentService.getClassIdById(sid);
+            //更新排名，根据表名，学号获取该学生的年级排名
+            Integer gR = scoreMapper.getGradeRankingByStudentId(tableName,sid);
+            //存进去
+            scoreMapper.setGradeRankingByStudentId(tableName,sid,gR);
+            //获取班级排名
+            Integer cR = scoreMapper.getClassRankingByStudentId(tableName,sid,classId);
+            //存入班级排名
+            scoreMapper.setClassRankingByStudentId(tableName,sid,cR);
+        }
     }
 
 
@@ -396,6 +478,28 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         }
         return stringDoubleMap;
     }
+
+    @Override
+    public List<String> getSubjectListByTableName(String tableName){
+        List<String> tableFieldList = getTableFieldList(tableName);
+        List<String > subjectList = new ArrayList<>();
+        for (String s : tableFieldList) {
+            switch (s){
+                case "score_id":
+                case "exam_id":
+                case "student_id":
+                case "student_name":
+                case "student_class":
+                case "sum":
+                case "classRanking":
+                case "gradeRanking":break;
+                default:subjectList.add(s);
+            }
+        }
+        return subjectList;
+
+    }
+
 
 
     //获取表的字段

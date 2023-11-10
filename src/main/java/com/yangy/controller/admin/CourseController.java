@@ -43,6 +43,26 @@ public class CourseController {
     }
 
     /**
+     * 通过考试名称获取考试科目
+     * @param examName
+     * @return
+     */
+    @GetMapping("/getSubjectListByExamName")
+    public Result getSubjectListByExamName(@RequestParam String examName){
+        //通过考试名称获得考试成绩表名称
+        String tableName = "ts_score_" + examinationService.getIdByExamName(examName);
+        //通过考试成绩表获取考试科目
+        List<String> subjectList = scoreService.getSubjectListByTableName(tableName);
+        List<String> subjectListName = new ArrayList<>();
+        //通过科目id获取科目名称
+        for (String s : subjectList) {
+            subjectListName.add(courseService.getCourseNameById(s));
+        }
+
+        return Result.success(subjectListName);
+    }
+
+    /**
      * 获取该科目最大值
      */
     @PostMapping("/getSubjectMax")
