@@ -29,9 +29,6 @@ public interface ScoreMapper extends BaseMapper<Score> {
     @Update("update tb_score set score = #{scores} where student_id = #{id} AND course_id = #{courseid} AND exam_date = #{examDate}")
     boolean updataScore(String id, String courseid, Double scores,Date examDate);
 
-    @Select("SELECT exam_name from ts_examination")
-    List<String> getExamList();
-
     @Insert("insert into tb_score(student_id,course_id,score,exam_date) values(#{studentId},#{courseId},#{score},#{examDate})")
     boolean addStudentScore(Score score1);
 
@@ -119,4 +116,8 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Delete("delete from ${tableName} where score_id=#{scoreId}")
     boolean deleteByScoreIdTS(String tableName, String scoreId);
+
+    @Select("SELECT exam_name from ts_examination")
+    List<String> getExamList();
+
 }

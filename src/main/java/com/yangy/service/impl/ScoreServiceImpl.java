@@ -197,6 +197,10 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    /**
+     * 获取成绩信息
+     * @return
+     */
     @Override
     public List<StudentScores> getAll() {
         List<StudentScores> studentScoresList = new ArrayList<>();
@@ -225,7 +229,38 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         }
         return studentScoresList;
     }
+    //通过表名称获得这张成绩表的所有成绩信息
+    @Override
+    public List<StudentScores> getScoreMessageByTableName(Examination examination){
+        List<StudentScores> studentScoresList = new ArrayList<>();
+        String tableName = "ts_score_"+examination.getId(); //获得成绩表名称
+        List<String> tableFieldList = getTableFieldList(tableName); //通过成绩表名称获取表中字段
+        //通过表名获取考试成绩id列表
+        ArrayList<String> examinationScoreIdList = scoreMapper.getExaminationScoreId(tableName);
+        //通过表名刷新排名
+        RefreshResults(tableName);
+        //通过获取的成绩id查询值
+        for (String scoreId : examinationScoreIdList) {
+            StudentScores studentScores = new StudentScores();
+            //先通过表名和考试成绩id获得学生id，然后通过学生id查到学生信息，然后存入studentscore对象中
+            studentScores.setStudent(studentService.getStudentByIdGM(scoreMapper.getStudentByScoreId(tableName,scoreId)));
+            studentScores.setScoreId(scoreId);//获取成绩id
+            studentScores.setClassRanking(scoreMapper.getClassRankingByScoreId(tableName,scoreId));//获取班级排名
+            studentScores.setGradeRanking(scoreMapper.getGradeRankingByScoreId(tableName,scoreId));//获取年级排名
+            studentScores.setExamDate(examinationService.getDateByExamId(examination.getId()));
+            studentScores.setExamName(examinationService.getDateNameByExamId(examination.getId()));
+            studentScores.setScores(getScoreMap(tableName,scoreId,tableFieldList));//需要表名称，考试成绩id， 表的字段名称
+            studentScoresList.add(studentScores);//将这条成绩添加到里面
+        }
+        return studentScoresList;
+    }
 
+    /**
+     * 通过学号获取所有的考试成绩
+     * @param studentId
+     * @param studentScoresList
+     * @return
+     */
     @Override
     public List<StudentScores> getstudentScoresListByStudentId(String studentId, List<StudentScores> studentScoresList) {
         List<StudentScores> studentScores = new ArrayList<>();
@@ -237,6 +272,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    /**
+     * 通过学生姓名获取所有的考试成绩
+     * @param studentName
+     * @param studentScoresList
+     * @return
+     */
     @Override
     public List<StudentScores> getstudentScoresListByStudentName(String studentName, List<StudentScores> studentScoresList) {
         List<StudentScores> studentScores = new ArrayList<>();
@@ -248,6 +289,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    /**
+     * 通过性别获取所有的考试成绩
+     * @param gender
+     * @param studentScoresList
+     * @return
+     */
     @Override
     public List<StudentScores> getstudentScoresListByStudentGender(String gender, List<StudentScores> studentScoresList) {
         List<StudentScores> studentScores = new ArrayList<>();
@@ -259,6 +306,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    /**
+     * 通过年级获取所有的考试信息
+     * @param grade
+     * @param studentScoresList
+     * @return
+     */
     @Override
     public List<StudentScores> getstudentScoresListByGrade(String grade, List<StudentScores> studentScoresList) {
         List<StudentScores> studentScores = new ArrayList<>();
@@ -270,6 +323,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    /**
+     * 通过班级id获取考试信息
+     * @param classId
+     * @param studentScoresList
+     * @return
+     */
     @Override
     public List<StudentScores> getstudentScoresListByClassId(String classId, List<StudentScores> studentScoresList) {
         List<StudentScores> studentScores = new ArrayList<>();
@@ -281,6 +340,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    /**
+     * 通过专业获取所有的考信息
+     * @param major
+     * @param studentScoresList
+     * @return
+     */
     @Override
     public List<StudentScores> getstudentScoresListByMajor(String major, List<StudentScores> studentScoresList) {
         List<StudentScores> studentScores = new ArrayList<>();
@@ -292,6 +357,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    /**
+     * 通过考试日期获取所有的考试信息
+     * @param examDate
+     * @param studentScoresList
+     * @return
+     */
     @Override
     public List<StudentScores> getstudentScoresListByExamDate(String examDate, List<StudentScores> studentScoresList) {
         List<StudentScores> studentScores = new ArrayList<>();
@@ -303,6 +374,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    /**
+     * 通过考试名称筛选考试信息
+     * @param examName
+     * @param studentScoresList
+     * @return
+     */
     @Override
     public List<StudentScores> getstudentScoresListByExamName(String examName, List<StudentScores> studentScoresList) {
         List<StudentScores> studentScores = new ArrayList<>();
@@ -347,6 +424,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return sum/scoreList.size();
     }
 
+    /**
+     * 更新成绩
+     * @param tableName
+     * @param id
+     * @param courseName
+     * @param scores
+     * @return
+     */
     @Override
     public boolean updataScore1(String tableName, String id, String courseName, Double scores) {
         boolean b = scoreMapper.updataScore1(tableName, id, courseName, scores);
@@ -376,7 +461,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 //        }
         return b1;
     }
-    //通过表名，学生id,来进行sum值的设置
+
+    /**
+     * 通过表名，学生id,来进行sum值的设置
+     * @param tableName
+     * @param id
+     * @param b
+     * @return
+     */
     public boolean setSumFunc(String tableName,String id,Boolean b){
         if(b){
             List<String> tableFieldList = getTableFieldList(tableName);
@@ -404,7 +496,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return false;
     }
 
-
+    /**
+     * 存入总成绩
+     * @param tableName
+     * @param id
+     * @param sum
+     */
     @Override
     public void setSum(String tableName, String id, Double sum) {
         scoreMapper.setSum(tableName, id, sum);//将总分存入数据库
@@ -413,6 +510,16 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
     }
 
+    /**
+     * 创建成绩信息
+     * @param scoreId
+     * @param examId
+     * @param studentId
+     * @param studentName
+     * @param studentClass
+     * @param tableName
+     * @return
+     */
     @Override
     public boolean createScore(String scoreId, String examId, String studentId, String studentName, String studentClass, String tableName) {
         try {
@@ -424,6 +531,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         }
     }
 
+    /**
+     * 添加成绩
+     * @param tableName
+     * @param scoreId
+     * @param key
+     * @param value
+     * @return
+     */
     @Override
     public boolean addScore(String tableName, String scoreId, String key, double value) {
         boolean b = scoreMapper.addScore(tableName, scoreId, key, value);
@@ -435,6 +550,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return b;
     }
 
+    /**
+     * 删除某成绩表的成绩信息
+     * @param tableName
+     * @param scoreId
+     * @return
+     */
     @Override
     public boolean deleteByScoreId(String tableName, String scoreId) {
         boolean b = scoreMapper.deleteByScoreIdTS(tableName, scoreId);
@@ -444,7 +565,10 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return b;
     }
 
-    //获取这张表中所有学生的id，用来更新所有学生的排名
+    /**
+     * 获取这张表中所有学生的id，用来更新所有学生的排名
+     * @param tableName
+     */
     public void RefreshResults(String tableName){
         List<String> studentIdList = scoreMapper.getStudentIdListByTableName(tableName);
         for (String sid : studentIdList) {
@@ -460,7 +584,13 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         }
     }
 
-
+    /**
+     * 获取成绩集合
+     * @param tableName
+     * @param scoreId
+     * @param tableFieldList
+     * @return
+     */
     public Map<String, Double> getScoreMap(String tableName,String scoreId,List<String> tableFieldList){
         Map<String, Double> stringDoubleMap = new HashMap<>();//用来存成绩
         for (String s : tableFieldList) {
@@ -479,6 +609,11 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return stringDoubleMap;
     }
 
+    /**
+     * 获取某表的科目集合
+     * @param tableName
+     * @return
+     */
     @Override
     public List<String> getSubjectListByTableName(String tableName){
         List<String> tableFieldList = getTableFieldList(tableName);
@@ -501,8 +636,9 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     }
 
 
-
-    //获取表的字段
+    /**
+     * 获取表的字段
+     */
     public List<String> getTableFieldList(String tableName){
         Connection conn = null;
         PreparedStatement pstmt = null;

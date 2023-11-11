@@ -80,4 +80,6 @@ public interface ScoreService {
     boolean addScore(String tableName, String scoreId, String key, double value);
 
     boolean deleteByScoreId(String tableName, String scoreId);
+
+    List<StudentScores> getScoreMessageByTableName(Examination examById);
 }

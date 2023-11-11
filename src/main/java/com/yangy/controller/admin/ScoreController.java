@@ -1,20 +1,25 @@
 package com.yangy.controller.admin;
 
-import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
 import com.yangy.common.Result;
 import com.yangy.entity.*;
 import com.yangy.service.*;
 import com.yangy.util.Pagetool;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @RestController
@@ -250,11 +255,6 @@ public class ScoreController {
         String tableName = "ts_score_" + examId;
         String scoreId = examId + "_"+studentId;
         b = scoreService.deleteByScoreId(tableName, scoreId);
-//        Date examDate = examinationService.getDateByName(examName);
-//        List<Score> scoreStuByStuIdAndExamDate = scoreService.findScoreStuByStuIdAndExamDate(studentId, examDate);
-//        for (Score score : scoreStuByStuIdAndExamDate) {
-//            b = scoreService.deleteById(score.getId());
-//        }
         if(b){
             return Result.success("该学生成绩删除");
         }else{
@@ -279,91 +279,158 @@ public class ScoreController {
      * @throws Exception
      */
     @GetMapping("/export")
-    public void export(HttpServletResponse response) throws Exception{
-        //从数据库查询所有的数据
-        List<Student> studentList = studentService.findAllOver();
-        List<StudentScores> list = getStudentScoesList(studentList);
-
-        //通过工具类创建writer写出到磁盘路径
-//        ExcelWriter writer = ExcelUtil.getWriter(filesUploadPath + "/用户信息.xlsx");
-
-//        在内存操作，写出到浏览器
-        ExcelWriter writer = ExcelUtil.getWriter(true);
-        //自定义标题别名
-        writer.addHeaderAlias("student.id","学号");
-        writer.addHeaderAlias("student.name","姓名");
-        writer.addHeaderAlias("student.grade","年级");
-        writer.addHeaderAlias("student.classId","班级");
-        writer.addHeaderAlias("student.major","专业");
-        writer.addHeaderAlias("scores","成绩");
-        writer.addHeaderAlias("examDate","考试日期");
-        writer.addHeaderAlias("examName","考试名称");
+    public Result export(HttpServletResponse response,String examName) throws Exception{
+        //根据考试名称获取成绩单数据库
+        String examId = examinationService.getIdByExamName(examName);
+        String tableName = "ts_score_" + examId;
+        Examination examById = examinationService.getExamById(examId);
+        List<StudentScores> list = scoreService.getScoreMessageByTableName(examById);
+        //通过表名获取科目名称
+        List<String> subjectList = scoreService.getSubjectListByTableName(tableName);
 
 
-        //一次性写出list内的对象到excel，使用默认样式，强制输出标题
-        writer.write(list,true);
+        //直接写出到磁盘路径
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("学生成绩");
 
-        // 设置浏览器响应的格式
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        String fileName = URLEncoder.encode("学生成绩信息", "UTF-8");
-        response.setHeader("Content-Disposition","attachment;filename=" + fileName + ".xlsx");
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("学号");
+        headerRow.createCell(1).setCellValue("学生姓名");
+        headerRow.createCell(2).setCellValue("班级");
+        int rowi = 3;
+        for (int i = 0; i < subjectList.size(); i++) {
+            headerRow.createCell(rowi).setCellValue(courseService.getCourseNameById(subjectList.get(i)));
+            rowi++;
+        }
+        headerRow.createCell(rowi++).setCellValue("班级排名");
+        headerRow.createCell(rowi++).setCellValue("年级排名");
+        headerRow.createCell(rowi++).setCellValue("考试日期");
+        headerRow.createCell(rowi++).setCellValue("考试名称");
 
-        ServletOutputStream out = response.getOutputStream();
-        writer.flush(out,true);
-        out.close();
-        writer.close();
 
-//        Workbook workbook = new XSSFWorkbook();
-//        Sheet sheet = workbook.createSheet("学生成绩");
-//
-//        // Create header row
-//        Row headerRow = sheet.createRow(0);
-//        headerRow.createCell(0).setCellValue("学生姓名");
-//        headerRow.createCell(1).setCellValue("班级排名");
-//        headerRow.createCell(2).setCellValue("年级排名");
-//        headerRow.createCell(3).setCellValue("考试日期");
-//        headerRow.createCell(4).setCellValue("考试名称");
-////        headerRow.createCell(5).setCellValue("科目");
-////        headerRow.createCell(6).setCellValue("成绩");
-//
-//        // Create data rows
-//        for (int i = 0; i < list.size(); i++) {
-//            StudentScores score = list.get(i);
-//            Row dataRow = sheet.createRow(i + 1);
-//            dataRow.createCell(0).setCellValue(score.getStudent().getName());
-//            dataRow.createCell(1).setCellValue(score.getClassRanking().toString());
-//            dataRow.createCell(2).setCellValue(score.getGradeRanking().toString());
-//            dataRow.createCell(3).setCellValue(score.getExamDate().toString() );
-//            dataRow.createCell(4).setCellValue(score.getExamName());
-//            int cellIndex = 5;
-//            for (Map.Entry<String, Double> entry : score.getScores().entrySet()) {
-//                headerRow.createCell(cellIndex).setCellValue(entry.getKey());
-//                dataRow.createCell(cellIndex).setCellValue(entry.getValue().toString());
-//                cellIndex++;
-//            }
-//        }
-//
-//        // Auto-size columns and adjust layout
-//        for (int i = 0; i < 5; i++) {
-//            sheet.autoSizeColumn(i);
-//        }
-////        sheet.calculateColumnWidths();
-//
-//        // Save the workbook to a file
-//        try (FileOutputStream outputStream = new FileOutputStream("D:/学生成绩.xlsx")) {
-//            workbook.write(outputStream);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                workbook.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        // Create data rows
+        for (int i = 0; i < list.size(); i++) {
+            StudentScores score = list.get(i);
+            Row dataRow = sheet.createRow(i + 1);
+            dataRow.createCell(0).setCellValue(score.getStudent().getId());
+            dataRow.createCell(1).setCellValue(score.getStudent().getName());
+            dataRow.createCell(2).setCellValue(score.getStudent().getClassId());
+            int cellIndex = 3;
+            for(Map.Entry<String, Double> entry : score.getScores().entrySet()){
+                dataRow.createCell(cellIndex).setCellValue(entry.getValue().toString());
+                cellIndex++;
+            }
+            dataRow.createCell(cellIndex).setCellValue(score.getClassRanking().toString());
+            dataRow.createCell(cellIndex+1).setCellValue(score.getGradeRanking().toString());
+            dataRow.createCell(cellIndex+2).setCellValue(score.getExamDate().toString() );
+            dataRow.createCell(cellIndex+3).setCellValue(score.getExamName());
+        }
 
+
+        for (int i = 0; i < rowi; i++) {
+            sheet.autoSizeColumn(i);
+        }
+//        sheet.calculateColumnWidths();
+
+        // Save the workbook to a file
+        try (FileOutputStream outputStream = new FileOutputStream("D:/学生成绩.xlsx")) {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return Result.success();
 
     }
 
+    /**
+     * 导入接口
+     * @param file
+     * @throws Exception
+     */
+    @PostMapping("/import")
+    public Boolean imp(MultipartFile file) throws Exception{
+        try {
+            InputStream inputStream = file.getInputStream();
+            Workbook workbook = new XSSFWorkbook(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            //获取科目列表
+            ArrayList<String> subjectList = new ArrayList<>();
+            Iterator<Row> rowIterator = sheet.iterator();
+            rowIterator.hasNext();
+            Row head = rowIterator.next();
+            Iterator<Cell> headIterator = head.iterator();
+
+            while (headIterator != null){
+                String value = "";
+                try {
+                    Cell next = headIterator.next();
+                    value =getCellValueAsString(next);
+                }catch (Exception e){
+                    break;
+                }
+                switch (value){
+                    case "学号":
+                    case "学生姓名":
+                    case "班级":
+                    case "考试名称":break;
+                    default:subjectList.add(courseService.getCourseIdByName(value));
+                }
+            }
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Iterator<Cell> cellIterator = row.iterator();
+                String studentId = getCellValueAsString(cellIterator.next());
+                String studentName = getCellValueAsString(cellIterator.next());
+                String className = getCellValueAsString(cellIterator.next());
+                //通过班级名称获得班级id
+                String classId = classService.getIdByclassName(className);
+                String examName = getCellValueAsString(cellIterator.next());
+                //通过考试名称获得考试id
+                String examId = examinationService.getIdByExamName(examName);
+                String tableName = "ts_score_" + examId; //考试成绩表
+                String scoreId =  examId+ "_" + studentId;
+                //创建成绩信息
+                scoreService.createScore(scoreId,examId,studentId,studentName,classId,tableName);
+                for (String subject : subjectList) {
+                    scoreService.addScore(tableName,scoreId,subject,Double.parseDouble(getCellValueAsString(cellIterator.next())));
+                }
+
+            }
+            workbook.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String getCellValueAsString(Cell cell) {
+        String cellValue = "";
+        if (cell != null) {
+            switch (cell.getCellType()) {
+                case STRING:
+                    cellValue = cell.getStringCellValue();
+                    break;
+                case NUMERIC:
+                    cellValue = String.valueOf(cell.getNumericCellValue());
+                    break;
+                case BOOLEAN:
+                    cellValue = String.valueOf(cell.getBooleanCellValue());
+                    break;
+                default:
+                    break;
+            }
+        }
+        return cellValue;
+    }
 
 }

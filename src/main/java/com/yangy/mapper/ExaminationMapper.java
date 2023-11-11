@@ -31,4 +31,7 @@ public interface ExaminationMapper extends BaseMapper<Examination> {
 
     @Select("select id from ts_examination where exam_name = #{examName}")
     String getIdByExamName(String examName);
+
+    @Select("select * from ts_examination where id=#{examId}")
+    Examination getExamById(String examId);
 }

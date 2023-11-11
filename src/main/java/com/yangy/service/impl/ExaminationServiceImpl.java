@@ -131,6 +131,11 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
         return examinationMapper.getIdByExamName(examName);
     }
 
+    @Override
+    public Examination getExamById(String examId) {
+        return examinationMapper.getExamById(examId);
+    }
+
 
     @Override
     public boolean updataExam(Examination examination) {

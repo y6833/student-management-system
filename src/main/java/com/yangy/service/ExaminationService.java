@@ -35,4 +35,6 @@ public interface ExaminationService {
     String getIdByNameAndDate(String examName, java.util.Date examDate);
 
     String getIdByExamName(String examName);
+
+    Examination getExamById(String examId);
 }
