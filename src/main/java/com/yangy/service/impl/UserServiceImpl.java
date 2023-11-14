@@ -84,4 +84,14 @@ public class UserServiceImpl implements UserService {
         return userMapper.getAvatarURL(username);
     }
 
+    @Override
+    public int getRoleNamebyRoleId(String uid) {
+        return userMapper.getRoleNamebyRoleId(uid);
+    }
+
+    @Override
+    public String getRoleIdByUsername(String id) {
+        return userMapper.getRoleIdByUsername(id);
+    }
+
 }

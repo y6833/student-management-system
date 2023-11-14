@@ -5,10 +5,7 @@ import com.yangy.common.Result;
 import com.yangy.entity.Admin;
 import com.yangy.entity.Teacher;
 import com.yangy.entity.User;
-import com.yangy.service.AdminService;
-import com.yangy.service.StudentService;
-import com.yangy.service.TeacherService;
-import com.yangy.service.UserService;
+import com.yangy.service.*;
 import com.yangy.util.TokenUtils;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +36,12 @@ public class UserController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
+    private UserPermissionService userPermissionService;
+
 
     /**
      * 分页查询
@@ -60,6 +63,10 @@ public class UserController {
 
         Boolean aBoolean = userService.addUser(user);
         if (aBoolean) {
+            List<Integer> allPermission = permissionService.getAllPermission();
+            for (Integer integer : allPermission) {
+                userPermissionService.addUserPermission(user.getRoleId(),integer);
+            }
             return Result.success();
         } else {
             return Result.error();
@@ -69,8 +76,13 @@ public class UserController {
     //删除
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable String id) {
+        String roleId = userService.getRoleIdByUsername(id);
         boolean b = userService.removeByUsername(id);
         if (b) {
+            List<Integer> allPermission = permissionService.getAllPermission();
+            for (Integer integer : allPermission) {
+                userPermissionService.deletePermission(roleId,integer);
+            }
             return Result.success();
         }
         return Result.error();
@@ -102,7 +114,7 @@ public class UserController {
 
     @GetMapping("/getUser")
     public Result getUserById(@RequestParam String id) {
-        User user = userService.selectByUsername(id);
+        User user = userService.selectByRoleId(id);
         return Result.success(user);
     }
 

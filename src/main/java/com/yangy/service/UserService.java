@@ -35,4 +35,8 @@ public interface UserService {
     boolean login(User user);
 
     String getAvatarURL(String username);
+
+    int getRoleNamebyRoleId(String uid);
+
+    String getRoleIdByUsername(String id);
 }

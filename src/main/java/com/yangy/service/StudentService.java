@@ -33,4 +33,5 @@ public interface StudentService{
 
     Student getStudentByIdGM(String studentByScoreId);
 
+    String getNameById(String uid);
 }

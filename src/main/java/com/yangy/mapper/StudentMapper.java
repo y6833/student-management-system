@@ -22,4 +22,7 @@ public interface StudentMapper extends BaseMapper<Student> {
 
     @Select("select major from tb_students where id=#{studentId}")
     String getMajorById(String studentId);
+
+    @Select("select name from tb_students where id=#{uid}")
+    String getNameById(String uid);
 }

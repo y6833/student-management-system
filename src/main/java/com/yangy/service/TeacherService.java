@@ -23,4 +23,6 @@ public interface TeacherService {
     List<Teacher> findAll();
 
     boolean removeByTeaId(String id);
+
+    String getNameById(String uid);
 }

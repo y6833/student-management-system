@@ -376,6 +376,7 @@ public class ScoreController {
                 }catch (Exception e){
                     break;
                 }
+                //找出表头的科目 ---->可以将所有的字段调用科目表，有这个科目就返回true就加入
                 switch (value){
                     case "学号":
                     case "学生姓名":

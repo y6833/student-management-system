@@ -21,4 +21,6 @@ public interface AdminService {
     void saveAdminList(List<Admin> list);
 
     List<Admin> findAllOver();
+
+    String getNameById(String uid);
 }

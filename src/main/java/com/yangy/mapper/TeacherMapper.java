@@ -13,4 +13,7 @@ public interface TeacherMapper extends BaseMapper<Teacher> {
 
     @Delete("delete from tb_teachers where id = #{id}")
     boolean removeByTeaId(String id);
+
+    @Select("select name from tb_teachers where id=#{uid}")
+    String getNameById(String uid);
 }

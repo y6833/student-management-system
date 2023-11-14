@@ -13,4 +13,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
 
     @Delete("delete from tb_admin where id = #{id}")
     boolean removeByTeaId(String id);
+
+    @Select("select name from tb_admin where id=#{uid}")
+    String getNameById(String uid);
 }

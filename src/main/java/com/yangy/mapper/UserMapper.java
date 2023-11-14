@@ -43,4 +43,10 @@ public interface UserMapper {
 
     @Select("SELECT avatar_url FROM tb_user WHERE username = #{username}")
     String getAvatarURL(String username);
+
+    @Select("select role_name from tb_user where role_id=#{uid}")
+    int getRoleNamebyRoleId(String uid);
+
+    @Select("select role_id from tb_user where username = #{username}")
+    String getRoleIdByUsername(String username);
 }

@@ -88,4 +88,9 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
     public boolean removeByTeaId(String id) {
         return teacherMapper.removeByTeaId(id);
     }
+
+    @Override
+    public String getNameById(String uid) {
+        return teacherMapper.getNameById(uid);
+    }
 }
