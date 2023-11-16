@@ -1,10 +1,13 @@
 package com.yangy.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yangy.entity.Tclass;
 import com.yangy.mapper.ClassMapper;
 import com.yangy.service.ClassService;
 import com.yangy.service.MajorService;
+import com.yangy.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,8 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
     ClassMapper classMapper;
     @Autowired
     MajorService majorService;
+    @Autowired
+    TeacherService teacherService;
 
     @Override
     public String getClassName(String id) {
@@ -62,6 +67,61 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
     public List<String> getGradeByclassId(String classId) {
         classId = classMapper.getIdByclassName(classId);
         return classMapper.getGradeByclassId(classId);
+    }
+
+    @Override
+    public IPage<Tclass> getPage(IPage<Tclass> page, QueryWrapper<Tclass> queryWrapper) {
+
+        List<Tclass> classList = page(page, queryWrapper).getRecords();
+
+        for (Tclass tclass : classList) {
+            tclass.setMajorId(majorService.getMajorName(tclass.getMajorId()));
+//            tclass.setHeadTeacherId(teacherService.getNameById(tclass.getHeadTeacherId()));
+        }
+        IPage<Tclass> studentIPage = page(page, queryWrapper).setRecords(classList);
+        return studentIPage;
+    }
+
+    @Override
+    public boolean addClass(Tclass tclass) {
+        tclass.setMajorId(majorService.getIdByclassName(tclass.getMajorId()));
+        int insert = classMapper.insert(tclass);
+        if (insert >0){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updataClass(Tclass tclass) {
+        tclass.setMajorId(majorService.getIdByclassName(tclass.getMajorId()));
+        boolean b = saveOrUpdate(tclass);
+        return b;
+    }
+
+    @Override
+    public boolean removeclassById(String id) {
+        return classMapper.removeclassById(id);
+    }
+
+    @Override
+    public List<Tclass> findAllOver() {
+        List<Tclass> classlist = list();
+        for (Tclass tclass : classlist) {
+            tclass.setMajorId(majorService.getMajorName(tclass.getMajorId()));
+            tclass.setHeadTeacherId(teacherService.getNameById(tclass.getHeadTeacherId()));
+        }
+        return classlist;
+    }
+
+    @Override
+    public void saveClassList(List<Tclass> list) {
+        for (Tclass tclass : list) {
+            tclass.setMajorId(majorService.getIdByclassName(tclass.getMajorId()));
+            tclass.setHeadTeacherId(teacherService.getIdByName(tclass.getHeadTeacherId()));
+            Tclass tclazz = new Tclass(tclass.getClassId(),tclass.getClassName(),tclass.getGradeId(),tclass.getMajorId(),tclass.getHeadTeacherId());
+        }
+        saveBatch(list);
     }
 
 }

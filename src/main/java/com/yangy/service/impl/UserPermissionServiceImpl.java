@@ -75,4 +75,10 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
         return userPermissionMapper.getUserPermissionList(roleId);
     }
 
+    @Override
+    public List<String> findLikeList(String roleId) {
+        List<String> likeList = userPermissionMapper.findLikeList(roleId);
+        return likeList;
+    }
+
 }

@@ -77,7 +77,7 @@ public class UserPermissionController {
             userPermissionList = userPermissionsList;
         }else{
             for (UserPermissionDTO userPermissionDTO : userPermissionsList) {
-                if (userPermissionDTO.getUserId().equals(searchString)){
+                if (userPermissionService.findLikeList(searchString).contains(userPermissionDTO.getUserId())){
                     userPermissionList.add(userPermissionDTO);
                 }
             }

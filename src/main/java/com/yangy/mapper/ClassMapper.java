@@ -2,6 +2,7 @@ package com.yangy.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yangy.entity.Tclass;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -33,4 +34,7 @@ public interface ClassMapper extends BaseMapper<Tclass> {
     //通过班级获得年级
     @Select("SELECT grade_id FROM tb_class where class_id = #{classId}")
     List<String> getGradeByclassId(String classId);
+
+    @Delete("delete from tb_class where class_id = #{id}")
+    boolean removeclassById(String id);
 }

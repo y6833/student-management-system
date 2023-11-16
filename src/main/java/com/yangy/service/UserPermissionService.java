@@ -15,4 +15,6 @@ public interface UserPermissionService {
     List<Integer> getUserPermission(String roleId);
 
     List<Integer> getUserPermissionList(String roleId);
+
+    List<String> findLikeList(String searchString);
 }

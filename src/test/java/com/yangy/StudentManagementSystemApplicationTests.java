@@ -1,5 +1,6 @@
 package com.yangy;
 
+import com.yangy.entity.Student;
 import com.yangy.entity.Teacher;
 import com.yangy.entity.User;
 import com.yangy.service.*;
@@ -81,6 +82,12 @@ class StudentManagementSystemApplicationTests {
 //        for (String s : keyValue) {
 //            System.out.println(s);
 //        }
+        }
+
+        @Test
+        void test5(){
+            Student student = studentService.getStudentById("s0000334");
+            System.out.println(student);
         }
 
 

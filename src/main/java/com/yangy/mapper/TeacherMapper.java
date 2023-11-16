@@ -16,4 +16,7 @@ public interface TeacherMapper extends BaseMapper<Teacher> {
 
     @Select("select name from tb_teachers where id=#{uid}")
     String getNameById(String uid);
+
+    @Select("select id from tb_teachers where name = #{value}")
+    String getIdbyName(String value);
 }

@@ -25,4 +25,6 @@ public interface TeacherService {
     boolean removeByTeaId(String id);
 
     String getNameById(String uid);
+
+    String getIdByName(String value);
 }

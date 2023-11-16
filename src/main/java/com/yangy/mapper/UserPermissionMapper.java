@@ -21,4 +21,7 @@ public interface UserPermissionMapper extends BaseMapper<UserPermission> {
 
     @Delete("delete from tb_user_permission where user_id = #{userId} and permission_id = #{permissionId}")
     boolean deletePermission(String userId, int permissionId);
+
+    @Select("select role_id from tb_user where role_id Like concat('%',#{roleId},'%')")
+    List<String> findLikeList(String roleId);
 }

@@ -28,4 +28,5 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
     public String getIdByclassName(String value) {
         return majorMapper.getIdByclassName(value);
     }
+
 }

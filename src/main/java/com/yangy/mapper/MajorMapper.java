@@ -17,4 +17,5 @@ public interface MajorMapper extends BaseMapper<Major> {
 
     @Select("select major_id from tb_major where major_name =#{value} ;")
     String getIdByclassName(String value);
+
 }
