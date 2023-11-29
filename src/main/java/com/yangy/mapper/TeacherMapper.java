@@ -5,6 +5,8 @@ import com.yangy.entity.Teacher;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 //@Mapper
 public interface TeacherMapper extends BaseMapper<Teacher> {
 
@@ -19,4 +21,7 @@ public interface TeacherMapper extends BaseMapper<Teacher> {
 
     @Select("select id from tb_teachers where name = #{value}")
     String getIdbyName(String value);
+
+    @Select("select id from tb_teachers")
+    List<String> getAllId();
 }

@@ -39,25 +39,27 @@ public class TeacherController {
     private ClassService classService;
     @Autowired
     private MajorService majorService;
+
     /**
      * 导入接口
+     *
      * @param file
      * @throws Exception
      */
     @PostMapping("/import")
-    public Boolean imp(MultipartFile file) throws Exception{
+    public Boolean imp(MultipartFile file) throws Exception {
         InputStream inputStream = file.getInputStream();
         ExcelReader reader = ExcelUtil.getReader(inputStream);
-        reader.addHeaderAlias("教职工号","id");
-        reader.addHeaderAlias("密码","password");
-        reader.addHeaderAlias("姓名","name");
-        reader.addHeaderAlias("性别","gender");
-        reader.addHeaderAlias("出生日期","birthday");
-        reader.addHeaderAlias("年级","grade");
-        reader.addHeaderAlias("班级","classId");
-        reader.addHeaderAlias("邮箱","email");
-        reader.addHeaderAlias("手机号","phone");
-        reader.addHeaderAlias("地址","address");
+        reader.addHeaderAlias("教职工号", "id");
+        reader.addHeaderAlias("密码", "password");
+        reader.addHeaderAlias("姓名", "name");
+        reader.addHeaderAlias("性别", "gender");
+        reader.addHeaderAlias("出生日期", "birthday");
+        reader.addHeaderAlias("年级", "grade");
+        reader.addHeaderAlias("班级", "classId");
+        reader.addHeaderAlias("邮箱", "email");
+        reader.addHeaderAlias("手机号", "phone");
+        reader.addHeaderAlias("地址", "address");
         List<Teacher> list = reader.readAll(Teacher.class);
 //        System.out.println(list);
         teacherService.saveTeacherList(list);
@@ -66,11 +68,12 @@ public class TeacherController {
 
     /**
      * 导出接口
+     *
      * @param response
      * @throws Exception
      */
     @GetMapping("/export")
-    public void export(HttpServletResponse response) throws Exception{
+    public void export(HttpServletResponse response) throws Exception {
         //从数据库查询所有的数据
         List<Teacher> list = teacherService.findAllOver();
 
@@ -80,35 +83,43 @@ public class TeacherController {
         //在内存操作，写出到浏览器
         ExcelWriter writer = ExcelUtil.getWriter(true);
         //自定义标题别名
-        writer.addHeaderAlias("id","教职工号");
-        writer.addHeaderAlias("password","密码");
-        writer.addHeaderAlias("name","姓名");
-        writer.addHeaderAlias("gender","性别");
-        writer.addHeaderAlias("birthday","出生日期");
-        writer.addHeaderAlias("grade","年级");
-        writer.addHeaderAlias("classId","班级");
-        writer.addHeaderAlias("email","邮箱");
-        writer.addHeaderAlias("phone","手机号");
-        writer.addHeaderAlias("address","地址");
+        writer.addHeaderAlias("id", "教职工号");
+        writer.addHeaderAlias("password", "密码");
+        writer.addHeaderAlias("name", "姓名");
+        writer.addHeaderAlias("gender", "性别");
+        writer.addHeaderAlias("birthday", "出生日期");
+        writer.addHeaderAlias("grade", "年级");
+        writer.addHeaderAlias("classId", "班级");
+        writer.addHeaderAlias("email", "邮箱");
+        writer.addHeaderAlias("phone", "手机号");
+        writer.addHeaderAlias("address", "地址");
 
         //一次性写出list内的对象到excel，使用默认样式，强制输出标题
-        writer.write(list,true);
+        writer.write(list, true);
 
         // 设置浏览器响应的格式
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         String fileName = URLEncoder.encode("教师信息", "UTF-8");
-        response.setHeader("Content-Disposition","attachment;filename=" + fileName + ".xlsx");
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
 
         ServletOutputStream out = response.getOutputStream();
-        writer.flush(out,true);
+        writer.flush(out, true);
         out.close();
         writer.close();
 
 
     }
 
+    @GetMapping("/getTeacherList")
+    public Result getTeacherList() {
+        List<String> allTeacherId = teacherService.getAllTeacherId();
+        return Result.success(allTeacherId);
+    }
 
-
+    @GetMapping("/getTeacherNameById/{id}")
+    public Result getTeacherNameById(@PathVariable String id) {
+        return Result.success(teacherService.getNameById(id));
+    }
 
     //mybatis-plus分页查询
     @GetMapping("/page")
@@ -116,48 +127,47 @@ public class TeacherController {
             , @RequestParam Integer pageSize
             , @RequestParam String searchString) {
 
-        IPage<Teacher> page = new Page<>(pageNum,pageSize);
+        IPage<Teacher> page = new Page<>(pageNum, pageSize);
 
         QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
-        if(!"".equals(searchString)){
+        if (!"".equals(searchString)) {
             Map<String, String> stringStringMap = Pagetool.parseParams(searchString);
             Set<String> keys = stringStringMap.keySet();
-            for (String key: keys) {
+            for (String key : keys) {
                 String value = stringStringMap.get(key);
-                if("class_id".equals(key)){
+                if ("class_id".equals(key)) {
                     value = classService.getIdByclassName(value);
-                }else if("major".equals(key)){
+                } else if ("major".equals(key)) {
                     value = majorService.getIdByclassName(value);
-                }else if("birthday".equals(key)){
+                } else if ("birthday".equals(key)) {
                     value = DateHelp.dataToString(value);
                 }
                 queryWrapper.like(key, value);
             }
 
         }
-        IPage<Teacher> teacherpage = teacherService.getPage(page,queryWrapper);
+        IPage<Teacher> teacherpage = teacherService.getPage(page, queryWrapper);
 
         return Result.success(teacherpage);
     }
 
 
-
     //新增
     @PostMapping
-    public Result save(@RequestBody Teacher teacher){
+    public Result save(@RequestBody Teacher teacher) {
         boolean b = teacherService.saveTeacher(teacher);
-        if(b){
+        if (b) {
             return Result.success();
-        }else{
+        } else {
             return Result.error();
         }
     }
 
     //修改
     @PostMapping("/updata")
-    public Result updata(@RequestBody Teacher teacher){
+    public Result updata(@RequestBody Teacher teacher) {
         boolean b = teacherService.updataTeacher(teacher);
-        if(b){
+        if (b) {
             return Result.success();
         }
         return Result.error();
@@ -165,25 +175,25 @@ public class TeacherController {
 
     //查找所有
     @GetMapping
-    public List<Teacher> findALl(){
+    public List<Teacher> findALl() {
         return teacherService.findAll();
     }
 
 
     //删除
     @DeleteMapping("/{id}")
-    public Result delete(@PathVariable String id){
+    public Result delete(@PathVariable String id) {
         boolean b = teacherService.removeByTeaId(id);
-        if (b){
+        if (b) {
             return Result.success();
         }
         return Result.error();
     }
 
     @GetMapping("/getTeacherByRoleId/{roleId}")
-    public Result getTeacherByRoleId(@PathVariable String roleId){
+    public Result getTeacherByRoleId(@PathVariable String roleId) {
         Teacher teacher = teacherService.getTeacherByRoleId(roleId);
-        if(teacher != null){
+        if (teacher != null) {
             return Result.success(teacher);
         }
         return Result.error();

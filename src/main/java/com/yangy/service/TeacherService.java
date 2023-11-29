@@ -2,6 +2,7 @@ package com.yangy.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yangy.common.Result;
 import com.yangy.entity.Teacher;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface TeacherService {
     String getNameById(String uid);
 
     String getIdByName(String value);
+
+    List<String> getAllTeacherId();
 }

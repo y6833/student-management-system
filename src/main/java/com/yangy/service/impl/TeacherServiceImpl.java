@@ -98,4 +98,9 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
     public String getIdByName(String value) {
         return teacherMapper.getIdbyName(value);
     }
+
+    @Override
+    public List<String> getAllTeacherId() {
+        return teacherMapper.getAllId();
+    }
 }

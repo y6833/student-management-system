@@ -176,6 +176,28 @@ public class ScoreController {
 //        return Result.success(scoreTotal);
 //    }
 
+    /**
+     * 更新评语
+     * @param id
+     * @param proposal
+     * @param examDate
+     * @param examName
+     * @return
+     */
+    @GetMapping("/updataProposal")
+    public Result updataProposal(@RequestParam String id,
+                                 @RequestParam String proposal,
+                                 @RequestParam Date examDate,
+                                 @RequestParam String examName){
+        String examId = examinationService.getIdByNameAndDate(examName, examDate);//考试id
+        String tableName = "ts_score_"+examId;
+        boolean b = scoreService.updataProposal(tableName, id, proposal);
+        if(b){
+            return Result.success();
+        }else{
+            return Result.error();
+        }
+    }
 
     /**、
      * 更新数据

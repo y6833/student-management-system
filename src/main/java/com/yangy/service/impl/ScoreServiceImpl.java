@@ -223,6 +223,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                 studentScores.setExamDate(examinationService.getDateByExamId(examination.getId()));
                 studentScores.setExamName(examinationService.getDateNameByExamId(examination.getId()));
                 studentScores.setScores(getScoreMap(tableName,scoreId,tableFieldList));//需要表名称，考试成绩id， 表的字段名称
+                studentScores.setProposal(scoreMapper.getProposalByScoreId(tableName,scoreId));
                 studentScoresList.add(studentScores);//将这条成绩添加到里面
             }
 
@@ -250,9 +251,15 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
             studentScores.setExamDate(examinationService.getDateByExamId(examination.getId()));
             studentScores.setExamName(examinationService.getDateNameByExamId(examination.getId()));
             studentScores.setScores(getScoreMap(tableName,scoreId,tableFieldList));//需要表名称，考试成绩id， 表的字段名称
+            studentScores.setProposal(scoreMapper.getProposalByScoreId(tableName,scoreId));
             studentScoresList.add(studentScores);//将这条成绩添加到里面
         }
         return studentScoresList;
+    }
+
+    @Override
+    public boolean updataProposal(String tableName, String id, String proposal) {
+        return scoreMapper.updataProposal(tableName,id,proposal);
     }
 
     /**
@@ -482,7 +489,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                     case "student_class":
                     case "sum":
                     case "classRanking":
-                    case "gradeRanking":break;
+                    case "gradeRanking":
+                    case "proposal":break;
                     default:scorelist.add(s);
                 }
             }
@@ -602,7 +610,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                 case "student_class":
                 case "sum":
                 case "classRanking":
-                case "gradeRanking":break;
+                case "gradeRanking":
+                case "proposal":break;
                 default:stringDoubleMap.put(courseService.getCourseNameById(s),scoreMapper.getScoreByCourse(s,tableName,scoreId));
             }
         }
@@ -627,7 +636,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                 case "student_class":
                 case "sum":
                 case "classRanking":
-                case "gradeRanking":break;
+                case "gradeRanking":
+                case "proposal":break;
                 default:subjectList.add(s);
             }
         }

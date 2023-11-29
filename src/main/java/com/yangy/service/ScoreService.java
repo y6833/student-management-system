@@ -82,4 +82,6 @@ public interface ScoreService {
     boolean deleteByScoreId(String tableName, String scoreId);
 
     List<StudentScores> getScoreMessageByTableName(Examination examById);
+
+    boolean updataProposal(String tableName, String id, String proposal);
 }

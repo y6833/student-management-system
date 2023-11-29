@@ -14,4 +14,5 @@ public class StudentScores {
     private Integer gradeRanking;//年级排名
     private Date examDate; // 考试日期
     private String examName;//考试名称
+    private String proposal;//建议
 }

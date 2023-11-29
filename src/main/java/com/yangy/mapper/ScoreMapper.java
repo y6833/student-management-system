@@ -120,4 +120,9 @@ public interface ScoreMapper extends BaseMapper<Score> {
     @Select("SELECT exam_name from ts_examination")
     List<String> getExamList();
 
+    @Select("select proposal from ${tableName} where score_id = #{scoreId}")
+    String getProposalByScoreId(String tableName, String scoreId);
+
+    @Update("update ${tableName} set proposal=#{proposal} where score_id = #{scoreId}")
+    boolean updataProposal(String tableName, String scoreId, String proposal);
 }
