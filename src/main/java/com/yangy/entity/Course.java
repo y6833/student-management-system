@@ -16,6 +16,7 @@ public class Course {
     private String courseId;
     private String name;
     private String teacher;
-    private Integer teacherId;
+    private String  teacherId;
+    private Integer fullmarks;
     private String remark;
 }

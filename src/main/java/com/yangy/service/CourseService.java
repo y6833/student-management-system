@@ -1,5 +1,9 @@
 package com.yangy.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yangy.entity.Course;
+
 import java.util.List;
 
 public interface CourseService {
@@ -13,4 +17,13 @@ public interface CourseService {
     Integer getSubjectMaxScore(String subject);
 
     Integer getSubjectNameMaxScore(String subject);
+
+    IPage<Course> getPage(IPage<Course> page, QueryWrapper<Course> queryWrapper);
+
+    boolean saveCourse(Course course);
+
+
+    boolean updatacourse(Course course);
+
+    boolean removeById(String id);
 }

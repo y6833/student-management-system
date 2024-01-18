@@ -1,23 +1,26 @@
 package com.yangy.controller.admin;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yangy.common.Result;
+import com.yangy.entity.Course;
 import com.yangy.service.CourseService;
 import com.yangy.service.ExaminationService;
 import com.yangy.service.ScoreService;
 import com.yangy.service.StudentService;
+import com.yangy.util.Pagetool;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
 @RequestMapping("/sms/admin/course")
-@Component("adminCourseController")
 @Slf4j
-@Api(tags = "B端-课表相关接口")
+@Api(tags = "B端-课程相关接口")
 public class CourseController {
 
     @Autowired
@@ -31,6 +34,76 @@ public class CourseController {
 
     @Autowired
     private StudentService studentService;
+
+    /**
+     * 获取课程分页
+     * @param pageNum
+     * @param pageSize
+     * @param searchString
+     * @return
+     */
+    @GetMapping("/page")
+    public Result findPage(@RequestParam Integer pageNum
+            , @RequestParam Integer pageSize
+            , @RequestParam String searchString) {
+
+        IPage<Course> page = new Page<>(pageNum, pageSize);
+
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        if (!"".equals(searchString)) {
+            Map<String, String> stringStringMap = Pagetool.parseParams(searchString);
+            Set<String> keys = stringStringMap.keySet();
+            for (String key : keys) {
+                String value = stringStringMap.get(key);
+                queryWrapper.like(key, value);
+            }
+
+        }
+        IPage<Course> coursepage = courseService.getPage(page, queryWrapper);
+
+        return Result.success(coursepage);
+    }
+
+    /**
+     * 新增
+     * @param course
+     * @return
+     */
+    @PostMapping("/addcourse")
+    public Result addcourse(@RequestBody Course course){
+        boolean b = courseService.saveCourse(course);
+        if(b){
+            return Result.success();
+        }else{
+            return Result.error();
+        }
+    }
+
+    /**
+     * 修改课程
+     * @param course
+     * @return
+     */
+    @PostMapping("/updatacourse")
+    public Result updatamajor(@RequestBody Course course){
+        boolean b = courseService.updatacourse(course);
+        if(b){
+            return Result.success();
+        }
+        return Result.error();
+    }
+
+
+    //删除
+    @DeleteMapping("/deletecourse/{id}")
+    public Result deletemajor(@PathVariable String id){
+        boolean b = courseService.removeById(id);
+        if (b){
+            return Result.success();
+        }
+        return Result.error();
+    }
+
     /**
      * 获取科目列表
      *

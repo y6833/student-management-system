@@ -2,6 +2,7 @@ package com.yangy.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yangy.entity.Course;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface CourseMapper extends BaseMapper<Course> {
 
     @Select("select fullmarks from  tb_courses where name = #{subject}")
     Integer getSubjectNameMaxScore(String subject);
+    @Delete("delete from tb_courses where course_id = #{id}")
+    boolean removeById(String id);
 }

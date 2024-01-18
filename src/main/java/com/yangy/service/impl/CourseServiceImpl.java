@@ -1,5 +1,7 @@
 package com.yangy.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yangy.entity.Course;
 import com.yangy.mapper.CourseMapper;
@@ -38,4 +40,33 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public Integer getSubjectNameMaxScore(String subject) {
         return courseMapper.getSubjectNameMaxScore(subject);
     }
+
+    @Override
+    public IPage<Course> getPage(IPage<Course> page, QueryWrapper<Course> queryWrapper) {
+
+        List<Course> courseList = page(page, queryWrapper).getRecords();
+        IPage<Course> courseIPage = page(page, queryWrapper).setRecords(courseList);
+        return courseIPage;
+    }
+
+    @Override
+    public boolean saveCourse(Course course) {
+        try {
+            return save(course);
+
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updatacourse(Course course) {
+        return updateById(course);
+    }
+
+    @Override
+    public boolean removeById(String id) {
+        return courseMapper.removeById(id);
+    }
+
 }

@@ -72,6 +72,11 @@ public class MajorController {
         return Result.error();
     }
 
+    /**
+     * 新增
+     * @param major
+     * @return
+     */
     @PostMapping("/addmajor")
     public Result addmajor(@RequestBody Major major){
         boolean b = majorService.saveMajor(major);
