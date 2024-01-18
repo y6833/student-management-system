@@ -15,5 +15,4 @@ public class Major {
     @TableId(value = "major_id",type = IdType.AUTO)
     private String majorId;
     private String majorName;
-    private Integer credit;
 }

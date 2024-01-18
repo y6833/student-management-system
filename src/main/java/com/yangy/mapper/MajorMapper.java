@@ -2,6 +2,7 @@ package com.yangy.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yangy.entity.Major;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -17,5 +18,8 @@ public interface MajorMapper extends BaseMapper<Major> {
 
     @Select("select major_id from tb_major where major_name =#{value} ;")
     String getIdByclassName(String value);
+
+    @Delete("delete from tb_major where major_id = #{id}")
+    boolean removeById(String id);
 
 }
