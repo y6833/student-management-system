@@ -26,4 +26,8 @@ public interface CourseService {
     boolean updatacourse(Course course);
 
     boolean removeById(String id);
+
+    List<String> getCourseIdList();
+
+    String getTeacherById(String course);
 }

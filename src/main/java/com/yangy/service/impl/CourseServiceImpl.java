@@ -69,4 +69,14 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return courseMapper.removeById(id);
     }
 
+    @Override
+    public List<String> getCourseIdList() {
+        return courseMapper.getCourseIdList();
+    }
+
+    @Override
+    public String getTeacherById(String course) {
+        return courseMapper.getTeacherById(course);
+    }
+
 }

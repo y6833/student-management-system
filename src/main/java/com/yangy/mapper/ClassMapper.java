@@ -37,4 +37,6 @@ public interface ClassMapper extends BaseMapper<Tclass> {
 
     @Delete("delete from tb_class where class_id = #{id}")
     boolean removeclassById(String id);
+    @Select("select DISTINCT class_id from tb_class")
+    List<String> getClassIdList();
 }

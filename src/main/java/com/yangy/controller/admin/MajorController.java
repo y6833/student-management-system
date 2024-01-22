@@ -41,7 +41,9 @@ public class MajorController {
         IPage<Major> page = new Page<>(pageNum,pageSize);
 
         QueryWrapper<Major> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("major_name", searchString);
+        if(!"".equals(searchString)) {
+            queryWrapper.like("major_name", searchString);
+        }
         IPage<Major> majorpage = majorService.getPage(page,queryWrapper);
 
         return Result.success(majorpage);

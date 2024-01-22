@@ -65,6 +65,17 @@ public class CourseController {
     }
 
     /**
+     * 通过课程名称获取id
+     * @param name
+     * @return
+     */
+    @GetMapping("/getCourseIdByName/{name}")
+    public Result getCourseIdByName(@PathVariable String name){
+        String courseIdByName = courseService.getCourseIdByName(name);
+        return Result.success(courseIdByName);
+    }
+
+    /**
      * 新增
      * @param course
      * @return
@@ -212,6 +223,30 @@ public class CourseController {
         }
         return Result.success(gradeAve);
 
+    }
+
+
+    /**
+     * 获取课程id列表
+     * @return
+     */
+    @GetMapping("/getCourseIdList")
+    public Result getCourseIdList(){
+        List<String> courseList = courseService.getCourseIdList();
+        if(courseList.size() >0){
+            return Result.success(courseList);
+        }
+        return Result.error();
+    }
+
+
+    @GetMapping("/getCourseNameById/{id}")
+    public Result getCourseNameById(@PathVariable String id){
+        String courseNameById = courseService.getCourseNameById(id);
+        if("".equals(courseNameById)){
+            return Result.error();
+        }
+        return Result.success(courseNameById);
     }
 
 }

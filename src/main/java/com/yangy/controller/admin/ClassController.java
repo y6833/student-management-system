@@ -47,12 +47,29 @@ public class ClassController {
         return Result.success(classList);
     }
 
+
+    @GetMapping("/getClassIdList")
+    public Result getClassIdList(){
+        List<String> classList = classService.getClassIdList();
+        return Result.success(classList);
+    }
     @GetMapping("/getGradeList")
     public Result getGradeList(){
         List<String> gradeList = classService.getGradeList();
         return Result.success(gradeList);
     }
 
+    //通过班级id获取班级名称
+    @GetMapping("/getClassNameById/{id}")
+    public Result getClassNameById(@PathVariable String id){
+        return Result.success(classService.getClassName(id));
+    }
+
+    //通过班级名称获取班级id
+    @GetMapping("/getClassIdbyName/{name}")
+    public Result getClassIdbyNmae(@PathVariable String name){
+        return Result.success(classService.getIdByclassName(name));
+    }
     //通过年级获得班级列表
     @GetMapping("/getClassListBygradeId")
     public Result getClassList(@RequestParam String gradeId){

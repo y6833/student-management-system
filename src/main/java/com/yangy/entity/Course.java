@@ -19,4 +19,5 @@ public class Course {
     private String  teacherId;
     private Integer fullmarks;
     private String remark;
+    private Integer type;//考试类型
 }

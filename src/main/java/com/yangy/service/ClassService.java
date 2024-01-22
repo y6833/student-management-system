@@ -34,4 +34,8 @@ public interface ClassService {
     List<Tclass> findAllOver();
 
     void saveClassList(List<Tclass> list);
+
+    List<String> getClassIdList();
+
+
 }

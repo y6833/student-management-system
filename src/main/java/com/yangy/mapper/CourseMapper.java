@@ -26,4 +26,10 @@ public interface CourseMapper extends BaseMapper<Course> {
     Integer getSubjectNameMaxScore(String subject);
     @Delete("delete from tb_courses where course_id = #{id}")
     boolean removeById(String id);
+
+    @Select("select course_id from tb_courses")
+    List<String> getCourseIdList();
+
+    @Select("select teacher from tb_courses where course_id = #{courseId}")
+    String getTeacherById(String courseId);
 }

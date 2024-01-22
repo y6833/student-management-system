@@ -124,4 +124,9 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
         saveBatch(list);
     }
 
+    @Override
+    public List<String> getClassIdList() {
+        return classMapper.getClassIdList();
+    }
+
 }
