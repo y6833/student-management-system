@@ -9,9 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yangy.common.Result;
 import com.yangy.entity.Examination;
 import com.yangy.entity.ExaminationDTO;
-import com.yangy.service.ClassService;
-import com.yangy.service.ExaminationService;
-import com.yangy.service.MajorService;
+import com.yangy.service.*;
 import com.yangy.util.DateHelp;
 import com.yangy.util.Pagetool;
 import io.swagger.annotations.Api;
@@ -24,6 +22,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +41,14 @@ public class ExaminationController {
 
     @Autowired
     private ExaminationService examinationService;
+
+    @Autowired
+    private SchedulesService schedulesService;
+
+    @Autowired
+    private ScheduleService scheduleService;
+
+
 
     //mybatis-plus分页查询
     @GetMapping("/page")
@@ -71,6 +78,30 @@ public class ExaminationController {
         return Result.success(examinationpage);
     }
 
+
+    @GetMapping("/getCurrSchedule")
+    public Result getCurrSchedule(@RequestParam String name){
+        //通过名称获得id
+        String scheduleId = schedulesService.getscheduleIdByName(name);
+        //通过名称获得班级id
+        String classId= schedulesService.getClassIdByName(name);
+        //通过班级id获取年级
+        String gradeId = classService.getGradeIdByclassId(classId);
+        //通过班级id获取专业
+        String majorId = classService.getMajorIdByclassId(classId);
+        //通过专业id获取专业名称
+        String majorName = majorService.getMajorName(majorId);
+        //通过课表id获得课表课程列表
+        List<String> courseList = scheduleService.getCourseListById(scheduleId);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("courses", courseList);
+        data.put("examGrade", gradeId);
+        data.put("examMajor", majorName);
+        return Result.success(data);
+
+
+    }
 
     /**
      * 添加考试信息，创建成绩表

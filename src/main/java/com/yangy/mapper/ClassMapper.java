@@ -39,4 +39,10 @@ public interface ClassMapper extends BaseMapper<Tclass> {
     boolean removeclassById(String id);
     @Select("select DISTINCT class_id from tb_class")
     List<String> getClassIdList();
+
+    @Select("SELECT grade_id FROM tb_class where class_id = #{classId}")
+    String getGradeIdByclassId(String classId);
+
+    @Select("select major_id from tb_class where class_id = #{classId}")
+    String getMajorIdByclassId(String classId);
 }

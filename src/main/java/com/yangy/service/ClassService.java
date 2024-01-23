@@ -38,4 +38,7 @@ public interface ClassService {
     List<String> getClassIdList();
 
 
+    String getGradeIdByclassId(String classId);
+
+    String getMajorIdByclassId(String classId);
 }
