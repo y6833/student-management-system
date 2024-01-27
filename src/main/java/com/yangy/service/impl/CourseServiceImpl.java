@@ -79,4 +79,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return courseMapper.getTeacherById(course);
     }
 
+    @Override
+    public Integer getFullmarksByName(String name) {
+        return courseMapper.getFullmarksByName(name);
+    }
+
 }

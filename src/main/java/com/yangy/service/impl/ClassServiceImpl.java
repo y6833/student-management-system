@@ -134,9 +134,20 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
         return classMapper.getGradeIdByclassId(classId);
     }
 
+
     @Override
     public String getMajorIdByclassId(String classId) {
         return classMapper.getMajorIdByclassId(classId);
+    }
+
+    @Override
+    public List<String> getClassIdListBygradeId(String gradeValue) {
+        return classMapper.getClassIdListBygradeId(gradeValue);
+    }
+
+    @Override
+    public List<String> getClassIdListBygradeIdAndMajorId(String gradeValue, String getmajorByName) {
+        return classMapper.getClassIdListBygradeIdAndMajorId(gradeValue,getmajorByName);
     }
 
 }

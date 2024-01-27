@@ -117,7 +117,7 @@ public interface ScoreMapper extends BaseMapper<Score> {
     @Delete("delete from ${tableName} where score_id=#{scoreId}")
     boolean deleteByScoreIdTS(String tableName, String scoreId);
 
-    @Select("SELECT exam_name from ts_examination")
+    @Select("SELECT DISTINCT exam_name from ts_examination")
     List<String> getExamList();
 
     @Select("select proposal from ${tableName} where score_id = #{scoreId}")
@@ -125,4 +125,10 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Update("update ${tableName} set proposal=#{proposal} where score_id = #{scoreId}")
     boolean updataProposal(String tableName, String scoreId, String proposal);
+
+    @Select("select AVG(${courseId}) from ${tableName} where student_class=#{classs}")
+    Double getClassAveByobject(String tableName, String classs, String courseId);
+
+    @Select("select AVG(${courseId}) from ${tableName}")
+    Double getGradeAveByobject(String tableName, String courseId);
 }

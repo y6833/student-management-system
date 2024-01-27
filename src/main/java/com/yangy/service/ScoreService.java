@@ -1,5 +1,6 @@
 package com.yangy.service;
 
+import com.yangy.entity.AveScoreDTO;
 import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
 import com.yangy.entity.StudentScores;
@@ -84,4 +85,6 @@ public interface ScoreService {
     List<StudentScores> getScoreMessageByTableName(Examination examById);
 
     boolean updataProposal(String tableName, String id, String proposal);
+
+    List<AveScoreDTO> getAveTable(String examValue, String gradeValue,String majorValue, String choiceSubject);
 }

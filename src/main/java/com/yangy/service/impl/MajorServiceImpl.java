@@ -53,4 +53,9 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
         return save(major);
     }
 
+    @Override
+    public String getmajorByName(String majorValue) {
+        return majorMapper.getmajorByName(majorValue);
+    }
+
 }

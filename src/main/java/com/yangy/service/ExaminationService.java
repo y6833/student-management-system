@@ -37,4 +37,10 @@ public interface ExaminationService {
     String getIdByExamName(String examName);
 
     Examination getExamById(String examId);
+
+    String getIdByExamNameAndGrade(String examValue, String gradeValue);
+
+    String getIdByExamNameAndGradeAndMajorId(String examValue, String gradeValue, String getmajorByName);
+
+    List<String> getSubjectListByExamNameAndGradeAndMajor(String examValue, String gradeValue, String majorValue);
 }

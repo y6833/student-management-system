@@ -63,50 +63,50 @@ public class ScoreController {
 
             for (String key : keys) {
                 String value = stringStringMap.get(key);
-                switch (key){
+                switch (key) {
                     case "id":
-                        studentScoresList = scoreService.getstudentScoresListByStudentId(value,studentScoresList); //通过学号筛选
+                        studentScoresList = scoreService.getstudentScoresListByStudentId(value, studentScoresList); //通过学号筛选
                         break;
                     case "name":
-                        studentScoresList = scoreService.getstudentScoresListByStudentName(value,studentScoresList);//通过姓名筛选
+                        studentScoresList = scoreService.getstudentScoresListByStudentName(value, studentScoresList);//通过姓名筛选
                         break;
                     case "gender":
-                        studentScoresList = scoreService.getstudentScoresListByStudentGender(value,studentScoresList);//通过性别筛选
+                        studentScoresList = scoreService.getstudentScoresListByStudentGender(value, studentScoresList);//通过性别筛选
                         break;
                     case "grade":
-                        studentScoresList = scoreService.getstudentScoresListByGrade(value,studentScoresList);//通过年级筛选
+                        studentScoresList = scoreService.getstudentScoresListByGrade(value, studentScoresList);//通过年级筛选
                         break;
                     case "class_id":
-                        studentScoresList = scoreService.getstudentScoresListByClassId(value,studentScoresList);//通过班级筛选
+                        studentScoresList = scoreService.getstudentScoresListByClassId(value, studentScoresList);//通过班级筛选
                         break;
                     case "major":
-                        studentScoresList = scoreService.getstudentScoresListByMajor(value,studentScoresList);//通过专业筛选
+                        studentScoresList = scoreService.getstudentScoresListByMajor(value, studentScoresList);//通过专业筛选
                         break;
                     case "examDate":
-                        studentScoresList = scoreService.getstudentScoresListByExamDate(value,studentScoresList);//通过考试日期筛选
+                        studentScoresList = scoreService.getstudentScoresListByExamDate(value, studentScoresList);//通过考试日期筛选
                         break;
                     case "examName":
-                        studentScoresList = scoreService.getstudentScoresListByExamName(value,studentScoresList);//通过考试名称筛选
+                        studentScoresList = scoreService.getstudentScoresListByExamName(value, studentScoresList);//通过考试名称筛选
                         break;
                 }
             }
         }
         List<StudentScores> studentScoresLists = new ArrayList<>();
         //进行分页
-        for (int i = (pageNum -1)*pageSize; i < pageSize*pageNum; i++) {
-            if(studentScoresList.size()> i && studentScoresList.get(i) !=null){
+        for (int i = (pageNum - 1) * pageSize; i < pageSize * pageNum; i++) {
+            if (studentScoresList.size() > i && studentScoresList.get(i) != null) {
                 studentScoresLists.add(studentScoresList.get(i));
             }
         }
 
-        StudentScoresDTO studentScoresDTO = new StudentScoresDTO(studentScoresLists,studentScoresList.size());
+        StudentScoresDTO studentScoresDTO = new StudentScoresDTO(studentScoresLists, studentScoresList.size());
 
 //        Result page = studentController.findPage(pageNum, pageSize, searchStr);
 
         return Result.success(studentScoresDTO);
     }
 
-//    @PostMapping("/getStuScorePage")
+    //    @PostMapping("/getStuScorePage")
 //    public Result Page(@RequestBody List<Student> studentList) {
 //        ArrayList<StudentScores> studentScoresList = new ArrayList<>();
 //        studentScoresList = getStudentScoesList(studentList);
@@ -139,7 +139,7 @@ public class ScoreController {
 //        return Result.success(studentScoresList);
 //    }
 //
-    public ArrayList<StudentScores> getStudentScoesList(List<Student> studentList){
+    public ArrayList<StudentScores> getStudentScoesList(List<Student> studentList) {
         ArrayList<StudentScores> studentScoresList = new ArrayList<>();
         //获取考试次数
         List<Examination> examTimes = scoreService.getExamTimes();
@@ -159,7 +159,7 @@ public class ScoreController {
                 //注入考试名称
                 studentScores.setExamName(examTime.getExamName());
                 List<Score> scoreStuByStuIdAndExamDate = scoreService.findScoreStuByStuIdAndExamDate(student.getId(), examinationService.getDateByName(examTime.getExamName()));
-                if(scoreStuByStuIdAndExamDate.size() > 0){
+                if (scoreStuByStuIdAndExamDate.size() > 0) {
                     //将此次考试信息加入列表
                     studentScoresList.add(studentScores);
                 }
@@ -178,6 +178,7 @@ public class ScoreController {
 
     /**
      * 更新评语
+     *
      * @param id
      * @param proposal
      * @param examDate
@@ -188,19 +189,21 @@ public class ScoreController {
     public Result updataProposal(@RequestParam String id,
                                  @RequestParam String proposal,
                                  @RequestParam Date examDate,
-                                 @RequestParam String examName){
+                                 @RequestParam String examName) {
         String examId = examinationService.getIdByNameAndDate(examName, examDate);//考试id
-        String tableName = "ts_score_"+examId;
+        String tableName = "ts_score_" + examId;
         boolean b = scoreService.updataProposal(tableName, id, proposal);
-        if(b){
+        if (b) {
             return Result.success();
-        }else{
+        } else {
             return Result.error();
         }
     }
 
-    /**、
+    /**
+     * 、
      * 更新数据
+     *
      * @param id
      * @param courseName
      * @param scores
@@ -214,32 +217,38 @@ public class ScoreController {
                               @RequestParam Date examDate,
                               @RequestParam String examName) {
         String examId = examinationService.getIdByNameAndDate(examName, examDate);//考试id
-        String tableName = "ts_score_"+examId;
+        String tableName = "ts_score_" + examId;
         String coureseId = courseService.getCourseIdByName(courseName);
-        boolean result = scoreService.updataScore1(tableName,id, coureseId, scores);
+        boolean result = scoreService.updataScore1(tableName, id, coureseId, scores);
         return Result.success(result);
 
     }
 
     /**
      * 根据学号，考试名称添加学生成绩
+     *
      * @param studentId
      * @param examName
      * @param scoreList
      * @return
      */
     @GetMapping("/addStudentScore")
-    public Result addStudentScore(@RequestParam String studentId,  @RequestParam String examName, @RequestParam String scoreList){
+    public Result addStudentScore(@RequestParam String studentId, @RequestParam String examName, @RequestParam String scoreList) {
+
         //通过考试名称获取考试成绩表名
         String examId = examinationService.getIdByExamName(examName); //考试id
-        String scoreId = examId + "_" +studentId;//成绩id
+        //判断这个学生是不是考试年级的
+        if (!studentService.getStudentById(studentId).getGrade().equals(examinationService.getExamById(examId))) {
+            return Result.error("该学生不能添加到这个年级的考试");
+        }
+        String scoreId = examId + "_" + studentId;//成绩id
         String studentName = studentService.getStudentById(studentId).getName();//学生姓名
         String studentClass = studentService.getStudentById(studentId).getClassId();//获取班级id
         String tableName = "ts_score_" + examId;
         // 创建学生创建信息
         boolean b2 = scoreService.createScore(scoreId, examId, studentId, studentName, studentClass, tableName);
 
-        if(b2){
+        if (b2) {
             Boolean b = true;
             scoreList = scoreList.replaceAll("\"", ""); // 去掉双引号
             String[] arr = scoreList.split(","); // 使用逗号分割字符串
@@ -250,14 +259,14 @@ public class ScoreController {
                 String key = courseService.getCourseIdByName(parts[0]);
                 double value = Double.parseDouble(parts[1]);
                 //将这个科目的成绩添加到数据库
-                boolean b3 = scoreService.addScore(tableName,scoreId, key, value);
+                boolean b3 = scoreService.addScore(tableName, scoreId, key, value);
                 b = b & b3;
-                if(b == false){
-                    return Result.error(key+"成绩添加失败");
+                if (b == false) {
+                    return Result.error(key + "成绩添加失败");
                 }
             }
             return Result.success();
-        }else{
+        } else {
             return Result.error("该学生创建信息已存在");
         }
 
@@ -265,21 +274,22 @@ public class ScoreController {
 
     /**
      * 删除根据学号和考试名称
+     *
      * @param studentId
      * @param examName
      * @return
      */
     @DeleteMapping("/delStudentScore")
-    public Result delStudentScore(@RequestParam String studentId,@RequestParam String examName){
+    public Result delStudentScore(@RequestParam String studentId, @RequestParam String examName) {
         boolean b = false;
         //通过考试名称获取表名
         String examId = examinationService.getIdByExamName(examName);
         String tableName = "ts_score_" + examId;
-        String scoreId = examId + "_"+studentId;
+        String scoreId = examId + "_" + studentId;
         b = scoreService.deleteByScoreId(tableName, scoreId);
-        if(b){
+        if (b) {
             return Result.success("该学生成绩删除");
-        }else{
+        } else {
             return Result.error("删除失败");
         }
     }
@@ -287,21 +297,23 @@ public class ScoreController {
 
     /**
      * 获取考试列表
+     *
      * @return
      */
     @GetMapping("/getExamList")
-    public Result getExamList(){
+    public Result getExamList() {
         List<String> examList = scoreService.getExamList();
         return Result.success(examList);
     }
 
     /**
      * 导出接口
+     *
      * @param response
      * @throws Exception
      */
     @GetMapping("/export")
-    public Result export(HttpServletResponse response,String examName) throws Exception{
+    public Result export(HttpServletResponse response, String examName) throws Exception {
         //根据考试名称获取成绩单数据库
         String examId = examinationService.getIdByExamName(examName);
         String tableName = "ts_score_" + examId;
@@ -339,14 +351,14 @@ public class ScoreController {
             dataRow.createCell(1).setCellValue(score.getStudent().getName());
             dataRow.createCell(2).setCellValue(score.getStudent().getClassId());
             int cellIndex = 3;
-            for(Map.Entry<String, Double> entry : score.getScores().entrySet()){
+            for (Map.Entry<String, Double> entry : score.getScores().entrySet()) {
                 dataRow.createCell(cellIndex).setCellValue(entry.getValue().toString());
                 cellIndex++;
             }
             dataRow.createCell(cellIndex).setCellValue(score.getClassRanking().toString());
-            dataRow.createCell(cellIndex+1).setCellValue(score.getGradeRanking().toString());
-            dataRow.createCell(cellIndex+2).setCellValue(score.getExamDate().toString() );
-            dataRow.createCell(cellIndex+3).setCellValue(score.getExamName());
+            dataRow.createCell(cellIndex + 1).setCellValue(score.getGradeRanking().toString());
+            dataRow.createCell(cellIndex + 2).setCellValue(score.getExamDate().toString());
+            dataRow.createCell(cellIndex + 3).setCellValue(score.getExamName());
         }
 
 
@@ -373,11 +385,12 @@ public class ScoreController {
 
     /**
      * 导入接口
+     *
      * @param file
      * @throws Exception
      */
     @PostMapping("/import")
-    public Boolean imp(MultipartFile file) throws Exception{
+    public Boolean imp(MultipartFile file) throws Exception {
         try {
             InputStream inputStream = file.getInputStream();
             Workbook workbook = new XSSFWorkbook(inputStream);
@@ -390,21 +403,23 @@ public class ScoreController {
             Row head = rowIterator.next();
             Iterator<Cell> headIterator = head.iterator();
 
-            while (headIterator != null){
+            while (headIterator != null) {
                 String value = "";
                 try {
                     Cell next = headIterator.next();
-                    value =getCellValueAsString(next);
-                }catch (Exception e){
+                    value = getCellValueAsString(next);
+                } catch (Exception e) {
                     break;
                 }
                 //找出表头的科目 ---->可以将所有的字段调用科目表，有这个科目就返回true就加入
-                switch (value){
+                switch (value) {
                     case "学号":
                     case "学生姓名":
                     case "班级":
-                    case "考试名称":break;
-                    default:subjectList.add(courseService.getCourseIdByName(value));
+                    case "考试名称":
+                        break;
+                    default:
+                        subjectList.add(courseService.getCourseIdByName(value));
                 }
             }
 
@@ -420,11 +435,11 @@ public class ScoreController {
                 //通过考试名称获得考试id
                 String examId = examinationService.getIdByExamName(examName);
                 String tableName = "ts_score_" + examId; //考试成绩表
-                String scoreId =  examId+ "_" + studentId;
+                String scoreId = examId + "_" + studentId;
                 //创建成绩信息
-                scoreService.createScore(scoreId,examId,studentId,studentName,classId,tableName);
+                scoreService.createScore(scoreId, examId, studentId, studentName, classId, tableName);
                 for (String subject : subjectList) {
-                    scoreService.addScore(tableName,scoreId,subject,Double.parseDouble(getCellValueAsString(cellIterator.next())));
+                    scoreService.addScore(tableName, scoreId, subject, Double.parseDouble(getCellValueAsString(cellIterator.next())));
                 }
 
             }
@@ -455,5 +470,43 @@ public class ScoreController {
         }
         return cellValue;
     }
+
+
+    //获得考试平均分列表
+
+    @GetMapping("/getAveTableData")
+    public Result getAveTableData(@RequestParam String examValue,
+                                  @RequestParam String gradeValue,
+                                  @RequestParam String majorValue,
+                                  @RequestParam String choiceSubject) {
+
+
+        //判断这场考试存不存在
+
+        //如果专业为空只要找在这张考试表中寻找年级为这个的学生
+        List<AveScoreDTO> aveTable = scoreService.getAveTable(examValue, gradeValue,majorValue, choiceSubject);
+        if(aveTable == null){
+            return Result.error("考试不存在");
+        }
+        return Result.success(aveTable);
+    }
+
+    //获取考试科目
+    @GetMapping("/getSubjectListByExamNameAndGradeAndMajor")
+    public Result getSubjectListByExamNameAndGradeAndMajor(@RequestParam String examValue,
+                                                           @RequestParam String gradeValue,
+                                                           @RequestParam String majorValue
+                                                           ){
+        try {
+            List<String> subjectList = examinationService.getSubjectListByExamNameAndGradeAndMajor(examValue, gradeValue, majorValue);
+            if(subjectList == null){
+                return Result.error("考试不存在");
+            }
+            return Result.success(subjectList);
+        }catch (Exception e){
+            return Result.error("查询失败");
+        }
+    }
+
 
 }

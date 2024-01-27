@@ -26,6 +26,8 @@ public interface ClassMapper extends BaseMapper<Tclass> {
     @Select("select class_name from tb_class where grade_id = #{gradeId}")
     List<String> getClassListBygradeId(String gradeId);
 
+    @Select("select DISTINCT class_id from tb_class where grade_id = #{gradeId}")
+    List<String> getClassIdListBygradeId(String gradeId);
 
     //通过班级获得专业
     @Select("select major_id from tb_class where class_id = #{classId}")
@@ -45,4 +47,8 @@ public interface ClassMapper extends BaseMapper<Tclass> {
 
     @Select("select major_id from tb_class where class_id = #{classId}")
     String getMajorIdByclassId(String classId);
+
+
+    @Select("select DISTINCT class_id from tb_class where grade_id = #{gradeValue} AND major_id=#{getmajor}")
+    List<String> getClassIdListBygradeIdAndMajorId(String gradeValue, String getmajor);
 }

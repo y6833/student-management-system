@@ -30,4 +30,6 @@ public interface CourseService {
     List<String> getCourseIdList();
 
     String getTeacherById(String course);
+
+    Integer getFullmarksByName(String name);
 }

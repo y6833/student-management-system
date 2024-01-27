@@ -21,5 +21,6 @@ public interface MajorMapper extends BaseMapper<Major> {
 
     @Delete("delete from tb_major where major_id = #{id}")
     boolean removeById(String id);
-
+    @Select("select major_id from tb_major where  major_name = #{major}")
+    String getmajorByName(String majorValue);
 }

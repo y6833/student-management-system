@@ -21,4 +21,6 @@ public interface MajorService {
     boolean removeById(String id);
 
     boolean saveMajor(Major major);
+
+    String getmajorByName(String majorValue);
 }

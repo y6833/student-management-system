@@ -1,6 +1,7 @@
 package com.yangy.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yangy.entity.AveScoreDTO;
 import com.yangy.entity.Examination;
 import com.yangy.entity.Score;
 import com.yangy.entity.StudentScores;
@@ -260,6 +261,51 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     @Override
     public boolean updataProposal(String tableName, String id, String proposal) {
         return scoreMapper.updataProposal(tableName,id,proposal);
+    }
+
+    @Override
+    public List<AveScoreDTO> getAveTable(String examValue, String gradeValue,String majorValue, String choiceSubject) {
+        AveScoreDTO aveScoreDTO;
+        String courseId;
+        List<String> classList = new ArrayList<>();
+//        通过考试名称获取考试id
+        String examId = "";
+        if(choiceSubject.equals("总分")){
+            courseId = "sum";
+        }else{
+            //获得科目id
+            courseId = courseService.getCourseIdByName(choiceSubject);
+
+        }
+        if("".equals(majorValue)){
+            classList = classService.getClassIdListBygradeId(gradeValue);
+            examId = examinationService.getIdByExamNameAndGrade(examValue,gradeValue);
+        }else{
+            classList = classService.getClassIdListBygradeIdAndMajorId(gradeValue,majorService.getmajorByName(majorValue));
+            examId = examinationService.getIdByExamNameAndGradeAndMajorId(examValue,gradeValue,majorService.getmajorByName(majorValue));
+        }
+        if(examId == null){
+            return null;
+        }
+        String tableName = "ts_score_"+examId; //获得成绩表名称
+
+        List<AveScoreDTO> aveScoreDTOS = new ArrayList<>();
+        for (String classs : classList) {
+            Double gradeAveClass = scoreMapper.getClassAveByobject(tableName, classs, courseId);
+            Double gradeAveGrade = scoreMapper.getGradeAveByobject(tableName, courseId);
+            if(gradeAveClass != null){
+                aveScoreDTO = new AveScoreDTO();
+                aveScoreDTO.setGrade(gradeValue);
+                aveScoreDTO.setClasss(classService.getClassName(classs));
+                aveScoreDTO.setExamName(examValue);
+                aveScoreDTO.setAverageClass(gradeAveClass);
+                aveScoreDTO.setAverageGrade(gradeAveGrade);
+                aveScoreDTOS.add(aveScoreDTO);
+            }
+
+        }
+        //通过年级
+        return aveScoreDTOS;
     }
 
     /**

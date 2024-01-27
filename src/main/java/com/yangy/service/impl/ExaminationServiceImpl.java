@@ -8,12 +8,14 @@ import com.yangy.mapper.ExaminationMapper;
 import com.yangy.service.CourseService;
 import com.yangy.service.ExaminationService;
 import com.yangy.service.MajorService;
+import com.yangy.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,6 +30,9 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
     private MajorService majorService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ScoreService scoreService;
 
     @Override
     public Date getDateByName(String examName) {
@@ -135,6 +140,38 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
     @Override
     public Examination getExamById(String examId) {
         return examinationMapper.getExamById(examId);
+    }
+
+    @Override
+    public String getIdByExamNameAndGrade(String examValue, String gradeValue) {
+        return examinationMapper.getIdByExamNameAndGrade(examValue,gradeValue);
+    }
+
+    @Override
+    public String getIdByExamNameAndGradeAndMajorId(String examValue, String gradeValue, String getmajorByName) {
+        return examinationMapper.getIdByExamNameAndGradeAndMajorId(examValue,gradeValue,getmajorByName);
+    }
+
+    @Override
+    public List<String> getSubjectListByExamNameAndGradeAndMajor(String examValue, String gradeValue, String majorValue) {
+        //根据考试名称，考试年级，考试专业得到考试id
+        String examId = "";
+        ArrayList<String> subjects = new ArrayList<>();
+        if("".equals(majorValue)){
+            examId = examinationMapper.getIdByExamNameAndGrade(examValue, gradeValue);
+        }else{
+            examId = examinationMapper.getIdByExamNameAndGradeAndMajorId(examValue, gradeValue,majorService.getmajorByName(majorValue));
+        }
+        //通过考试id获取科目列表
+        if(examId == null){
+            return null;
+        }
+        String tableName = "ts_score_"+examId;
+        List<String> subjectListByTableName = scoreService.getSubjectListByTableName(tableName);
+        for (String subject : subjectListByTableName) {
+            subjects.add(courseService.getCourseNameById(subject));
+        }
+        return subjects;
     }
 
 

@@ -75,6 +75,12 @@ public class CourseController {
         return Result.success(courseIdByName);
     }
 
+    @GetMapping("/getCourseMax/{name}")
+    public Result getCourseMax(@PathVariable String name){
+        Integer fullmarksByName = courseService.getFullmarksByName(name);
+        return Result.success(fullmarksByName);
+    }
+
     /**
      * 新增
      * @param course
@@ -171,6 +177,8 @@ public class CourseController {
         return Result.success(indicator);
 
     }
+
+
 
     /**
      * 获取科目该考试该班级的的平均分
