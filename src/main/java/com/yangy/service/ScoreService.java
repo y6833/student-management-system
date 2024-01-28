@@ -92,4 +92,7 @@ public interface ScoreService {
 
     List<Integer> getScoreListByExamAndGradeAndSubject(String examValue, String gradeValue, String majorValue, String choiceSubject);
 
+    List<StudentScores> getstudentScoresListBySubject(String choiceSubject, List<StudentScores> studentScoresList);
+
+    List<StudentScores> getstudentScoresListByRankingRange(int num1, int num2,String choiceSubject, List<StudentScores> studentScoresList);
 }

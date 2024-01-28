@@ -565,4 +565,49 @@ public class ScoreController {
         List<Integer> abscissa = scoreService.getScoreListByExamAndGradeAndSubject(examValue, gradeValue, majorValue, choiceSubject);
         return Result.success(abscissa);
     }
+
+
+    @GetMapping("/getStuScoreGradeRankList")
+    public Result getStuScoreGradeRankList(@RequestParam Integer pageNum
+            , @RequestParam Integer pageSize
+            , @RequestParam String rankingRange,
+                                           @RequestParam String examValue,
+                                           @RequestParam String gradeValue,
+                                           @RequestParam String majorValue,
+                                           @RequestParam String choiceSubject) {
+
+        List<StudentScores> studentScoresList = scoreService.getAll();
+        String[] parts = rankingRange.split("-");
+        int num1 = Integer.parseInt(parts[0]);
+        int num2 = Integer.parseInt(parts[1]);
+        //查看这条数据是不是这场考试的
+        studentScoresList = scoreService.getstudentScoresListByExamName(examValue, studentScoresList);
+        //查看这条数据是不是这个年级的
+        studentScoresList = scoreService.getstudentScoresListByGrade(gradeValue, studentScoresList);
+        //查看这条数据是不是这个专业的
+        if (!"".equals(majorValue)) {
+            studentScoresList = scoreService.getstudentScoresListByMajor(majorValue, studentScoresList);
+        }
+        //重置这条数据的成绩值
+        studentScoresList = scoreService.getstudentScoresListBySubject(choiceSubject, studentScoresList);
+
+        //通过排名筛选
+        studentScoresList = scoreService.getstudentScoresListByRankingRange(num1,num2,choiceSubject,studentScoresList);
+
+
+        List<StudentScores> studentScoresLists = new ArrayList<>();
+        //进行分页
+        for (int i = (pageNum - 1) * pageSize; i < pageSize * pageNum; i++) {
+            if (studentScoresList.size() > i && studentScoresList.get(i) != null) {
+                studentScoresLists.add(studentScoresList.get(i));
+            }
+        }
+
+        StudentScoresDTO studentScoresDTO = new StudentScoresDTO(studentScoresLists, studentScoresLists.size());
+
+//        Result page = studentController.findPage(pageNum, pageSize, searchStr);
+
+        return Result.success(studentScoresDTO);
+    }
+
 }

@@ -428,6 +428,74 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return scoreCourseListByTableNameAndSubject;
     }
 
+    @Override
+    public List<StudentScores> getstudentScoresListBySubject(String choiceSubject, List<StudentScores> studentScoresList) {
+        Map<String, Double> stringDoubleMap;//用来存成绩
+        String courseId;
+        Double sum = 0.0;
+
+        for (StudentScores studentScores : studentScoresList) {
+            stringDoubleMap = new HashMap<>();
+            if(choiceSubject.equals("总分")){
+                sum = 0.0;
+                for (Double value : studentScores.getScores().values()) {
+                    sum += value;
+                }
+                stringDoubleMap.put("总分",sum);
+            }else {
+                Map<String, Double> scores = studentScores.getScores();
+                Double aDouble = scores.get(choiceSubject);
+                stringDoubleMap.put(choiceSubject, aDouble);
+            }
+            studentScores.setScores(stringDoubleMap);
+
+        }
+        return studentScoresList;
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByRankingRange(int num1, int num2,String choiceSubject, List<StudentScores> studentScoresList) {
+        int max;
+        int min;
+        String courseId = "";
+        List<StudentScores> studentScoresCopy = new ArrayList<>();
+        if(num1>num2){
+            max=num1;
+            min=num2;
+        }else{
+            max=num2;
+            min=num1;
+        }
+        //通过考试名称获取考试id
+        String examId = examinationService.getIdByExamName(studentScoresList.get(0).getExamName());
+        String tableName = "ts_score_"+examId; //获得成绩表名称
+        if(choiceSubject.equals("总分")){
+            courseId = "sum";
+        }else{
+            //获得科目id
+            courseId = courseService.getCourseIdByName(choiceSubject);
+
+        }
+//        studentScoresList.sort(Comparator.comparingDouble(o -> o.getScores().values().iterator().next()));
+        for (StudentScores studentScores : studentScoresList) {
+            //进行排名
+            List<String> subGradeRankingByScoreId = scoreMapper.getSubGradeRankingByScoreId(tableName,courseId);
+            List<String> subClassRankingByScoreId =  scoreMapper.getSubClassRankingByScoreId(tableName,courseId,classService.getIdByclassName(studentScores.getStudent().getClassId()));
+
+            studentScores.setGradeRanking(Collections.binarySearch(subGradeRankingByScoreId, studentScores.getScoreId())+1);
+            studentScores.setClassRanking(Collections.binarySearch(subClassRankingByScoreId, studentScores.getScoreId())+1);
+
+        }
+        for (StudentScores studentScores : studentScoresList) {
+            if(studentScores.getGradeRanking() >= min && studentScores.getGradeRanking() <= max){
+                studentScoresCopy.add(studentScores);
+            }
+
+        }
+
+        return studentScoresCopy;
+    }
+
 
     /**
      * 通过学号获取所有的考试成绩
