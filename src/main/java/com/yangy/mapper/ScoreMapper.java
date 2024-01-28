@@ -131,4 +131,16 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Select("select AVG(${courseId}) from ${tableName}")
     Double getGradeAveByobject(String tableName, String courseId);
+
+    @Select("select count(*) from ${tableName}")
+    Integer getTableNum(String tableName);
+    @Select("select max(${courseId}) from ${tableName}")
+    Double getMaxScore(String tableName, String courseId);
+    @Select("select min(${courseId}) from ${tableName}")
+    Double getMinScore(String tableName, String courseId);
+    @Select("select AVG(${courseId}) from ${tableName}")
+    Double getAveScore(String tableName, String courseId);
+
+    @Select("select ${courseId} from ${tableName}")
+    List<Integer> getScoreCourseListByTableNameAndSubject(String tableName, String courseId);
 }

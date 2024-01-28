@@ -35,4 +35,6 @@ public interface CourseMapper extends BaseMapper<Course> {
 
     @Select("select fullmarks from tb_courses where name = #{name}")
     Integer getFullmarksByName(String name);
+    @Select("select fullmarks from tb_courses where course_id = #{id}")
+    Integer getFullmarksById(String id);
 }

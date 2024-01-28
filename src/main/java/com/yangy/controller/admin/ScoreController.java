@@ -484,8 +484,8 @@ public class ScoreController {
         //判断这场考试存不存在
 
         //如果专业为空只要找在这张考试表中寻找年级为这个的学生
-        List<AveScoreDTO> aveTable = scoreService.getAveTable(examValue, gradeValue,majorValue, choiceSubject);
-        if(aveTable == null){
+        List<AveScoreDTO> aveTable = scoreService.getAveTable(examValue, gradeValue, majorValue, choiceSubject);
+        if (aveTable == null) {
             return Result.error("考试不存在");
         }
         return Result.success(aveTable);
@@ -496,17 +496,73 @@ public class ScoreController {
     public Result getSubjectListByExamNameAndGradeAndMajor(@RequestParam String examValue,
                                                            @RequestParam String gradeValue,
                                                            @RequestParam String majorValue
-                                                           ){
+    ) {
         try {
             List<String> subjectList = examinationService.getSubjectListByExamNameAndGradeAndMajor(examValue, gradeValue, majorValue);
-            if(subjectList == null){
+            if (subjectList == null) {
                 return Result.error("考试不存在");
             }
             return Result.success(subjectList);
-        }catch (Exception e){
+        } catch (Exception e) {
+            return Result.error("查询失败");
+        }
+    }
+
+    @GetMapping("/getGradeNum")
+    public Result getGradeNum(@RequestParam String examValue,
+                              @RequestParam String gradeValue,
+                              @RequestParam String majorValue,
+                              @RequestParam String choiceSubject) {
+        try {
+            GradeNumDTO gradeNumDTO = scoreService.getGradeNum(examValue, gradeValue, majorValue, choiceSubject);
+            if (gradeNumDTO == null) {
+                return Result.error("考试不存在");
+            }
+            return Result.success(gradeNumDTO);
+        } catch (Exception e) {
             return Result.error("查询失败");
         }
     }
 
 
+    /**
+     * 通过科目获取横坐标
+     *
+     * @param examValue
+     * @param gradeValue
+     * @param majorValue
+     * @param choiceSubject
+     * @return
+     */
+    @GetMapping("/getAbscissa")
+    public Result getAbscissa(@RequestParam String examValue,
+                              @RequestParam String gradeValue,
+                              @RequestParam String majorValue,
+                              @RequestParam String choiceSubject) {
+
+        //通过班级获得专业
+        List<Integer> abscissa = scoreService.getAbscissa(examValue, gradeValue, majorValue, choiceSubject);
+        return Result.success(abscissa);
+
+
+    }
+
+
+    /**
+     * 获取分数集合
+     *
+     * @param examValue
+     * @param gradeValue
+     * @param majorValue
+     * @param choiceSubject
+     * @return
+     */
+    @GetMapping("/getScoreListByExamAndGradeAndSubject")
+    public Result getScoreListByExamAndGradeAndSubject(@RequestParam String examValue,
+                                                       @RequestParam String gradeValue,
+                                                       @RequestParam String majorValue,
+                                                       @RequestParam String choiceSubject) {
+        List<Integer> abscissa = scoreService.getScoreListByExamAndGradeAndSubject(examValue, gradeValue, majorValue, choiceSubject);
+        return Result.success(abscissa);
+    }
 }

@@ -1,10 +1,7 @@
 package com.yangy.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yangy.entity.AveScoreDTO;
-import com.yangy.entity.Examination;
-import com.yangy.entity.Score;
-import com.yangy.entity.StudentScores;
+import com.yangy.entity.*;
 import com.yangy.mapper.ScoreMapper;
 import com.yangy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -266,23 +263,25 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     @Override
     public List<AveScoreDTO> getAveTable(String examValue, String gradeValue,String majorValue, String choiceSubject) {
         AveScoreDTO aveScoreDTO;
-        String courseId;
         List<String> classList = new ArrayList<>();
-//        通过考试名称获取考试id
+        String courseId;
+        //        通过考试名称获取考试id
         String examId = "";
         if(choiceSubject.equals("总分")){
             courseId = "sum";
         }else{
             //获得科目id
             courseId = courseService.getCourseIdByName(choiceSubject);
-
         }
         if("".equals(majorValue)){
             classList = classService.getClassIdListBygradeId(gradeValue);
             examId = examinationService.getIdByExamNameAndGrade(examValue,gradeValue);
+
         }else{
             classList = classService.getClassIdListBygradeIdAndMajorId(gradeValue,majorService.getmajorByName(majorValue));
             examId = examinationService.getIdByExamNameAndGradeAndMajorId(examValue,gradeValue,majorService.getmajorByName(majorValue));
+
+
         }
         if(examId == null){
             return null;
@@ -307,6 +306,128 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         //通过年级
         return aveScoreDTOS;
     }
+
+    @Override
+    public GradeNumDTO getGradeNum(String examValue, String gradeValue, String majorValue, String choiceSubject) {
+        String courseId;
+        if(choiceSubject.equals("总分")){
+            courseId = "sum";
+        }else{
+            //获得科目id
+            courseId = courseService.getCourseIdByName(choiceSubject);
+
+        }
+        String examId = "";
+
+        if("".equals(majorValue)){
+            examId = examinationService.getIdByExamNameAndGrade(examValue,gradeValue);
+        }else{
+            examId = examinationService.getIdByExamNameAndGradeAndMajorId(examValue,gradeValue,majorService.getmajorByName(majorValue));
+        }
+        if(examId == null){
+            return null;
+        }
+        String tableName = "ts_score_"+examId; //获得成绩表名称
+        //通过表名获取这张表考试的人数
+        Integer tableNum = scoreMapper.getTableNum(tableName);
+        Double maxScore = scoreMapper.getMaxScore(tableName, courseId);
+        Double minScore = scoreMapper.getMinScore(tableName, courseId);
+        Double aveScore = scoreMapper.getAveScore(tableName, courseId);
+
+        GradeNumDTO gradeNumDTO = new GradeNumDTO(tableNum, maxScore, minScore, aveScore);
+//        gradeNumDTO.setGradePeople(tableNum);
+//        //查看最高分通过科目
+//        gradeNumDTO.setMaxScore(maxScore);
+//        //查看最低分通过科目
+//        gradeNumDTO.setMinScore(minScore);
+//        //查看平均分通过科目
+//        gradeNumDTO.setAveScore(aveScore);
+        return gradeNumDTO;
+    }
+
+   public String  getExamIdByExamNameAndGradeAndMajor(String examValue, String gradeValue, String majorValue){
+
+//        通过考试名称获取考试id
+       String examId = "";
+
+       if("".equals(majorValue)){
+           examId = examinationService.getIdByExamNameAndGrade(examValue,gradeValue);
+       }else{
+           examId = examinationService.getIdByExamNameAndGradeAndMajorId(examValue,gradeValue,majorService.getmajorByName(majorValue));
+       }
+       return examId;
+    }
+
+    @Override
+    public List<Integer> getAbscissa(String examValue, String gradeValue, String majorValue, String choiceSubject) {
+        List<Integer> integers = new ArrayList<>();
+        int sum = 0;
+        int i;
+        Integer minScore = 0;
+        String examId = getExamIdByExamNameAndGradeAndMajor(examValue,gradeValue,majorValue);
+
+        if(examId == null){
+            return null;
+        }
+        String tableName = "ts_score_"+examId; //获得成绩表名称
+        if(choiceSubject.equals("总分")){
+            List<String> tableFieldList = getTableFieldList(tableName);
+            List<String> scorelist = new ArrayList<>();
+            for (String s : tableFieldList) {
+                switch (s){
+                    case "score_id":
+                    case "exam_id":
+                    case "student_id":
+                    case "student_name":
+                    case "student_class":
+                    case "sum":
+                    case "classRanking":
+                    case "gradeRanking":
+                    case "proposal":break;
+                    default:scorelist.add(s);
+                }
+            }
+            for (String s : scorelist) {
+                sum += courseService.getFullmarksById(s);
+            }
+            minScore=(int)(sum*0.6);
+            for (i = 0;minScore<sum;i++){
+                integers .add(i,minScore);
+                minScore+=sum/10;
+            }
+            integers.add(i,sum);
+
+        }else{
+            //获得科目名称
+//            courseId = courseService.getCourseIdByName(choiceSubject);
+//            通过科目获取最大值
+            Integer fullmarks = courseService.getFullmarksByName(choiceSubject);
+            minScore = (int) (fullmarks * 0.6) /10*10;
+            for (i = 0;minScore<fullmarks;i++){
+                integers .add(i,minScore);
+                minScore+=fullmarks/10;
+            }
+            integers.add(i,fullmarks);
+        }
+        return integers;
+    }
+
+    @Override
+    public List<Integer> getScoreListByExamAndGradeAndSubject(String examValue, String gradeValue, String majorValue, String choiceSubject) {
+        String courseId;
+        if(choiceSubject.equals("总分")){
+            courseId = "sum";
+        }else{
+            //获得科目id
+            courseId = courseService.getCourseIdByName(choiceSubject);
+
+        }
+        String examId = getExamIdByExamNameAndGradeAndMajor(examValue,gradeValue,majorValue);
+        String tableName = "ts_score_"+examId; //获得成绩表名称
+        List<Integer> scoreCourseListByTableNameAndSubject = scoreMapper.getScoreCourseListByTableNameAndSubject(tableName, courseId);
+        return scoreCourseListByTableNameAndSubject;
+    }
+
 
     /**
      * 通过学号获取所有的考试成绩

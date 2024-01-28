@@ -150,4 +150,9 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
         return classMapper.getClassIdListBygradeIdAndMajorId(gradeValue,getmajorByName);
     }
 
+    @Override
+    public String getMajorIdByclassName(String name) {
+        return classMapper.getMajorIdByclassName(name);
+    }
+
 }
