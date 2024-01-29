@@ -187,6 +187,11 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
         return examinationMapper.etExamListksByGradeIdAndMajorId(gradeId, majorId);
     }
 
+    @Override
+    public List<String> getEXamNameListByScheduleName(String scheduleName) {
+        return examinationMapper.getEXamNameListByScheduleName(scheduleName);
+    }
+
 
     @Override
     public boolean updataExam(Examination examination) {

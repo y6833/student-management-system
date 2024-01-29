@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AveScoreDTO {
- private String grade;//年级
-    private String classs;//班级
-    private Double averageGrade;//年级平均分
-    private Double averageClass;//班级平均分
+public class ExamRangkDTO {
     private String examName;//考试名称
+    private Integer studentNum;//这个班的考试人数
+
 }

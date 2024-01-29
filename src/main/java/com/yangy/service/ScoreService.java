@@ -103,4 +103,6 @@ public interface ScoreService {
     List<Integer> getScoreListByExamAndClassAndSubject(String examValue, String classValue, String choiceSubject);
 
     List<StudentScores> getstudentScoresListByClass(String classValue, List<StudentScores> studentScoresList);
+
+    List<StudentScores> getRankingRangeNumByclassIdAndchoiceSubject(String examName, String rankingRange, String classValue, String choiceSubject);
 }

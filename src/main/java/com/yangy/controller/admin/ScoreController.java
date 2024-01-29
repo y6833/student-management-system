@@ -50,6 +50,9 @@ public class ScoreController {
     @Autowired
     private MajorService majorService;
 
+    @Autowired
+    private SchedulesService schedulesService;
+
     //分页查询
     @GetMapping("/getStuScoreList")
     public Result findPage(@RequestParam Integer pageNum
@@ -510,6 +513,7 @@ public class ScoreController {
 
     /**
      * 得到年级考试人数
+     *
      * @param examValue
      * @param gradeValue
      * @param majorValue
@@ -534,6 +538,7 @@ public class ScoreController {
 
     /**
      * 班级考试人数
+     *
      * @param examValue
      * @param gradeValue
      * @param majorValue
@@ -548,7 +553,7 @@ public class ScoreController {
                               @RequestParam String classValue,
                               @RequestParam String choiceSubject) {
         try {
-            GradeNumDTO gradeNumDTO = scoreService.getClassNum(examValue, gradeValue, majorValue,classValue, choiceSubject);
+            GradeNumDTO gradeNumDTO = scoreService.getClassNum(examValue, gradeValue, majorValue, classValue, choiceSubject);
             if (gradeNumDTO == null) {
                 return Result.error("考试不存在");
             }
@@ -579,6 +584,7 @@ public class ScoreController {
 
 
     }
+
     /**
      * 通过科目获取横坐标
      *
@@ -588,13 +594,13 @@ public class ScoreController {
     @GetMapping("/getAbscissa1")
     public Result getAbscissa1(@RequestParam String classValue,
                                @RequestParam String examValue,
-                              @RequestParam String choiceSubject) {
+                               @RequestParam String choiceSubject) {
         String gradeId = classService.getGradeIdByclassName(classValue);
 //        String classId = classService.getIdByclassName(classValue);
         String majorId = classService.getMajorIdByclassName(classValue);
         String majorName = majorService.getMajorName(majorId);
         //通过班级获得专业
-        List<Integer> abscissa = scoreService.getAbscissa(examValue, gradeId, majorName,choiceSubject);
+        List<Integer> abscissa = scoreService.getAbscissa(examValue, gradeId, majorName, choiceSubject);
         return Result.success(abscissa);
 
 
@@ -612,7 +618,7 @@ public class ScoreController {
     public Result getScoreListByExamAndClassAndSubject(@RequestParam String examValue,
                                                        @RequestParam String classValue,
                                                        @RequestParam String choiceSubject) {
-        List<Integer> abscissa = scoreService.getScoreListByExamAndClassAndSubject(examValue,classValue, choiceSubject);
+        List<Integer> abscissa = scoreService.getScoreListByExamAndClassAndSubject(examValue, classValue, choiceSubject);
         return Result.success(abscissa);
     }
 
@@ -661,7 +667,7 @@ public class ScoreController {
         studentScoresList = scoreService.getstudentScoresListBySubject(choiceSubject, studentScoresList);
 
         //通过排名筛选
-        studentScoresList = scoreService.getstudentScoresListByRankingRange(num1,num2,choiceSubject,studentScoresList);
+        studentScoresList = scoreService.getstudentScoresListByRankingRange(num1, num2, choiceSubject, studentScoresList);
 
 
         List<StudentScores> studentScoresLists = new ArrayList<>();
@@ -708,7 +714,7 @@ public class ScoreController {
         studentScoresList = scoreService.getstudentScoresListBySubject(choiceSubject, studentScoresList);
 
         //通过排名筛选
-        studentScoresList = scoreService.getstudentScoresListByRankingRange(num1,num2,choiceSubject,studentScoresList);
+        studentScoresList = scoreService.getstudentScoresListByRankingRange(num1, num2, choiceSubject, studentScoresList);
 
 
         List<StudentScores> studentScoresLists = new ArrayList<>();
@@ -727,10 +733,9 @@ public class ScoreController {
     }
 
 
-
     @GetMapping("/getExamClassAve")
     public Result getExamClassAve(@RequestParam String classValue,
-                                  @RequestParam String choiceSubject){
+                                  @RequestParam String choiceSubject) {
         //获得班级id
         //通过班级名称获得年级专业id
         String gradeId = classService.getGradeIdByclassName(classValue);
@@ -738,10 +743,45 @@ public class ScoreController {
         String majorId = classService.getMajorIdByclassName(classValue);
         String majorName = majorService.getMajorName(majorId);
         //通过年级和专业获得考试名称
-       List<String> examNameList = examinationService.getExamListksByGradeIdAndMajorId(gradeId,majorId);
-       Map<String,Double> examClassAve =  scoreService.getExamClassAve(gradeId,majorName,classId,examNameList,choiceSubject);
-    return Result.success(examClassAve);
+        List<String> examNameList = examinationService.getExamListksByGradeIdAndMajorId(gradeId, majorId);
+        Map<String, Double> examClassAve = scoreService.getExamClassAve(gradeId, majorName, classId, examNameList, choiceSubject);
+        return Result.success(examClassAve);
 
+    }
+
+    @GetMapping("/ClassRankSegment")
+    public Result ClassRankSegment(@RequestParam String classValue,
+                                   @RequestParam String choiceSubject,
+                                   @RequestParam String rankingRange,
+                                   @RequestParam String semester) {
+
+        List<Double> classProportions = new ArrayList<>();
+        List<Integer> classNums = new ArrayList<>();
+
+        //通过年级获取等级
+        Integer level = classService.getLevelByClassName(classValue);
+        //通过班级名称获得班级id
+        String classId = classService.getIdByclassName(classValue);
+        //通过班级和等级和学期获得课表
+        String scheduleName = schedulesService.getscheduleNameByClassIdAndLevelAndSemester(classId, level, semester);
+        List<String> examNameList = examinationService.getEXamNameListByScheduleName(scheduleName);
+        for (String examName : examNameList) {
+            int n = 0;
+            int m = 0;
+            //查看这场考试这个班在这个阶段的有多少人
+            List<StudentScores> studentScoresList = scoreService.getRankingRangeNumByclassIdAndchoiceSubject(examName, rankingRange, classValue, choiceSubject);
+            for (StudentScores studentScores : studentScoresList) {
+                m++;
+                if (classValue.equals(studentScores.getStudent().getClassId())) {
+                    n++;
+                }
+            }
+            classNums.add(n);
+            classProportions.add(Math.floor((n * 1.0) / m * 10) / 10 );
+
+        }
+        ClassRankDTO classRankDTO = new ClassRankDTO(examNameList, classNums, classProportions);
+        return Result.success(classRankDTO);
     }
 
 }

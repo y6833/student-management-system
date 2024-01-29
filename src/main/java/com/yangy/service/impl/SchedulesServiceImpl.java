@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yangy.entity.Schedules;
+import com.yangy.entity.StudentScores;
 import com.yangy.mapper.SchedulesMapper;
 import com.yangy.service.ClassService;
 import com.yangy.service.SchedulesService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,4 +68,11 @@ public class SchedulesServiceImpl extends ServiceImpl<SchedulesMapper, Schedules
     public String getscheduleIdByName(String name) {
         return schedulesMapper.getscheduleIdByName(name);
     }
+
+    @Override
+    public String getscheduleNameByClassIdAndLevelAndSemester(String classId, Integer level, String semester) {
+        return schedulesMapper.getscheduleNameByClassIdAndLevelAndSemester(classId,level,semester);
+    }
+
+
 }

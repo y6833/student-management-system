@@ -97,6 +97,8 @@ public class ClassController {
             , @RequestParam Integer pageSize
             , @RequestParam String searchString) {
 
+        //更新班级的等级
+        classService.updataClassLevel();
         IPage<Tclass> page = new Page<>(pageNum,pageSize);
 
         QueryWrapper<Tclass> queryWrapper = new QueryWrapper<>();
@@ -181,6 +183,8 @@ public class ClassController {
         writer.addHeaderAlias("gradeId","年级");
         writer.addHeaderAlias("majorId","专业");
         writer.addHeaderAlias("headTeacherId","班主任");
+        writer.addHeaderAlias("level","等级");
+
 
 
         //一次性写出list内的对象到excel，使用默认样式，强制输出标题
@@ -214,6 +218,7 @@ public class ClassController {
         reader.addHeaderAlias("年级","gradeId");
         reader.addHeaderAlias("专业","majorId");
         reader.addHeaderAlias("班主任","headTeacherId");
+        reader.addHeaderAlias("等级","level");
 
         List<Tclass> list = reader.readAll(Tclass.class);
 //        System.out.println(list);
@@ -221,5 +226,11 @@ public class ClassController {
         return true;
     }
 
+
+    @GetMapping("/getLevelList")
+    public Result getLevelList(){
+       Map<Integer,String> map =  classService.getLevelList();
+       return Result.success(map);
+    }
 
 }

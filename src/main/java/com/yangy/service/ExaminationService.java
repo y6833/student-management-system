@@ -47,4 +47,7 @@ public interface ExaminationService {
     List<String> getExamListks();
 
     List<String> getExamListksByGradeIdAndMajorId(String gradeId, String majorId);
+
+
+    List<String> getEXamNameListByScheduleName(String scheduleName);
 }

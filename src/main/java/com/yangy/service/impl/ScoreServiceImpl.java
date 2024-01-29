@@ -711,6 +711,19 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScores;
     }
 
+    @Override
+    public List<StudentScores> getRankingRangeNumByclassIdAndchoiceSubject(String examValue, String rankingRange, String classValue, String choiceSubject) {
+        String[] parts = rankingRange.split("-");
+        int num1 = Integer.parseInt(parts[0]);
+        int num2 = Integer.parseInt(parts[1]);
+        List<StudentScores> studentScoresList = scoreService.getAll();
+        //查看这条数据是不是这场考试的
+        studentScoresList = scoreService.getstudentScoresListByExamName(examValue, studentScoresList);
+        //通过排名筛选
+        studentScoresList = scoreService.getstudentScoresListByRankingRange(num1, num2, choiceSubject, studentScoresList);
+        return studentScoresList;
+    }
+
     /**
      * 通过考试日期获取所有的考试信息
      *

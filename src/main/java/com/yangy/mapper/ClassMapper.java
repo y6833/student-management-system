@@ -1,10 +1,13 @@
 package com.yangy.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yangy.entity.Level;
 import com.yangy.entity.Tclass;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 //@Mapper
@@ -57,4 +60,19 @@ public interface ClassMapper extends BaseMapper<Tclass> {
 
     @Select("select grade_id from tb_class where class_name =#{name}")
     String getGradeIdByclassName(String name);
+
+    @Select("select * from tb_grade")
+    List<Level> getLevelList();
+
+    @Select("SELECT * from tb_class")
+    List<Tclass> getClassOList();
+
+    @Select("select create_time from tb_class where class_id = #{classId}")
+    Timestamp getCreateTime(String classId);
+
+    @Update("update tb_class set level = #{level} where class_id = #{classId}")
+    void updateLevel(String classId, long level);
+
+    @Select("select level from tb_class where class_name = #{classValue}")
+    Integer getLevelByClassName(String classValue);
 }

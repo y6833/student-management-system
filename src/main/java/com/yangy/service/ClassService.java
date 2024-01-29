@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yangy.entity.Tclass;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ClassService {
 
@@ -49,4 +50,10 @@ public interface ClassService {
     String getMajorIdByclassName(String classs);
 
     String getGradeIdByclassName(String classValue);
+
+    Map<Integer, String> getLevelList();
+
+    void updataClassLevel();
+
+    Integer getLevelByClassName(String classValue);
 }

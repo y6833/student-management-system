@@ -18,5 +18,6 @@ public class Tclass {
     private String gradeId; // 年级编号
     private String majorId; // 专业编号
     private String headTeacherId; // 班主任ID
+    private Integer level;//大一/高一
 
 }

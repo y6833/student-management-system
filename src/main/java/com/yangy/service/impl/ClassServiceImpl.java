@@ -3,6 +3,7 @@ package com.yangy.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yangy.entity.Level;
 import com.yangy.entity.Tclass;
 import com.yangy.mapper.ClassMapper;
 import com.yangy.service.ClassService;
@@ -12,8 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implements ClassService {
@@ -121,12 +127,14 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
 
     @Override
     public void saveClassList(List<Tclass> list) {
+        ArrayList<Tclass> tclasses = new ArrayList<>();
         for (Tclass tclass : list) {
             tclass.setMajorId(majorService.getIdByclassName(tclass.getMajorId()));
             tclass.setHeadTeacherId(teacherService.getIdByName(tclass.getHeadTeacherId()));
-            Tclass tclazz = new Tclass(tclass.getClassId(),tclass.getClassName(),tclass.getGradeId(),tclass.getMajorId(),tclass.getHeadTeacherId());
+            Tclass tclazz = new Tclass(tclass.getClassId(),tclass.getClassName(),tclass.getGradeId(),tclass.getMajorId(),tclass.getHeadTeacherId(),tclass.getLevel());
+            tclasses.add(tclazz);
         }
-        saveBatch(list);
+        saveBatch(tclasses);
     }
 
     @Override
@@ -163,6 +171,38 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
     @Override
     public String getGradeIdByclassName(String name) {
         return classMapper.getGradeIdByclassName(name);
+    }
+
+    @Override
+    public Map<Integer, String> getLevelList() {
+        List<Level> levelList = classMapper.getLevelList();
+        HashMap<Integer, String> map = new HashMap<>();
+        for (Level level : levelList) {
+            map.put(level.getId(),level.getName());
+        }
+        return map;
+    }
+
+    @Override
+    public void updataClassLevel() {
+         LocalDateTime currentTime = LocalDateTime.now();
+        //获取班级创建的时间
+        List<Tclass> classOList = classMapper.getClassOList();
+        for (Tclass tclass : classOList) {
+            //通过班级id获得创建时间
+            Timestamp storedTimestamp = classMapper.getCreateTime(tclass.getClassId());
+            // 将时间戳转换为LocalDateTime对象
+            LocalDateTime createTime = storedTimestamp.toLocalDateTime();
+            long between = ChronoUnit.YEARS.between(createTime, currentTime);
+            if(between >0){
+                classMapper.updateLevel(tclass.getClassId(),tclass.getLevel()+between);
+            }
+        }
+    }
+
+    @Override
+    public Integer getLevelByClassName(String classValue) {
+        return classMapper.getLevelByClassName(classValue);
     }
 
 }

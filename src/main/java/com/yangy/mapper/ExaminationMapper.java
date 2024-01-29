@@ -45,4 +45,8 @@ public interface ExaminationMapper extends BaseMapper<Examination> {
     List<String> getExamListks();
     @Select("select exam_name from ts_examination where exam_major =#{majorId} AND exam_grade=#{gradeId} AND schedule_name != '测试' AND schedule_name IS NOT NULL order by 'exam_data' ")
     List<String> etExamListksByGradeIdAndMajorId(String gradeId, String majorId);
+
+    @Select("select exam_name from ts_examination where schedule_name = #{scheduleName}")
+    List<String> getEXamNameListByScheduleName(String scheduleName);
+
 }

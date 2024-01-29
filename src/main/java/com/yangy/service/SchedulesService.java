@@ -22,4 +22,7 @@ public interface SchedulesService {
     String getClassIdByName(String name);
 
     String getscheduleIdByName(String name);
+
+    String getscheduleNameByClassIdAndLevelAndSemester(String classId, Integer level, String semester);
+
 }
