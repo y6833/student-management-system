@@ -17,4 +17,5 @@ public class ScheduleDTO {
     private String course; //课程id
     private String classroom;//教室
     private String teacher;//老师
+    private Integer type;//考试，考察
 }

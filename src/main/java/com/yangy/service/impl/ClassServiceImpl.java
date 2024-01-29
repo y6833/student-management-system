@@ -84,12 +84,17 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
 
     @Override
     public boolean addClass(Tclass tclass) {
-        tclass.setMajorId(majorService.getIdByclassName(tclass.getMajorId()));
-        int insert = classMapper.insert(tclass);
-        if (insert >0){
-            return true;
+        try {
+            tclass.setMajorId(majorService.getIdByclassName(tclass.getMajorId()));
+            int insert = classMapper.insert(tclass);
+            if (insert >0){
+                return true;
+            }
+            return false;
+        }catch (Exception e){
+            return false;
         }
-        return false;
+
     }
 
     @Override
@@ -153,6 +158,11 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
     @Override
     public String getMajorIdByclassName(String name) {
         return classMapper.getMajorIdByclassName(name);
+    }
+
+    @Override
+    public String getGradeIdByclassName(String name) {
+        return classMapper.getGradeIdByclassName(name);
     }
 
 }

@@ -130,7 +130,7 @@ public class ClassController {
         if (b){
             return Result.success("添加班级成功");
         }else{
-            return Result.error();
+            return Result.error("添加班级失败");
         }
     }
 

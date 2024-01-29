@@ -34,4 +34,6 @@ public interface CourseService {
     Integer getFullmarksByName(String name);
 
     Integer getFullmarksById(String s);
+
+    Integer getTypeById(String course);
 }

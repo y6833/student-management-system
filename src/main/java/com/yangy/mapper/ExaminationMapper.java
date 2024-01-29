@@ -38,6 +38,11 @@ public interface ExaminationMapper extends BaseMapper<Examination> {
     @Select("select id from ts_examination where exam_name = #{examName} And exam_grade=#{gradeValue}")
     String getIdByExamNameAndGrade(String examName, String gradeValue);
 
-    @Select("select id from ts_examination where exam_name = #{examName} And exam_grade=#{gradeValue} AND exam_major=#{major}")
+    @Select("select id from ts_examination where exam_name = #{examValue} And exam_grade=#{gradeValue} AND exam_major=#{major}")
     String getIdByExamNameAndGradeAndMajorId(String examValue, String gradeValue, String major);
+
+    @Select("select exam_name from ts_examination where schedule_name != '测试' AND schedule_name IS NOT NULL")
+    List<String> getExamListks();
+    @Select("select exam_name from ts_examination where exam_major =#{majorId} AND exam_grade=#{gradeId} AND schedule_name != '测试' AND schedule_name IS NOT NULL order by 'exam_data' ")
+    List<String> etExamListksByGradeIdAndMajorId(String gradeId, String majorId);
 }

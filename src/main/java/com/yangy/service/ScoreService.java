@@ -95,4 +95,12 @@ public interface ScoreService {
     List<StudentScores> getstudentScoresListBySubject(String choiceSubject, List<StudentScores> studentScoresList);
 
     List<StudentScores> getstudentScoresListByRankingRange(int num1, int num2,String choiceSubject, List<StudentScores> studentScoresList);
+
+    GradeNumDTO getClassNum(String examValue, String gradeValue, String majorValue, String classValue, String choiceSubject);
+
+    Map<String,Double>  getExamClassAve(String gradeId, String majorName,String classId, List<String> examNameList, String choiceSubject);
+
+    List<Integer> getScoreListByExamAndClassAndSubject(String examValue, String classValue, String choiceSubject);
+
+    List<StudentScores> getstudentScoresListByClass(String classValue, List<StudentScores> studentScoresList);
 }

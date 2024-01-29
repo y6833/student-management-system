@@ -54,4 +54,7 @@ public interface ClassMapper extends BaseMapper<Tclass> {
 
     @Select("select major_id from tb_class where class_name =#{name}")
     String getMajorIdByclassName(String name);
+
+    @Select("select grade_id from tb_class where class_name =#{name}")
+    String getGradeIdByclassName(String name);
 }

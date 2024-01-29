@@ -66,8 +66,11 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
         String tablename = "ts_score_"+examination.getId();
         String courseStr = "";
         for (String cours : courses) {
-            String courseId = courseService.getCourseIdByName(cours);
-            courseStr+= courseId + " double DEFAULT '0',";
+                String courseId = courseService.getCourseIdByName(cours);
+            if(courseService.getTypeById(courseId) == 1){
+                courseStr+= courseId + " double DEFAULT '0',";
+            }
+
         }
         String sql = "CREATE TABLE " + tablename +"("
 //                +"id int NOT NULL AUTO_INCREMENT,"
@@ -148,8 +151,8 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
     }
 
     @Override
-    public String getIdByExamNameAndGradeAndMajorId(String examValue, String gradeValue, String getmajorByName) {
-        return examinationMapper.getIdByExamNameAndGradeAndMajorId(examValue,gradeValue,getmajorByName);
+    public String getIdByExamNameAndGradeAndMajorId(String examValue, String gradeValue,String major) {
+        return examinationMapper.getIdByExamNameAndGradeAndMajorId(examValue,gradeValue,major);
     }
 
     @Override
@@ -172,6 +175,16 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
             subjects.add(courseService.getCourseNameById(subject));
         }
         return subjects;
+    }
+
+    @Override
+    public List<String> getExamListks() {
+        return examinationMapper.getExamListks();
+    }
+
+    @Override
+    public List<String> getExamListksByGradeIdAndMajorId(String gradeId, String majorId) {
+        return examinationMapper.etExamListksByGradeIdAndMajorId(gradeId, majorId);
     }
 
 

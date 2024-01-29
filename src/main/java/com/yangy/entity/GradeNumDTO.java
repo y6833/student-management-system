@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GradeNumDTO {
-    private Integer gradePeople;//年级人数
+    private Integer gradePeople;//年级人数/班级人数
     private Double maxScore;//最高分
     private Double minScore;//最低分
     private Double aveScore;//平均分

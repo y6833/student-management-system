@@ -43,4 +43,8 @@ public interface ExaminationService {
     String getIdByExamNameAndGradeAndMajorId(String examValue, String gradeValue, String getmajorByName);
 
     List<String> getSubjectListByExamNameAndGradeAndMajor(String examValue, String gradeValue, String majorValue);
+
+    List<String> getExamListks();
+
+    List<String> getExamListksByGradeIdAndMajorId(String gradeId, String majorId);
 }

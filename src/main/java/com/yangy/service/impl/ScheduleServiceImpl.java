@@ -65,7 +65,8 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleMapper, Schedule> i
             ArrayList<Integer> weekly = new ArrayList<>(intList);
             String teacher = courseService.getTeacherById(course);
             String courseName = courseService.getCourseNameById(course);
-            resultList.add(new ScheduleDTO(id,weekly,week,section,courseName,classroom,teacher));
+            Integer type = courseService.getTypeById(course);
+            resultList.add(new ScheduleDTO(id,weekly,week,section,courseName,classroom,teacher,type));
         }
         return resultList;
     }

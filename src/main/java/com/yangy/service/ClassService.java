@@ -47,4 +47,6 @@ public interface ClassService {
     List<String> getClassIdListBygradeIdAndMajorId(String gradeValue, String getmajorByName);
 
     String getMajorIdByclassName(String classs);
+
+    String getGradeIdByclassName(String classValue);
 }

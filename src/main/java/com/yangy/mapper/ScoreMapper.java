@@ -134,12 +134,24 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Select("select count(*) from ${tableName}")
     Integer getTableNum(String tableName);
+    @Select("select count(*) from ${tableName} where student_class=#{classId}")
+    Integer getTableNumByClassId(String tableName,String classId);
+
     @Select("select max(${courseId}) from ${tableName}")
     Double getMaxScore(String tableName, String courseId);
+    @Select("select max(${courseId}) from ${tableName} where student_class=#{classId}")
+    Double getMaxScoreByClassId(String tableName, String courseId,String classId);
+
     @Select("select min(${courseId}) from ${tableName}")
     Double getMinScore(String tableName, String courseId);
+    @Select("select min(${courseId}) from ${tableName} where student_class=#{classId}")
+    Double getMinScoreByClassId(String tableName, String courseId,String classId);
+
+
     @Select("select AVG(${courseId}) from ${tableName}")
     Double getAveScore(String tableName, String courseId);
+    @Select("select AVG(${courseId}) from ${tableName} where student_class=#{classId}")
+    Double getAveScoreByClassId(String tableName, String courseId,String classId);
 
     @Select("select ${courseId} from ${tableName}")
     List<Integer> getScoreCourseListByTableNameAndSubject(String tableName, String courseId);
@@ -149,4 +161,7 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Select("select score_id from ${tableName} where student_class =#{classId} ORDER BY ${courseId} DESC")
     List<String> getSubClassRankingByScoreId(String tableName, String courseId, String classId);
+
+    @Select("select ${courseId} from ${tableName} where student_class = #{classId}")
+    List<Integer> getScoreCourseListByTableNameAndSubjectAndClassId(String tableName, String courseId, String classId);
 }

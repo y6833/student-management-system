@@ -226,5 +226,15 @@ public class ExaminationController {
     }
 
 
+    /**
+     * 获取课表考试列表
+     * @return
+     */
+    @GetMapping("/getExamListks")
+    public Result getExamListks(){
+        List<String> examListks = examinationService.getExamListks();
+        return Result.success(examListks);
+    }
+
 
 }

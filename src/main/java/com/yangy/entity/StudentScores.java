@@ -15,4 +15,5 @@ public class StudentScores {
     private Date examDate; // 考试日期
     private String examName;//考试名称
     private String proposal;//建议
+    private Integer type;//考试1，测试0
 }
