@@ -1,7 +1,6 @@
 package com.yangy.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yangy.util.MD5;
@@ -25,7 +24,6 @@ public class User {
     private String  roleId;
     private Integer roleName;
     private String token;
-    @TableField(value = "avatar_url")  //绑定数据库中的字段
     private String avatar; //头像
 
     public User(String username, String password,String verifiCode, Integer activation){

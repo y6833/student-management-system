@@ -13,7 +13,7 @@ public interface UserMapper {
     @Delete("DELETE FROM tb_user WHERE id = #{id}")
     void deleteById(@Param("id") String id);
 
-    @Update("UPDATE tb_user SET username=#{username}, password=#{password},activation=#{activation}, role_id=#{roleId}, role_name=#{roleName},avatar_url = #{avatar} WHERE id=#{id}")
+    @Update("UPDATE tb_user SET username=#{username}, password=#{password},activation=#{activation}, role_id=#{roleId}, role_name=#{roleName},avatar = #{avatar} WHERE id=#{id}")
     Boolean updateById(User user);
 
     @Select("SELECT * FROM tb_user WHERE id = #{id}")
@@ -41,7 +41,7 @@ public interface UserMapper {
     @Update("update tb_user set activation = #{isActivate} where role_id = #{roleId}")
     boolean updateIsActivate(String roleId, Integer isActivate);
 
-    @Select("SELECT avatar_url FROM tb_user WHERE username = #{username}")
+    @Select("SELECT avatar FROM tb_user WHERE username = #{username}")
     String getAvatarURL(String username);
 
     @Select("select role_name from tb_user where role_id=#{uid}")

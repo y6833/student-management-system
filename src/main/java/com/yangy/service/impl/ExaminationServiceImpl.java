@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yangy.entity.Examination;
 import com.yangy.mapper.ExaminationMapper;
-import com.yangy.service.CourseService;
-import com.yangy.service.ExaminationService;
-import com.yangy.service.MajorService;
-import com.yangy.service.ScoreService;
+import com.yangy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -33,6 +30,10 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
 
     @Autowired
     private ScoreService scoreService;
+
+    @Autowired
+    private StudentService studentService;
+
 
     @Override
     public Date getDateByName(String examName) {
@@ -190,6 +191,24 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
     @Override
     public List<String> getEXamNameListByScheduleName(String scheduleName) {
         return examinationMapper.getEXamNameListByScheduleName(scheduleName);
+    }
+
+//    通过考试名称获得考试和学生id获得考试id
+    @Override
+    public String getIdByExamNameAndStudentId(String examValue, String studentId) {
+
+        //通过学生id获得年级，专业
+        String grade = studentService.getGradeById(studentId);
+        String major = studentService.getMajorById(studentId);
+        String examId = examinationMapper.getIdByExamNameAndGradeAndMajorId(examValue, grade, major);
+
+
+        return examId;
+    }
+
+    @Override
+    public String getScheduleNameByExamName(String examValue) {
+        return examinationMapper.getScheduleNameByExamName(examValue);
     }
 
 

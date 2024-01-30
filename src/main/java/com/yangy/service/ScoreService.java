@@ -105,4 +105,8 @@ public interface ScoreService {
     List<StudentScores> getstudentScoresListByClass(String classValue, List<StudentScores> studentScoresList);
 
     List<StudentScores> getRankingRangeNumByclassIdAndchoiceSubject(String examName, String rankingRange, String classValue, String choiceSubject);
+
+    List<SubRankDTO> getInformationByexamIdAndStudentId(String examId, String studentValue);
+
+    double getScoreByStudentIdAndCourseId(String tableName, String studentValue, String s);
 }

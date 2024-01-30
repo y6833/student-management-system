@@ -777,11 +777,46 @@ public class ScoreController {
                 }
             }
             classNums.add(n);
-            classProportions.add(Math.floor((n * 1.0) / m * 10) / 10 );
+            classProportions.add(Math.floor((n * 1.0) / m * 10) / 10);
 
         }
         ClassRankDTO classRankDTO = new ClassRankDTO(examNameList, classNums, classProportions);
         return Result.success(classRankDTO);
     }
+
+
+    @GetMapping("/getSubRank")
+    public Result getSubRank(@RequestParam String examValue,
+                             @RequestParam String studentValue) {
+//    考试名称和学生id
+        //首先通过考试名称获得考试和学生id获得考试id
+        String examId = examinationService.getIdByExamNameAndStudentId(examValue, studentValue);
+        List<SubRankDTO> SubRankDTOList = scoreService.getInformationByexamIdAndStudentId(examId, studentValue);
+        return Result.success(SubRankDTOList);
+
+    }
+
+    @GetMapping("/getExamcompareChart")
+    public Result getExamcompareChart(@RequestParam String studentValue,
+                                      @RequestParam String examValue){
+
+        ArrayList<SubRankExamDTO> subRankExamDTOS = new ArrayList<>();
+        //通过考试名称获得课表
+        String scheduleName = examinationService.getScheduleNameByExamName(examValue);
+        //通过课表获得考试id列表
+        List<String> examNameList = examinationService.getEXamNameListByScheduleName(scheduleName);
+        for (String examValue1 : examNameList) {
+            SubRankExamDTO subRankExamDTO = new SubRankExamDTO();
+            //首先通过考试名称获得考试和学生id获得考试id
+            String examId = examinationService.getIdByExamNameAndStudentId(examValue1, studentValue);
+            List<SubRankDTO> SubRankDTOList = scoreService.getInformationByexamIdAndStudentId(examId, studentValue);
+            subRankExamDTO.setExamName(examValue1);
+            subRankExamDTO.setSubRankDTO(SubRankDTOList);
+            subRankExamDTOS.add(subRankExamDTO);
+        }
+
+        return Result.success(subRankExamDTOS);
+    }
+
 
 }

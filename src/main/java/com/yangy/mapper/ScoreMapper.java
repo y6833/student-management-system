@@ -164,4 +164,10 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Select("select ${courseId} from ${tableName} where student_class = #{classId}")
     List<Integer> getScoreCourseListByTableNameAndSubjectAndClassId(String tableName, String courseId, String classId);
+
+    @Select("select ${courseId} from ${tableName} where student_id=#{studentValue}")
+    double getScoreByStudentIdAndCourseId(String tableName, String studentValue, String courseId);
+
+    @Select("select score_id from ${tableName} where student_id = #{studentValue}")
+    String getScoreIdBystudentId(String tableName, String studentValue);
 }

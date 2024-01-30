@@ -310,6 +310,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         //通过年级
         return aveScoreDTOS;
     }
+
     @Override
     public GradeNumDTO getClassNum(String examValue, String gradeValue, String majorValue, String classValue, String choiceSubject) {
 
@@ -336,12 +337,12 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         String tableName = "ts_score_" + examId; //获得成绩表名称
 
         //通过表名获取这张表考试的人数
-        Integer tableNum = scoreMapper.getTableNumByClassId(tableName,classId);
-        Double maxScore = scoreMapper.getMaxScoreByClassId(tableName, courseId,classId);
-        Double minScore = scoreMapper.getMinScoreByClassId(tableName, courseId,classId);
-        Double aveScore = scoreMapper.getAveScoreByClassId(tableName, courseId,classId);
+        Integer tableNum = scoreMapper.getTableNumByClassId(tableName, classId);
+        Double maxScore = scoreMapper.getMaxScoreByClassId(tableName, courseId, classId);
+        Double minScore = scoreMapper.getMinScoreByClassId(tableName, courseId, classId);
+        Double aveScore = scoreMapper.getAveScoreByClassId(tableName, courseId, classId);
 
-        GradeNumDTO gradeNumDTO = new GradeNumDTO(tableNum, maxScore, minScore,Math.floor(aveScore * 10) / 10 );
+        GradeNumDTO gradeNumDTO = new GradeNumDTO(tableNum, maxScore, minScore, Math.floor(aveScore * 10) / 10);
 //        gradeNumDTO.setGradePeople(tableNum);
 //        //查看最高分通过科目
 //        gradeNumDTO.setMaxScore(maxScore);
@@ -353,7 +354,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     }
 
     @Override
-    public Map<String,Double>  getExamClassAve(String gradeId, String majorName,String classId, List<String> examNameList, String choiceSubject) {
+    public Map<String, Double> getExamClassAve(String gradeId, String majorName, String classId, List<String> examNameList, String choiceSubject) {
         Map<String, Double> examClassAve = new HashMap<>();
         String courseId;
         if (choiceSubject.equals("总分")) {
@@ -367,12 +368,10 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
             String examId = getExamIdByExamNameAndGradeAndMajor(exmaName, gradeId, majorName);
             String tableName = "ts_score_" + examId; //获得成绩表名称
             Double classAveByScoreId = scoreService.getClassAveByScoreId(tableName, classId, courseId);
-            examClassAve.put(exmaName,classAveByScoreId);
+            examClassAve.put(exmaName, classAveByScoreId);
         }
         return examClassAve;
     }
-
-
 
 
     @Override
@@ -402,7 +401,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         Double minScore = scoreMapper.getMinScore(tableName, courseId);
         Double aveScore = scoreMapper.getAveScore(tableName, courseId);
 
-        GradeNumDTO gradeNumDTO = new GradeNumDTO(tableNum, maxScore, minScore, Math.floor(aveScore * 10) / 10 );
+        GradeNumDTO gradeNumDTO = new GradeNumDTO(tableNum, maxScore, minScore, Math.floor(aveScore * 10) / 10);
 //        gradeNumDTO.setGradePeople(tableNum);
 //        //查看最高分通过科目
 //        gradeNumDTO.setMaxScore(maxScore);
@@ -481,6 +480,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         }
         return integers;
     }
+
     @Override
     public List<Integer> getScoreListByExamAndClassAndSubject(String examValue, String classValue, String choiceSubject) {
         String courseId;
@@ -498,11 +498,10 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         String majorValue = majorService.getMajorName(majorId);
         String examId = getExamIdByExamNameAndGradeAndMajor(examValue, gradeValue, majorValue);
         String tableName = "ts_score_" + examId; //获得成绩表名称
-        List<Integer> scoreCourseListByTableNameAndSubject = scoreMapper.getScoreCourseListByTableNameAndSubjectAndClassId(tableName, courseId,classId);
+        List<Integer> scoreCourseListByTableNameAndSubject = scoreMapper.getScoreCourseListByTableNameAndSubjectAndClassId(tableName, courseId, classId);
         return scoreCourseListByTableNameAndSubject;
 
     }
-
 
 
     @Override
@@ -574,8 +573,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         for (StudentScores studentScores : studentScoresList) {
             //进行排名
             List<String> subClassRankingByScoreId = scoreMapper.getSubClassRankingByScoreId(tableName, courseId, classService.getIdByclassName(studentScores.getStudent().getClassId()));
-            Integer subGradeRanking = subGradeRankingByScoreId.indexOf(studentScores.getScoreId())+1;
-            Integer subClassRanking = subClassRankingByScoreId.indexOf(studentScores.getScoreId())+1;
+            Integer subGradeRanking = subGradeRankingByScoreId.indexOf(studentScores.getScoreId()) + 1;
+            Integer subClassRanking = subClassRankingByScoreId.indexOf(studentScores.getScoreId()) + 1;
             studentScores.setGradeRanking(subGradeRanking);
             studentScores.setClassRanking(subClassRanking);
 
@@ -589,7 +588,6 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
         return studentScoresCopy;
     }
-
 
 
     /**
@@ -722,6 +720,74 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         //通过排名筛选
         studentScoresList = scoreService.getstudentScoresListByRankingRange(num1, num2, choiceSubject, studentScoresList);
         return studentScoresList;
+    }
+
+
+    public List<String> getExamTableSubjects(String tableName) {
+        List<String> tableFieldList = getTableFieldList(tableName);
+        List<String> scorelist = new ArrayList<>();
+        for (String s : tableFieldList) {
+            switch (s) {
+                case "score_id":
+                case "exam_id":
+                case "student_id":
+                case "student_name":
+                case "student_class":
+                case "classRanking":
+                case "gradeRanking":
+                case "proposal":
+                    break;
+                default:
+                    scorelist.add(s);
+            }
+        }
+        return scorelist;
+    }
+
+
+    @Override
+    public List<SubRankDTO> getInformationByexamIdAndStudentId(String examId, String studentValue) {
+        String tableName = "ts_score_" + examId; //获得成绩表名称
+        List<String> scorelist = getExamTableSubjects(tableName);
+        //通过考试id和学号获得考试成绩id
+        String scoreId = scoreMapper.getScoreIdBystudentId(tableName, studentValue);
+        List<SubRankDTO> SubRankDTOList = new ArrayList<>();
+        //循环科目
+        Double sum = 0.0;
+        for (String courseId : scorelist) {
+            SubRankDTO subRankDTO = new SubRankDTO();
+            //通过科目id获得科目名称
+            subRankDTO.setCourse( "sum".equals(courseId)? "总分" : courseService.getCourseNameById(courseId));
+            //通过科目id获取科目最大值
+            subRankDTO.setMax(courseService.getSubjectMaxScore(courseId));
+            //通过成绩表学生id获得科目分数
+            double courseScore = scoreService.getScoreByStudentIdAndCourseId(tableName, studentValue, courseId);
+            subRankDTO.setSubject(courseScore);
+            sum += courseScore;
+            List<String> subGradeRankingByScoreId = scoreMapper.getSubGradeRankingByScoreId(tableName, courseId);
+//        studentScoresList.sort(Comparator.comparingDouble(o -> o.getScores().values().iterator().next()));
+            //获取科目的年级平均分
+            Double aveScore = scoreMapper.getAveScore(tableName, courseId);
+            subRankDTO.setAverage(Math.floor(aveScore * 10) / 10);
+            //进行排名
+            List<String> subClassRankingByScoreId = scoreMapper.getSubClassRankingByScoreId(tableName, courseId, studentService.getClassIdById(studentValue));
+            Integer subGradeRanking = subGradeRankingByScoreId.indexOf(scoreId) + 1;
+            Integer subClassRanking = subClassRankingByScoreId.indexOf(scoreId) + 1;
+            //通过成绩表学生id获得科目年级排名
+            subRankDTO.setGradeRangk(subGradeRanking);
+            //通过成绩表学生id获得科目班级排名
+            subRankDTO.setClassRangk(subClassRanking);
+            SubRankDTOList.add(subRankDTO);
+
+
+        }
+
+        return SubRankDTOList;
+    }
+
+    @Override
+    public double getScoreByStudentIdAndCourseId(String tableName, String studentValue, String s) {
+        return scoreMapper.getScoreByStudentIdAndCourseId(tableName, studentValue, s);
     }
 
     /**

@@ -49,4 +49,6 @@ public interface ExaminationMapper extends BaseMapper<Examination> {
     @Select("select exam_name from ts_examination where schedule_name = #{scheduleName}")
     List<String> getEXamNameListByScheduleName(String scheduleName);
 
+    @Select("select schedule_name from ts_examination where exam_name = #{examValue}")
+    String getScheduleNameByExamName(String examValue);
 }
