@@ -78,7 +78,7 @@ public interface ScoreMapper extends BaseMapper<Score> {
     @Select("select ${courseId} from ${tableName}")
     List<Double> getObjectScoreList(String tableName, String courseId);
 
-    @Select("select ${courseId} from ${tableName} where student_class=#{classId}")
+    @Select("select ${courseId} from ${tableName} where student_class=#{classId} And active = 1")
     List<Double> getObjectByClassScoreList(String tableName,String classId, String courseId);
 
     @Update("update ${tableName} set ${courseName}=#{scores} where student_id=#{id}")
@@ -126,48 +126,60 @@ public interface ScoreMapper extends BaseMapper<Score> {
     @Update("update ${tableName} set proposal=#{proposal} where score_id = #{scoreId}")
     boolean updataProposal(String tableName, String scoreId, String proposal);
 
-    @Select("select AVG(${courseId}) from ${tableName} where student_class=#{classs}")
+    @Select("select AVG(${courseId}) from ${tableName} where student_class=#{classs} AND active = 1")
     Double getClassAveByobject(String tableName, String classs, String courseId);
 
-    @Select("select AVG(${courseId}) from ${tableName}")
+    @Select("select AVG(${courseId}) from ${tableName} where active = 1")
     Double getGradeAveByobject(String tableName, String courseId);
 
-    @Select("select count(*) from ${tableName}")
+    @Select("select count(*) from ${tableName} where active = 1")
     Integer getTableNum(String tableName);
-    @Select("select count(*) from ${tableName} where student_class=#{classId}")
+    @Select("select count(*) from ${tableName} where student_class=#{classId} AND active = 1")
     Integer getTableNumByClassId(String tableName,String classId);
 
-    @Select("select max(${courseId}) from ${tableName}")
+    @Select("select max(${courseId}) from ${tableName} where active = 1")
     Double getMaxScore(String tableName, String courseId);
-    @Select("select max(${courseId}) from ${tableName} where student_class=#{classId}")
+    @Select("select max(${courseId}) from ${tableName} where student_class=#{classId} AND active = 1")
     Double getMaxScoreByClassId(String tableName, String courseId,String classId);
 
-    @Select("select min(${courseId}) from ${tableName}")
+    @Select("select min(${courseId}) from ${tableName} where active = 1")
     Double getMinScore(String tableName, String courseId);
-    @Select("select min(${courseId}) from ${tableName} where student_class=#{classId}")
+    @Select("select min(${courseId}) from ${tableName} where student_class=#{classId} AND active = 1")
     Double getMinScoreByClassId(String tableName, String courseId,String classId);
 
 
-    @Select("select AVG(${courseId}) from ${tableName}")
+    @Select("select AVG(${courseId}) from ${tableName} where active = 1")
     Double getAveScore(String tableName, String courseId);
-    @Select("select AVG(${courseId}) from ${tableName} where student_class=#{classId}")
+    @Select("select AVG(${courseId}) from ${tableName} where student_class=#{classId} AND active = 1")
     Double getAveScoreByClassId(String tableName, String courseId,String classId);
 
-    @Select("select ${courseId} from ${tableName}")
+    @Select("select ${courseId} from ${tableName} where active = 1")
     List<Integer> getScoreCourseListByTableNameAndSubject(String tableName, String courseId);
 
-    @Select("select score_id from ${tableName} ORDER BY ${courseId} DESC")
+    @Select("select score_id from ${tableName} where active = 1 ORDER BY ${courseId} DESC")
     List<String> getSubGradeRankingByScoreId(String tableName, String courseId);
 
-    @Select("select score_id from ${tableName} where student_class =#{classId} ORDER BY ${courseId} DESC")
+    @Select("select score_id from ${tableName} where student_class =#{classId} AND active = 1 ORDER BY ${courseId} DESC")
     List<String> getSubClassRankingByScoreId(String tableName, String courseId, String classId);
 
-    @Select("select ${courseId} from ${tableName} where student_class = #{classId}")
+    @Select("select ${courseId} from ${tableName} where student_class = #{classId} and active = 1")
     List<Integer> getScoreCourseListByTableNameAndSubjectAndClassId(String tableName, String courseId, String classId);
 
-    @Select("select ${courseId} from ${tableName} where student_id=#{studentValue}")
+    @Select("select ${courseId} from ${tableName} where student_id=#{studentValue} and active = 1")
     double getScoreByStudentIdAndCourseId(String tableName, String studentValue, String courseId);
 
     @Select("select score_id from ${tableName} where student_id = #{studentValue}")
     String getScoreIdBystudentId(String tableName, String studentValue);
+
+    @Select("select active from ${tableName} where score_id=#{scoreId}")
+    Integer getExamActive(String tableName, String scoreId);
+
+    @Update("update ${tableName} set exam_room=#{examRoom} where score_id = #{scoreId}")
+    boolean updataExamRoom(String tableName, String scoreId, String examRoom);
+
+    @Select("select exam_room from ${tableName} where score_id=#{scoreId}")
+    String getExamRoom(String tableName, String scoreId);
+
+    @Update("update ${tableName} set active=1 where student_id = #{id}")
+    void updataActive(String tableName, String id);
 }

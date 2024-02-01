@@ -203,6 +203,22 @@ public class ScoreController {
         }
     }
 
+
+    @GetMapping("/updataExamRoom")
+    public Result updataExamRoom(@RequestParam String id,
+                                 @RequestParam String examRoom,
+                                 @RequestParam Date examDate,
+                                 @RequestParam String examName) {
+        String examId = examinationService.getIdByNameAndDate(examName, examDate);//考试id
+        String tableName = "ts_score_" + examId;
+        boolean b = scoreService.updataExamRoom(tableName, id, examRoom);
+        if (b) {
+            return Result.success();
+        } else {
+            return Result.error();
+        }
+    }
+
     /**
      * 、
      * 更新数据
@@ -223,6 +239,9 @@ public class ScoreController {
         String tableName = "ts_score_" + examId;
         String coureseId = courseService.getCourseIdByName(courseName);
         boolean result = scoreService.updataScore1(tableName, id, coureseId, scores);
+        if(result){
+            scoreService.updataActive(tableName,id);
+        }
         return Result.success(result);
 
     }
@@ -268,6 +287,7 @@ public class ScoreController {
                     return Result.error(key + "成绩添加失败");
                 }
             }
+            scoreService.updataActive(tableName,studentId);
             return Result.success();
         } else {
             return Result.error("该学生创建信息已存在");
@@ -663,11 +683,15 @@ public class ScoreController {
         if (!"".equals(majorValue)) {
             studentScoresList = scoreService.getstudentScoresListByMajor(majorValue, studentScoresList);
         }
+        //筛选这个学生是否参加了考试有成绩
+        studentScoresList = scoreService.getstudentScoresListByActive(studentScoresList);
         //重置这条数据的成绩值
         studentScoresList = scoreService.getstudentScoresListBySubject(choiceSubject, studentScoresList);
 
         //通过排名筛选
         studentScoresList = scoreService.getstudentScoresListByRankingRange(num1, num2, choiceSubject, studentScoresList);
+
+
 
 
         List<StudentScores> studentScoresLists = new ArrayList<>();
@@ -712,7 +736,7 @@ public class ScoreController {
         studentScoresList = scoreService.getstudentScoresListByClass(classValue, studentScoresList);
         //重置这条数据的成绩值
         studentScoresList = scoreService.getstudentScoresListBySubject(choiceSubject, studentScoresList);
-
+        studentScoresList = scoreService.getstudentScoresListByActive(studentScoresList);
         //通过排名筛选
         studentScoresList = scoreService.getstudentScoresListByRankingRange(num1, num2, choiceSubject, studentScoresList);
 

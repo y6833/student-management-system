@@ -141,6 +141,16 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
+    public List<Student> getstudentListByGrade(String examGrade) {
+        return studentMapper. getstudentListByGrade(examGrade);
+    }
+
+    @Override
+    public List<Student> getstudentListByGradeAndMajor(String examGrade, String examMajor) {
+        return studentMapper. getstudentListByGradeAndMajor(examGrade,examMajor);
+    }
+
+    @Override
     public List<Student> findAll(){
         return list();
     }

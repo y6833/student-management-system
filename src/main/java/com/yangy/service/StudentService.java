@@ -34,4 +34,8 @@ public interface StudentService{
     Student getStudentByIdGM(String studentByScoreId);
 
     String getNameById(String uid);
+
+    List<Student> getstudentListByGrade(String examGrade);
+
+    List<Student> getstudentListByGradeAndMajor(String examGrade, String examMajor);
 }

@@ -15,6 +15,7 @@ public class InterceptorConfig implements WebMvcConfigurer{
                 .addPathPatterns("/**")  // 拦截所有请求，通过判断token是否合法决定是否需要登录
                 .excludePathPatterns(
                         "/sms/admin/user/login",
+                        "/sms/user/user/login",
                         "/**/export","/**/import"
                         ,"/sms/file/**"
                         ,"/**/swagger-resources/**"

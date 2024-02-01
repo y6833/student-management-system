@@ -48,6 +48,9 @@ public class ExaminationController {
     @Autowired
     private ScheduleService scheduleService;
 
+    @Autowired
+    private ScoreService scoreService;
+
 
 
     //mybatis-plus分页查询
@@ -117,7 +120,13 @@ public class ExaminationController {
             if(b){
                 boolean scoreTable = examinationService.createScoreTable(examination, examinationDTO.getCourses());
                 if(scoreTable){
-                    return Result.success("创建成功");
+                    //为这堂考试的年级专业的学生全部创建一个成绩
+                    boolean b1 =  scoreService.addScoreInfoList(examination);
+                    if(b1){
+                        return Result.success("创建成功");
+                    }else{
+                        return Result.error("考试创建成功，学生成绩信息创建失败");
+                    }
                 }else{
                     return Result.error("创建失败");
                 }

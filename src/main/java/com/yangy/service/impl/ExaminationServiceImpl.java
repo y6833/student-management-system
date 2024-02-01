@@ -84,6 +84,8 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
                 +"sum double DEFAULT '0',"
                 +"classRanking int DEFAULT '0',"  //班级排名
                 +"gradeRanking int DEFAULT '0'," //年级排名
+                +"active int DEFAULT '0',"//是否参与考试
+                +"exam_room varchar(255),"//考试教室
                 +"proposal varchar(255),"//教师建议
                 +"PRIMARY KEY (score_id)"
                 +")";

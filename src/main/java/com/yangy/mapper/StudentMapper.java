@@ -5,6 +5,8 @@ import com.yangy.entity.Student;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 //@Mapper
 public interface StudentMapper extends BaseMapper<Student> {
 
@@ -25,4 +27,10 @@ public interface StudentMapper extends BaseMapper<Student> {
 
     @Select("select name from tb_students where id=#{uid}")
     String getNameById(String uid);
+
+    @Select("select * from tb_students where grade=#{examGrade}")
+    List<Student> getstudentListByGrade(String examGrade);
+
+    @Select("select * from tb_students where grade=#{examGrade} AND major = #{examMajor}")
+    List<Student> getstudentListByGradeAndMajor(String examGrade, String examMajor);
 }

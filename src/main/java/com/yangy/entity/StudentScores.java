@@ -15,5 +15,7 @@ public class StudentScores {
     private Date examDate; // 考试日期
     private String examName;//考试名称
     private String proposal;//建议
+    private Integer active;//是否参与考试1参与/0未参与
+    private String examRoom;//考试教室
     private Integer type;//考试1，测试0
 }

@@ -109,4 +109,12 @@ public interface ScoreService {
     List<SubRankDTO> getInformationByexamIdAndStudentId(String examId, String studentValue);
 
     double getScoreByStudentIdAndCourseId(String tableName, String studentValue, String s);
+
+    boolean addScoreInfoList(Examination examination);
+
+    boolean updataExamRoom(String tableName, String id, String examRoom);
+
+    void updataActive(String tableName, String id);
+
+    List<StudentScores> getstudentScoresListByActive(List<StudentScores> studentScoresList);
 }

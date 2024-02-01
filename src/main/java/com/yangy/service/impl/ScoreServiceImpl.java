@@ -225,6 +225,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                 studentScores.setScores(getScoreMap(tableName, scoreId, tableFieldList));//需要表名称，考试成绩id， 表的字段名称
                 studentScores.setProposal(scoreMapper.getProposalByScoreId(tableName, scoreId));
                 studentScores.setType(examination.getScheduleName().equals("测试") ? 0 : 1);
+                studentScores.setActive(scoreMapper.getExamActive(tableName, scoreId));
+                studentScores.setExamRoom(scoreMapper.getExamRoom(tableName, scoreId));
                 studentScoresList.add(studentScores);//将这条成绩添加到里面
             }
 
@@ -451,6 +453,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                     case "classRanking":
                     case "gradeRanking":
                     case "proposal":
+                    case "active":
+                    case "exam_room":
                         break;
                     default:
                         scorelist.add(s);
@@ -717,6 +721,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         List<StudentScores> studentScoresList = scoreService.getAll();
         //查看这条数据是不是这场考试的
         studentScoresList = scoreService.getstudentScoresListByExamName(examValue, studentScoresList);
+        studentScoresList = scoreService.getstudentScoresListByActive(studentScoresList);
         //通过排名筛选
         studentScoresList = scoreService.getstudentScoresListByRankingRange(num1, num2, choiceSubject, studentScoresList);
         return studentScoresList;
@@ -736,6 +741,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                 case "classRanking":
                 case "gradeRanking":
                 case "proposal":
+                case "active":
+                case "exam_room":
                     break;
                 default:
                     scorelist.add(s);
@@ -757,7 +764,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         for (String courseId : scorelist) {
             SubRankDTO subRankDTO = new SubRankDTO();
             //通过科目id获得科目名称
-            subRankDTO.setCourse( "sum".equals(courseId)? "总分" : courseService.getCourseNameById(courseId));
+            subRankDTO.setCourse("sum".equals(courseId) ? "总分" : courseService.getCourseNameById(courseId));
             //通过科目id获取科目最大值
             subRankDTO.setMax(courseService.getSubjectMaxScore(courseId));
             //通过成绩表学生id获得科目分数
@@ -788,6 +795,52 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     @Override
     public double getScoreByStudentIdAndCourseId(String tableName, String studentValue, String s) {
         return scoreMapper.getScoreByStudentIdAndCourseId(tableName, studentValue, s);
+    }
+
+    @Override
+    public boolean addScoreInfoList(Examination examination) {
+        //通过年级和专业获取学生列表列表
+        List<Student> studentList = new ArrayList<>();
+        if ("".equals(examination.getExamMajor())) {
+            //通过年级获取学生列表
+            studentList = studentService.getstudentListByGrade(examination.getExamGrade());
+        } else {
+            studentList = studentService.getstudentListByGradeAndMajor(examination.getExamGrade(), examination.getExamMajor());
+        }
+        for (Student student : studentList) {
+            String scoreId = examination.getId() + "_" + student.getId();//成绩id
+            String studentName = studentService.getStudentById(student.getId()).getName();//学生姓名
+            String studentClass = studentService.getStudentById(student.getId()).getClassId();//获取班级id
+            String tableName = "ts_score_" + examination.getId();
+            // 创建学生创建信息
+            boolean b2 = scoreService.createScore(scoreId, examination.getId(), student.getId(), studentName, studentClass, tableName);
+            if (b2 == false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean updataExamRoom(String tableName, String id, String examRoom) {
+        return scoreMapper.updataExamRoom(tableName, id, examRoom);
+    }
+
+    @Override
+    public void updataActive(String tableName, String id) {
+        scoreMapper.updataActive(tableName,id);
+    }
+
+    @Override
+    public List<StudentScores> getstudentScoresListByActive(List<StudentScores> studentScoresList) {
+        List<StudentScores> studentScoresCopy = new ArrayList<>();
+        for (StudentScores studentScores : studentScoresList) {
+            if (studentScores.getActive()  == 1) {
+                studentScoresCopy.add(studentScores);
+            }
+        }
+        return studentScoresCopy;
     }
 
     /**
@@ -923,6 +976,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                     case "classRanking":
                     case "gradeRanking":
                     case "proposal":
+                    case "active":
+                    case "exam_room":
                         break;
                     default:
                         scorelist.add(s);
@@ -1052,6 +1107,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                 case "classRanking":
                 case "gradeRanking":
                 case "proposal":
+                case "active":
+                case "exam_room":
                     break;
                 default:
                     stringDoubleMap.put(courseService.getCourseNameById(s), scoreMapper.getScoreByCourse(s, tableName, scoreId));
@@ -1081,6 +1138,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
                 case "classRanking":
                 case "gradeRanking":
                 case "proposal":
+                case "active":
+                case "exam_room":
                     break;
                 default:
                     subjectList.add(s);
