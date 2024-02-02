@@ -15,4 +15,6 @@ public interface ScheduleService {
     boolean deleteScheduleInFo(ScheduleDTO scheduleDTO);
 
     List<String> getCourseListById(String scheduleId);
+
+
 }

@@ -117,4 +117,6 @@ public interface ScoreService {
     void updataActive(String tableName, String id);
 
     List<StudentScores> getstudentScoresListByActive(List<StudentScores> studentScoresList);
+
+    String getProposal(String tableName, String scoresId);
 }

@@ -843,6 +843,11 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
         return studentScoresCopy;
     }
 
+    @Override
+    public String getProposal(String tableName, String scoresId) {
+        return scoreMapper.getProposal(tableName,scoresId);
+    }
+
     /**
      * 通过考试日期获取所有的考试信息
      *

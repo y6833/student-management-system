@@ -56,4 +56,6 @@ public interface ClassService {
     void updataClassLevel();
 
     Integer getLevelByClassName(String classValue);
+
+    Integer getLevelByClassId(String classId);
 }

@@ -54,4 +54,8 @@ public interface ExaminationService {
     String getIdByExamNameAndStudentId(String examValue, String studentValue);
 
     String getScheduleNameByExamName(String examValue);
+
+    List<Examination> getEXamListByScheduleName(String scheduleName);
+
+    List<Examination> getExamByGradeIdAndMajorId(String gradeId, String majorId);
 }

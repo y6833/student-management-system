@@ -213,6 +213,22 @@ public class ExaminationServiceImpl extends ServiceImpl<ExaminationMapper, Exami
         return examinationMapper.getScheduleNameByExamName(examValue);
     }
 
+    @Override
+    public List<Examination> getEXamListByScheduleName(String scheduleName) {
+        List<Examination> eXamListByScheduleName = examinationMapper.getEXamListByScheduleName(scheduleName);
+
+        for (Examination examination : eXamListByScheduleName) {
+            examination.setExamMajor(majorService.getMajorName(examination.getExamMajor()));
+        }
+        return eXamListByScheduleName;
+
+    }
+
+    @Override
+    public List<Examination> getExamByGradeIdAndMajorId(String gradeId, String majorId) {
+        return examinationMapper.getExamByGradeIdAndMajorId(gradeId,majorId);
+    }
+
 
     @Override
     public boolean updataExam(Examination examination) {

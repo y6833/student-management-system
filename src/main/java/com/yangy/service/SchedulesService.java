@@ -25,4 +25,5 @@ public interface SchedulesService {
 
     String getscheduleNameByClassIdAndLevelAndSemester(String classId, Integer level, String semester);
 
+    String getscheduleNameByClassIdAndLevelAndSemester1(String classId, Integer level, Integer semester);
 }

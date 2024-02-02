@@ -75,7 +75,7 @@ public interface ScoreMapper extends BaseMapper<Score> {
     @Select("select ${s} from ${tableName} where score_id=#{scoreId}")
     Double getScoreByCourse(String s, String tableName, String scoreId);
 
-    @Select("select ${courseId} from ${tableName}")
+    @Select("select ${courseId} from ${tableName} where active = 1")
     List<Double> getObjectScoreList(String tableName, String courseId);
 
     @Select("select ${courseId} from ${tableName} where student_class=#{classId} And active = 1")
@@ -182,4 +182,7 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     @Update("update ${tableName} set active=1 where student_id = #{id}")
     void updataActive(String tableName, String id);
+
+    @Select("select proposal from ${tableName} where score_id=#{scoresId}")
+    String getProposal(String tableName, String scoresId);
 }

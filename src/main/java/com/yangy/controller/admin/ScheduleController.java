@@ -6,14 +6,16 @@ import com.yangy.service.ScheduleService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/sms/admin/schedule")
+@Component("adminScheduleController")
 @Slf4j
-@Api(tags = "课表相关接口")
+@Api(tags = "管理课表相关接口")
 public class ScheduleController {
 
     @Autowired

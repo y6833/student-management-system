@@ -15,6 +15,7 @@ import com.yangy.util.Pagetool;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/sms/admin/examination")
 @Slf4j
+@Component("adminExaminationController")
 @Api(tags = "考试相关接口")
 public class ExaminationController {
 

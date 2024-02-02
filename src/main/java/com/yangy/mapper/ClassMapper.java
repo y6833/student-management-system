@@ -75,4 +75,7 @@ public interface ClassMapper extends BaseMapper<Tclass> {
 
     @Select("select level from tb_class where class_name = #{classValue}")
     Integer getLevelByClassName(String classValue);
+
+    @Select("select level from tb_class where class_id = #{classId}")
+    Integer getLevelByClassId(String classId);
 }

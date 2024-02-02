@@ -205,4 +205,9 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Tclass> implement
         return classMapper.getLevelByClassName(classValue);
     }
 
+    @Override
+    public Integer getLevelByClassId(String classId) {
+        return classMapper.getLevelByClassId(classId);
+    }
+
 }

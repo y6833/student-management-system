@@ -25,4 +25,7 @@ public interface SchedulesMapper  extends BaseMapper<Schedules> {
 
     @Select("select name from tb_schedules where classs=#{classId} AND grade = #{level} AND stage = #{semester}")
     String getscheduleNameByClassIdAndLevelAndSemester(String classId, Integer level, String semester);
+
+    @Select("select name from tb_schedules where classs=#{classId} AND grade = #{level} AND stage = #{semester}")
+    String getscheduleNameByClassIdAndLevelAndSemester1(String classId, Integer level, Integer semester);
 }

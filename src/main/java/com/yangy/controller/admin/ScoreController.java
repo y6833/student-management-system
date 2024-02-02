@@ -26,7 +26,7 @@ import java.util.*;
 @RequestMapping("/sms/admin/score")
 @Component("adminScoreController")
 @Slf4j
-@Api(tags = "成绩相关接口")
+@Api(tags = "管理成绩相关接口")
 public class ScoreController {
 
     @Autowired
