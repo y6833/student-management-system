@@ -899,6 +899,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
             sum += score;
         }
         return sum / scoreList.size();
+
     }
 
     /**
