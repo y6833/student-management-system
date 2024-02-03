@@ -59,7 +59,7 @@ public class ScheduleController {
     /**
      * 通过学号
      * @param semester
-     * @param releIdVariable
+     * @param releId
      * @return
      */
     @GetMapping("/getscheduleWorkListByStudentId")

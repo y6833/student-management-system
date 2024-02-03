@@ -71,4 +71,19 @@ public class UserController {
         }
     }
 
+    @PostMapping("/updataUser")
+    public Result updataUser(@RequestBody User user) {
+        if (userService.selectByUsername(user.getUsername()) == null) {
+            return Result.error();
+//            userService.addUser(user);
+        } else {
+            user.setId(userService.selectByUsername(user.getUsername()).getId());
+            Boolean aBoolean = userService.updateUserById(user);
+            if (aBoolean) {
+                return Result.success();
+            }
+        }
+        return Result.error();
+    }
+
 }

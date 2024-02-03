@@ -49,4 +49,7 @@ public interface UserMapper {
 
     @Select("select role_id from tb_user where username = #{username}")
     String getRoleIdByUsername(String username);
+
+    @Select("select * from tb_user where role_id=#{id}")
+    User getUserByRoleId(String id);
 }

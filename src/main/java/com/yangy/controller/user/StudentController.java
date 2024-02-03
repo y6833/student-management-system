@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/sms/user/student")
@@ -43,5 +40,14 @@ public class StudentController {
 
         }
         return Result.error(Constants.CODE_302,"学生不存在");
+    }
+
+    @PostMapping("/updata")
+    public Result updata(@RequestBody Student student){
+        boolean b = studentService.updataStudent(student);
+        if(b){
+            return Result.success();
+        }
+        return Result.error();
     }
 }

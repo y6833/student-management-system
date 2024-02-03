@@ -1,5 +1,6 @@
 package com.yangy.service.impl;
 
+import com.yangy.entity.Student;
 import com.yangy.entity.User;
 import com.yangy.mapper.UserMapper;
 import com.yangy.service.UserService;
@@ -92,6 +93,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getRoleIdByUsername(String id) {
         return userMapper.getRoleIdByUsername(id);
+    }
+
+    @Override
+    public void updatePassword(Student student) {
+        //通过学号获得用户信息
+       User user =  userMapper.getUserByRoleId(student.getId());
+       user.setPassword(student.getPassword());
+       userMapper.updateById(user);
     }
 
 }

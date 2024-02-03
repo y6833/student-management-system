@@ -68,6 +68,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public boolean updataStudent(Student student) {
         student.setClassId(classService.getIdByclassName(student.getClassId()));
         student.setMajor(majorService.getIdByclassName(student.getMajor()));
+        //修改密码
+        userService.updatePassword(student);
         return updateById(student);
     }
 

@@ -1,5 +1,6 @@
 package com.yangy.service;
 
+import com.yangy.entity.Student;
 import com.yangy.entity.User;
 
 import java.util.List;
@@ -39,4 +40,6 @@ public interface UserService {
     int getRoleNamebyRoleId(String uid);
 
     String getRoleIdByUsername(String id);
+
+    void updatePassword(Student student);
 }
